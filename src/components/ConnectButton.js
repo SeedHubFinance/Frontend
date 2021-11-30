@@ -1,41 +1,47 @@
-import { useEffect, useState } from "react";
-import Web3 from "web3";
-import { initialiseMetamask } from "../utils/connectionHelpers";
-
+import { useState, useContext, useEffect } from "react";
+import Modal from "./modal";
+import { Web3Context } from "../context/web3Context";
 const ConnectedButton = () => {
+  const [web3, setWeb3] = useContext(Web3Context);
   const [address, setAddress] = useState(null);
-  const [isConnected, setIsConnected] = useState(false);
-  // const [provider, setProvider] = useState(null);
-  const handleConnectWallet = async (e) => {
+  const [connected, setConnected] = useState(false);
+
+  useEffect(() => {
+    if (!web3) return setAddress("");
+    setConnected(window.ethereum.isConnected());
+    web3?.eth.getAccounts().then((results) => setAddress(results[0]));
+    // setAddress(web3?.eth.getAccounts()[0]);
+  }, [web3]);
+
+  const handleDisconnect = (e) => {
     e.preventDefault();
-    console.log("Hello 2");
-    const { isConnected, address, provider } = await initialiseMetamask();
-    setAddress(address);
-    setIsConnected(isConnected);
-    if (!isConnected || !address || !provider) {
-      return console.log("Connection error");
-    }
-    window.web3 = new Web3(provider);
+    setConnected(false);
+    setWeb3(null);
   };
 
-  return isConnected ? (
+  return !connected ? (
+    <>
+      <button
+        type="button"
+        class="btn btn-primary"
+        data-toggle="modal"
+        data-target="#exampleModalCenter"
+      >
+        Connect Wallet
+      </button>
+      <Modal />
+    </>
+  ) : (
     <div className="container">
       <div className="row">
+        <div className="col">{address}</div>
         <div className="col">
-          <p>
-            {address &&
-              `${address.slice(0, 6)}...${address.slice(
-                address.length - 4,
-                address.length
-              )}`}
-          </p>
+          <button className="btn btn-success" onClick={handleDisconnect}>
+            Disconnect
+          </button>
         </div>
       </div>
     </div>
-  ) : (
-    <button className="btn btn-primary" onClick={handleConnectWallet}>
-      Connect to a wallet
-    </button>
   );
 };
 

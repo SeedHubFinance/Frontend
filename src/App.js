@@ -1,10 +1,13 @@
 import Home from "./pages/home";
+import { Web3Provider } from "./context/web3Context";
 
 function App() {
   return (
-    <div className="App">
-      <Home />
-    </div>
+    <Web3Provider>
+      <div className="App">
+        <Home />
+      </div>
+    </Web3Provider>
   );
 }
 
