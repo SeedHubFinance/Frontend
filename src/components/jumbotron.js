@@ -1,3 +1,6 @@
+import { useContext, useEffect } from "react";
+import { Web3Context } from "../context/web3Context";
+
 const Jumbotron = () => {
   return (
     <nav aria-label="breadcrumb">
