@@ -1,10 +1,16 @@
 import { useState, useContext, useEffect } from "react";
-import Modal from "./modal";
-import { Web3Context } from "../context/web3Context";
+import WalletModal from "../WalletModel/WalletModal";
+import { Button } from "react-bootstrap";
+import { Web3Context } from "../../context/web3Context";
+import "./ConnectButton.scss";
+
 const ConnectedButton = () => {
   const [web3, setWeb3] = useContext(Web3Context);
   const [address, setAddress] = useState(null);
   const [connected, setConnected] = useState(false);
+
+  // Model State
+  const [modalShow, setModalShow] = useState(false);
 
   useEffect(() => {
     if (!web3) return setAddress("");
@@ -21,24 +27,33 @@ const ConnectedButton = () => {
 
   return !connected ? (
     <>
-      <button
+      {/* <button
         type="button"
-        class="btn btn-primary"
+        className="btn btn-connect-wallet"
         data-toggle="modal"
         data-target="#exampleModalCenter"
       >
         Connect Wallet
       </button>
-      <Modal />
+      <Modal /> */}
+      <Button className="btn-connect-wallet" onClick={() => setModalShow(true)}>
+        Connect Wallet
+      </Button>
+
+      <WalletModal show={modalShow} onHide={() => setModalShow(false)} />
     </>
   ) : (
-    <div className="container">
-      <div className="row">
-        <div className="col">{address}</div>
+    <div className="container justify-content-end">
+      <div className="row align-items-center">
         <div className="col">
-          <button className="btn btn-success" onClick={handleDisconnect}>
+          {(address?.substr(0, 4) || "") +
+            "..." +
+            (address?.substr(-4, 4) || "")}
+        </div>
+        <div className="col">
+          <Button variant="success" onClick={handleDisconnect}>
             Disconnect
-          </button>
+          </Button>
         </div>
       </div>
     </div>

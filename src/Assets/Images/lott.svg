@@ -1,0 +1,7 @@
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none">
+<path d="M3 1H9V6C9 7.10457 8.10457 8 7 8H5C3.89543 8 3 7.10457 3 6V1Z" stroke="black" stroke-width="1.5"/>
+<path d="M0 2H2V4H0V2Z" fill="black"/>
+<path d="M10 2H12V4H10V2Z" fill="black"/>
+<rect x="5" y="8" width="2" height="4" fill="black"/>
+<rect x="9" y="10" width="2" height="6" transform="rotate(90 9 10)" fill="black"/>
+</svg>

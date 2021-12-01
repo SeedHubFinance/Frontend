@@ -1,4 +1,4 @@
-import Home from "./pages/home";
+import Home from "./pages/Home/home";
 import { Web3Provider } from "./context/web3Context";
 
 function App() {
