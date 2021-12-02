@@ -62,17 +62,25 @@ const WalletModal = (props) => {
             <div className="d-grid">
               <Button onClick={handleMetamask}>
                 <span>
-                  <img src={Images.MetaMaskicon} className="img-fluid me-3" />
+                  <img
+                    src={Images.MetaMaskicon}
+                    className="img-fluid me-3"
+                    alt="icon"
+                  />
                   Metamask
                 </span>
-                <img src={Images.RightArrow} className="img-fluid" />
+                <img src={Images.RightArrow} className="img-fluid" alt="icon" />
               </Button>
               <Button onClick={handleWalletConnect}>
                 <span>
-                  <img src={Images.WalletConnect} className="img-fluid me-3" />
+                  <img
+                    src={Images.WalletConnect}
+                    className="img-fluid me-3"
+                    alt="icon"
+                  />
                   Wallet Connect
                 </span>
-                <img src={Images.RightArrow} className="img-fluid" />
+                <img src={Images.RightArrow} className="img-fluid" alt="icon" />
               </Button>
             </div>
             <Button className="closebtn" onClick={props.onHide}>
