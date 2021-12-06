@@ -1,4 +1,4 @@
-import ConnectedButton from "./ConnectButton";
+import ConnectedButton from "./ConnectButton/ConnectButton";
 
 const Header = () => {
   return (

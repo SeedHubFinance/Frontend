@@ -94,13 +94,13 @@ const Jumbotron = () => {
                     className="dropdown-menu"
                     aria-labelledby="dropdownMenuButton"
                   >
-                    <a className="dropdown-item" href="#">
+                    <a className="dropdown-item" href="#action">
                       Action
                     </a>
-                    <a className="dropdown-item" href="#">
+                    <a className="dropdown-item" href="#action">
                       Another action
                     </a>
-                    <a className="dropdown-item" href="#">
+                    <a className="dropdown-item" href="#action">
                       Something else here
                     </a>
                   </div>

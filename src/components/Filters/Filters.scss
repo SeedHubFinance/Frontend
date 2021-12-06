@@ -1,0 +1,156 @@
+.filters-container {
+  margin-bottom: 20px;
+  .filter-tabs {
+    min-height: 90px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .filter-btns {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .btn {
+        background-color: transparent;
+        border: none;
+        display: flex;
+        align-items: center;
+        font-weight: bold;
+        font-size: 1rem;
+        height: 24px;
+        line-height: 24px;
+        padding: 0px 8px;
+        margin-right: 20px;
+        color: rgb(0, 0, 0);
+        cursor: pointer;
+        border-radius: 0px;
+        &:active {
+          background-color: #000;
+          color: #fff;
+        }
+        &:active svg path {
+          fill: rgb(255, 255, 255) !important;
+        }
+        &:focus {
+          box-shadow: none;
+        }
+      }
+    }
+    .action-btn {
+      .btn {
+        font-weight: bold;
+        border: 1px solid rgba(0, 0, 0, 0.4);
+        width: 160px;
+        height: 48px;
+        box-sizing: border-box;
+        display: flex;
+        -webkit-box-align: center;
+        align-items: center;
+        -webkit-box-pack: center;
+        border-radius: 0;
+        justify-content: center;
+        cursor: pointer;
+        background-color: rgb(255, 255, 255);
+        color: rgb(0, 0, 0);
+        &:focus {
+          box-shadow: none;
+        }
+        &:hover {
+          border-color: #000;
+        }
+      }
+    }
+  }
+  .search-filter {
+    z-index: 10;
+    min-height: 80px;
+    padding: 20px 0;
+    border-top: 2px solid #000;
+    border-bottom: 2px solid #000;
+    display: flex;
+
+    * {
+      font-size: 14px;
+      font-weight: bold;
+    }
+    .css-b62m3t-container {
+      width: -webkit-fill-available;
+    }
+
+    p {
+      white-space: nowrap;
+    }
+    .f-div {
+      flex: 2 2 20%;
+    }
+    .f-div:last-child {
+      flex: 1 1 10%;
+    }
+
+    .css-1pahdxg-control {
+      box-shadow: none;
+      border: none;
+      background-color: transparent;
+      &:hover {
+        border: none;
+        background-color: transparent;
+      }
+      &:focus {
+        border: none;
+        background-color: transparent;
+      }
+    }
+    .css-1s2u09g-control {
+      border: none;
+      background-color: transparent;
+    }
+
+    .css-1gtu0rj-indicatorContainer {
+      transform: rotate(180deg);
+      color: #000;
+      padding: 0;
+    }
+    .css-tlfecz-indicatorContainer {
+      color: #000;
+      padding: 0;
+    }
+    .css-1okebmr-indicatorSeparator {
+      background-color: #fff;
+    }
+    .search-filter-search {
+      display: flex;
+      align-items: center;
+      .btn {
+        background-color: transparent;
+        border: none;
+        padding: 0;
+        color: #000;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        &:focus {
+          border: none;
+          box-shadow: none;
+        }
+      }
+    }
+
+    .search-filter-view {
+      display: flex;
+      align-items: center;
+      justify-content: end;
+      .btn {
+        background-color: transparent;
+        border: none;
+        padding: 0;
+        margin-right: 20px;
+        &:focus {
+          border: none;
+          box-shadow: none;
+        }
+      }
+    }
+  }
+}
