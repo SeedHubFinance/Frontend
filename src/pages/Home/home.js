@@ -1,7 +1,7 @@
 import Filters from "../../components/Filters/Filters";
 import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
-import Cardlist from "../../components/Card/Cardlist";
+import Cardlist from "../../components/Cardlist/Cardlist";
 import CardPagination from "../../components/CardPagination/CardPagination";
 import "./Home.scss";
 

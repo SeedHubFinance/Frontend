@@ -1,5 +1,5 @@
 import React, { Fragment } from "react";
-import { Card, ProgressBar } from "react-bootstrap";
+import { Card, ProgressBar, Button } from "react-bootstrap";
 import "./TokenSaleCard.scss";
 
 const Tokensalecard = () => {
@@ -38,6 +38,7 @@ const Tokensalecard = () => {
             </div>
           </div>
           <ProgressBar now={60} variant="success" />
+          <Button>Join Now</Button>
         </Card.Body>
       </Card>
     </Fragment>
