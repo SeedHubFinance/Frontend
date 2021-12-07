@@ -19,7 +19,6 @@ jobs:
         port: ${{ secrets.PORT }}
         script: |
           cd ~/fixed-in
-          git reset --hard
           git pull origin staging
           npm install
           pm2 start npm --name "seed front" -- start
