@@ -21,4 +21,4 @@ jobs:
           cd ~/fixed-in
           git pull origin staging
           npm install
-          pm2 start npm --name "seed front" -- start
+          pm2 restart 0
