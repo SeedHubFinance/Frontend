@@ -1,7 +1,7 @@
-import Footer from "../../components/footer";
-import Header from "../../components/Header/Header";
 import Filters from "../../components/Filters/Filters";
-import Cardlist from "../../components/Card/Cardlist";
+import Header from "../../components/Header/Header";
+import Footer from "../../components/Footer/Footer";
+import Cardlist from "../../components/Cardlist/Cardlist";
 import CardPagination from "../../components/CardPagination/CardPagination";
 import "./Home.scss";
 
@@ -14,6 +14,7 @@ const Home = () => {
         <Cardlist />
         <CardPagination />
       </div>
+      <Footer />
     </div>
   );
 };

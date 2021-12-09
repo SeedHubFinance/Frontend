@@ -58,7 +58,7 @@ const WalletModal = (props) => {
         className="wallet-modal"
       >
         <Modal.Body>
-          <div class="modal-wrapper">
+          <div className="modal-wrapper">
             <div className="d-grid">
               <Button onClick={handleMetamask}>
                 <span>

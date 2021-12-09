@@ -63,7 +63,6 @@
     }
   }
   .search-filter {
-    z-index: 10;
     min-height: 80px;
     padding: 20px 0;
     border-top: 2px solid #000;
@@ -133,6 +132,85 @@
         &:focus {
           border: none;
           box-shadow: none;
+        }
+      }
+      .search-box {
+        position: absolute;
+        top: 60px;
+        left: -20px;
+        width: 350px;
+        min-height: 254px;
+        padding: 20px 24px;
+        box-sizing: border-box;
+        background-color: rgb(255, 255, 255);
+        border: 1px solid rgb(234, 234, 234);
+        z-index: 10;
+
+        .search-option {
+          display: flex;
+          flex-wrap: wrap;
+          -webkit-box-align: center;
+          align-items: center;
+          margin-bottom: 20px;
+
+          label {
+            display: block;
+            width: 14px;
+            height: 14px;
+            cursor: pointer;
+            margin-right: 8px;
+            background: url("../../Assets/Images/iconcheck.svg") 0px 0px /
+              contain no-repeat;
+            &.checked {
+              background: url("../../Assets/Images/iconchecked.svg") 0px 0px /
+                contain no-repeat;
+            }
+          }
+          p {
+            font-size: 16px;
+            font-weight: 400;
+          }
+          .implicit {
+            width: 100%;
+            input {
+              border-top: none;
+              border-right: none;
+              border-left: none;
+              border-image: initial;
+              border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+              width: 100%;
+              line-height: 36px;
+              font-size: 16px;
+              font-weight: 500;
+              outline: none;
+              margin-top: 5px;
+            }
+            &.hidden {
+              display: none;
+            }
+          }
+        }
+        .search-box-btn {
+          display: flex;
+          -webkit-box-pack: justify;
+          justify-content: space-between;
+          margin-top: 16px;
+          button {
+            width: 144px;
+            height: 48px;
+            box-sizing: border-box;
+            border: 1px solid rgba(0, 0, 0, 0.2);
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            &.black {
+              background-color: rgb(0, 0, 0);
+              color: rgb(255, 255, 255);
+            }
+            &.white {
+              background-color: rgb(255, 255, 255);
+            }
+          }
         }
       }
     }
