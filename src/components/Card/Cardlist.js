@@ -1,79 +1,49 @@
-import React from "react";
-import { Card, Row, Col } from "react-bootstrap";
+import React, { useState } from "react";
+import CardComponent from "./CardComponent";
 import "./Cardlist.scss";
 
 const Cardlist = (props) => {
-  return (
-    <div className="cardlist">
-      <Card>
-        <Card.Body>
-          <div className="card-head d-flex justify-content-between">
-            <span>
-              <div className="dot me-2"></div> Live
-            </span>
-            <p># 6189</p>
-          </div>
-          <div className="card-title">ETH/SHIB</div>
+  const [cardData, setCardData] = useState([
+    {
+      id: 1,
+      title: "ETH/SHIB",
+      address: "0xA447...C354",
+      pair: "LINK /ETH",
+      swapRatio: "200 : 1",
+      price: 22.8378,
+      participants: "public",
+    },
+    {
+      id: 2,
+      title: "ETH/SHIB",
+      address: "0xA447...C354",
+      pair: "LINK /ETH",
+      swapRatio: "200 : 1",
+      price: 22.8378,
+      participants: "public",
+    },
+    {
+      id: 3,
+      title: "ETH/SHIB",
+      address: "0xA447...C354",
+      pair: "LINK /ETH",
+      swapRatio: "200 : 1",
+      price: 22.8378,
+      participants: "public",
+    },
+  ]);
 
-          <div class="card-content">
-            <div>
-              <span>Address</span>
-              <p>0xA447...C354</p>
-            </div>
-            <div>
-              <span>Pair</span>
-              <p>LINK /ETH</p>
-            </div>
-            <div>
-              <span>Swap Ratio</span>
-              <p>200 : 1</p>
-            </div>
-            <div>
-              <span>Price</span>
-              <p>$ 22.8378</p>
-            </div>
-            <div>
-              <span>Participants</span>
-              <p>public</p>
-            </div>
-          </div>
-        </Card.Body>
-      </Card>
-      <Card>
-        <Card.Body>
-          <div className="card-head d-flex justify-content-between">
-            <span>
-              <div className="dot me-2"></div> Live
-            </span>
-            <p># 6189</p>
-          </div>
-          <div className="card-title">ETH/SHIB</div>
-
-          <div class="card-content">
-            <div>
-              <span>Address</span>
-              <p>0xA447...C354</p>
-            </div>
-            <div>
-              <span>Pair</span>
-              <p>LINK /ETH</p>
-            </div>
-            <div>
-              <span>Swap Ratio</span>
-              <p>200 : 1</p>
-            </div>
-            <div>
-              <span>Price</span>
-              <p>$ 22.8378</p>
-            </div>
-            <div>
-              <span>Participants</span>
-              <p>public</p>
-            </div>
-          </div>
-        </Card.Body>
-      </Card>
-    </div>
-  );
+  const ListCardComponent = cardData.map((data) => (
+    <CardComponent
+      id={data.id}
+      title={data.title}
+      address={data.address}
+      pair={data.pair}
+      swapRatio={data.swapRatio}
+      price={data.price}
+      participants={data.participants}
+    />
+  ));
+  return <div className="cardlist">{ListCardComponent}</div>;
 };
 export default Cardlist;
