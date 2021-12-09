@@ -12,20 +12,20 @@ const Footer = () => {
   return (
     <div className="footer">
       <div className="footer-content">
-        <Row className="w-100 g-0 align-items-center">
+        <Row className="w-100 g-0 align-items-center text-center">
           <Col lg={4}>
-            <div className="footer-icons">
+            <div className="footer-icons justify-content-lg-start justify-content-center">
               <MediumIcon />
               <TwitterIcon />
               <TelegramIcon />
               <MsgIcon />
             </div>
           </Col>
-          <Col lg={2}>
+          <Col lg={2} className="my-lg-0 my-3">
             <p>Fixed-Swap Docs</p>
           </Col>
           <Col lg={6}>
-            <p className="text-end">
+            <p className="text-lg-end">
               Fixed-Swap is a fully decentralized protocol. Join the auction at
               your own risk.
             </p>

@@ -9,20 +9,23 @@ const Header = () => {
     <Fragment>
       <div className="header">
         <div className="header-wrapper mx-auto">
-          <Navbar collapseOnSelect expand="md">
-            <Navbar.Brand className="logo fs-3">
+          <Navbar collapseOnSelect expand="lg">
+            <Navbar.Brand className="logo fs-3 me-auto">
               <Link to="/">Fixed Swap</Link>
             </Navbar.Brand>
-            <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+            <Navbar.Toggle
+              aria-controls="responsive-navbar-nav"
+              className="order-lg-1 order-2 ms-3"
+            />
             <Navbar.Collapse id="responsive-navbar-nav">
-              <Nav className="me-md-auto">
+              <Nav className="ms-md-auto">
                 <Nav.Link href="#application">Application</Nav.Link>
                 <Nav.Link href="#store">Store</Nav.Link>
                 <Nav.Link href="#earning">Earning</Nav.Link>
                 <Nav.Link href="#statistics">Statistics</Nav.Link>
               </Nav>
             </Navbar.Collapse>
-            <ConnectedButton />
+            <ConnectedButton className="order-lg-2 order-1" />
           </Navbar>
         </div>
       </div>

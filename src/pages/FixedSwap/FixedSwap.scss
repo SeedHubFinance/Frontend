@@ -1,3 +1,4 @@
+@import "../../Assets/Style/StyleData.scss";
 .fixed-swap-pool {
   background-color: #f5f5f5;
   padding: 32px 0;
@@ -5,7 +6,10 @@
     background-color: #fff;
     margin: 0 auto;
     padding: 40px 100px;
-    width: 1280px;
+    width: $container-width;
+    h5 {
+      color: $dark-clr;
+    }
 
     .form-header {
       font-style: normal;
@@ -13,6 +17,7 @@
       font-size: 12px;
       flex: 1 1 0%;
       line-height: 15px;
+      color: $dark-clr;
 
       .title {
         display: flex;
@@ -20,31 +25,31 @@
         font-style: normal;
         font-weight: bold;
         font-size: 36px;
+        color: $dark-clr;
         line-height: 44px;
         padding: 16px 0px;
         -webkit-box-pack: center;
-        border-bottom: 4px solid rgb(0, 0, 0);
+        border-bottom: 4px solid $dark-clr;
         .btn {
           font-weight: bold;
-          border: 1px solid rgba(0, 0, 0, 0.4);
-          width: 184px;
-          border-radius: 0;
-          height: 40px;
+          border: 1px solid $primary-color-two;
+          width: 210px;
+          height: 48px;
           box-sizing: border-box;
-          font-size: 0.9rem;
           display: flex;
           -webkit-box-align: center;
           align-items: center;
           -webkit-box-pack: center;
+          border-radius: $borderRadius;
           justify-content: center;
           cursor: pointer;
           background-color: rgb(255, 255, 255);
-          color: rgb(0, 0, 0);
+          color: $secondary-color-three;
           &:focus {
             box-shadow: none;
           }
           &:hover {
-            border-color: #000;
+            border-color: $dark-clr;
           }
         }
       }
@@ -53,6 +58,7 @@
     .form-heading {
       font-size: 26px;
       font-weight: 700;
+      color: $dark-clr;
     }
     .label {
       font-style: normal;
@@ -62,21 +68,22 @@
       display: flex;
       -webkit-box-align: center;
       align-items: center;
-      color: rgb(0, 0, 0);
+      color: $dark-clr;
       opacity: 0.7;
     }
+
     .to-select {
       width: 48%;
       .css-1s2u09g-control {
         border: none;
-        border-bottom: 1px solid #000;
+        border-bottom: 1px solid $dark-clr;
         border-radius: 0;
         outline: none !important;
         box-shadow: none !important;
       }
       .css-1pahdxg-control {
         border: none;
-        border-bottom: 1px solid #000;
+        border-bottom: 1px solid $dark-clr;
         border-radius: 0;
         outline: none !important;
         box-shadow: none !important;
@@ -101,7 +108,7 @@
     .divder {
       height: 2px;
       width: 100%;
-      background-color: rgb(0, 0, 0);
+      background-color: $dark-clr;
       margin: 52px 0px;
     }
     .max-icon {
@@ -109,6 +116,7 @@
       right: 0;
       top: 4px;
       width: 25px;
+      cursor: pointer;
     }
     .wka {
       width: -webkit-fill-available;
@@ -119,23 +127,41 @@
       align-items: center;
       vertical-align: middle;
       font-size: 14px;
-      color: rgb(31, 25, 27);
+      color: $dark-clr;
       cursor: pointer;
     }
-    .btn {
+    .sub-btn {
       border-radius: 0;
       font-weight: bold;
-      border: 1px solid rgba(0, 0, 0, 0.1);
-      color: rgba(0, 0, 0, 0.2);
-      background-color: rgb(211, 211, 218);
-      width: 440px;
+      border: none;
+      background-image: $gradient2;
+      color: rgb(255, 255, 255);
+      width: 100%;
       height: 48px;
       box-sizing: border-box;
+      border-radius: $borderRadius;
       display: flex;
+      box-shadow: none;
+      outline: none;
       -webkit-box-align: center;
       align-items: center;
       -webkit-box-pack: center;
       justify-content: center;
+      &:hover {
+        opacity: 0.8;
+      }
+      &.disable {
+        color: rgba(0, 0, 0, 0.2);
+        background-image: $gradientd;
+      }
+    }
+  }
+}
+
+@media only screen and (min-width: 1367px) {
+  .fixed-swap-pool {
+    .fixed-swap-form-container {
+      width: 1280px;
     }
   }
 }

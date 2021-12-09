@@ -1,19 +1,36 @@
+@import "../../Assets/Style/StyleData.scss";
 .footer {
   padding: 50px 0;
-  background-color: #f5f5f5;
+  background-color: #fff;
 
   .footer-content {
-    width: 1280px;
+    width: $container-width;
     margin: 0 auto;
     .footer-icons {
       display: flex;
       align-items: center;
       gap: 30px;
+
+      svg {
+        path {
+          fill: $dark-clr;
+          & + path {
+            fill: #fff;
+          }
+        }
+      }
     }
     p {
       font-size: 12px;
-      color: rgb(0, 0, 0);
+      color: $dark-clr;
       opacity: 0.8;
+    }
+  }
+}
+@media only screen and (min-width: 1367px) {
+  .footer {
+    .footer-content {
+      width: 1280px;
     }
   }
 }

@@ -237,7 +237,7 @@ const Fixedswap = () => {
                   </div>
                 </div>
                 <span className="label my-4">Transaction Fee</span>
-                <Button className="btn">Launch</Button>
+                <Button className="sub-btn disable">Launch</Button>
                 <p
                   style={{
                     color: "red",
