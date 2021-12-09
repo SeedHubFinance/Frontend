@@ -20,7 +20,7 @@ const WalletModal = (props) => {
         "imtoken",
         "pillar",
       ],
-      desktopLinks: ["encrypted ink"],
+      desktopLinks: ["Tokenary", "Infinity Wallet", "Ambire Wallet"],
     },
   });
 
