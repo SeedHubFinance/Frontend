@@ -1,5 +1,6 @@
 import React, { Fragment } from "react";
 import { Navbar, Nav } from "react-bootstrap";
+import { Link } from "react-router-dom";
 import ConnectedButton from "../ConnectButton/ConnectButton";
 import "./Header.scss";
 
@@ -9,8 +10,8 @@ const Header = () => {
       <div className="header">
         <div className="header-wrapper mx-auto">
           <Navbar collapseOnSelect expand="md">
-            <Navbar.Brand href="#home" className="fs-3">
-              Fixed Swap
+            <Navbar.Brand className="logo fs-3">
+              <Link to="/">Fixed Swap</Link>
             </Navbar.Brand>
             <Navbar.Toggle aria-controls="responsive-navbar-nav" />
             <Navbar.Collapse id="responsive-navbar-nav">

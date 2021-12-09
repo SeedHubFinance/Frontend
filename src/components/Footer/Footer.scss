@@ -1,0 +1,19 @@
+.footer {
+  padding: 50px 0;
+  background-color: #f5f5f5;
+
+  .footer-content {
+    width: 1280px;
+    margin: 0 auto;
+    .footer-icons {
+      display: flex;
+      align-items: center;
+      gap: 30px;
+    }
+    p {
+      font-size: 12px;
+      color: rgb(0, 0, 0);
+      opacity: 0.8;
+    }
+  }
+}
