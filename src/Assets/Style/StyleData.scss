@@ -1,0 +1,27 @@
+// Primary Color
+$font-family: "Roboto";
+$primary-color: #e63029;
+$primary-color-two: #ff9373;
+
+// Secondary Color
+$secondary-color: #ffbf74;
+$secondary-color-two: #ff8c8d;
+$secondary-color-three: #ef597e;
+
+// Button
+$gradient1: linear-gradient(90deg, $primary-color 0%, $primary-color-two 100%);
+$gradient2: linear-gradient(
+  90deg,
+  $secondary-color-three 0%,
+  $primary-color-two 100%
+);
+$gradientd: linear-gradient(
+  90deg,
+  rgb(211, 211, 218) 0%,
+  rgb(211, 211, 218) 100%
+);
+$borderRadius: 8px;
+$dark-clr: #706f6f;
+
+// Container width
+$container-width: 95%;

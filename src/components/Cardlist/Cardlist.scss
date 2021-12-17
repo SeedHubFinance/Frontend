@@ -1,0 +1,12 @@
+.cardlist {
+  display: flex;
+  gap: 14px;
+  min-height: 520px;
+  flex-wrap: wrap;
+}
+
+@media only screen and (max-width: 991px) {
+  .cardlist {
+    gap: 10px;
+  }
+}

@@ -1,0 +1,8 @@
+<svg version="1.2" baseProfile="tiny-ps" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 16" width="32" height="16">
+	<title>icon-menu-svg</title>
+	<style>
+		tspan { white-space:pre }
+		.shp0 { fill: #706f6f } 
+	</style>
+	<path id="Layer" fill-rule="evenodd" class="shp0" d="M0 0.2L32 0.2L32 2.6L0 2.6L0 0.2ZM6.4 6.8L32 6.8L32 9.2L6.4 9.2L6.4 6.8ZM32 15.8L12.8 15.8L12.8 13.4L32 13.4L32 15.8Z" />
+</svg>
