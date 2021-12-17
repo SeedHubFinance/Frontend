@@ -37,7 +37,7 @@ const Tokensalecard = () => {
               <p>public</p>
             </div>
           </div>
-          <ProgressBar now={60} variant="success" />
+          <ProgressBar now={60} />
           <Button>Join Now</Button>
         </Card.Body>
       </Card>

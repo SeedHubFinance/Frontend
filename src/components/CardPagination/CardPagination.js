@@ -4,7 +4,7 @@ import "./CardPagination.scss";
 
 const CardPagination = () => {
   return (
-    <div className="pagination-wapper">
+    <div className="pagination-wapper flex-md-row flex-column-reverse align-items-center">
       <div className="pagination-btns">
         <Button className="me-3">Prev</Button>
         <Button className="ms-3">Next</Button>

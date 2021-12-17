@@ -1,8 +1,60 @@
+@import "../../Assets/Style/StyleData.scss";
 .homepage {
-  background-color: #f5f5f5;
+  background-color: #fff;
   // height: 100vh;
   .home-container {
-    width: 1280px;
+    width: $container-width;
     margin: 0 auto;
+    .search-btn {
+      display: none;
+    }
+  }
+}
+
+// Responsive
+@media only screen and (min-width: 1367px) {
+  .homepage {
+    .home-container {
+      width: 1280px;
+    }
+  }
+}
+@media only screen and (max-width: 991px) {
+  .homepage {
+    .home-container {
+      .search-btn {
+        display: block;
+        .btn {
+          font-weight: bold;
+          border: none;
+          border-radius: $borderRadius;
+          width: 40px;
+          height: 40px;
+          font-size: 0.9rem;
+          line-height: normal;
+          box-sizing: border-box;
+          -webkit-box-align: center;
+          -webkit-box-pack: center;
+          cursor: pointer;
+          background-image: $gradient2;
+          color: rgb(255, 255, 255);
+
+          &:hover {
+            opacity: 0.8;
+            color: rgb(255, 255, 255);
+          }
+          &:focus {
+            box-shadow: none;
+            color: rgb(255, 255, 255);
+          }
+        }
+      }
+      .filters {
+        display: none;
+      }
+      .show {
+        display: block;
+      }
+    }
   }
 }

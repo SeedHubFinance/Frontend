@@ -47,8 +47,8 @@ const statusOptions = [
 const customStyles = {
   option: (provided, state) => ({
     ...provided,
-    color: state.isSelected ? "white" : "black",
-    backgroundColor: state.isSelected ? "black" : "white",
+    color: "#706f6f",
+    backgroundColor: "white",
   }),
 
   singleValue: (provided, state) => {
@@ -69,41 +69,41 @@ const Filters = () => {
 
   return (
     <div className="filters-container">
-      <div className="filter-tabs">
-        <div className="filter-btns">
+      <div className="filter-tabs flex-lg-row flex-column align-items-lg-center align-items-start">
+        <div className="filter-btns flex-lg-row flex-column align-items-lg-center align-items-start">
           <Button>
-            <TokenSale className="me-2" />
+            <TokenSale className="f-icon me-2" />
             Token Sale
           </Button>
           <Button>
-            <LiquidityLockAuction className="me-2" />
+            <LiquidityLockAuction className="f-icon me-2" />
             Liquidity Lock Auction
           </Button>
           <Button>
-            <NFTAuctionHouse className="me-2" />
+            <NFTAuctionHouse className="f-icon me-2" />
             NFT Auction House
           </Button>
           <Button>
-            <SocialVerifiedPools className="me-2" />
+            <SocialVerifiedPools className="f-icon me-2" />
             Social Verified Pools
           </Button>
           <Button>
-            <Lotteries className="me-2" />
+            <Lotteries className="f-icon me-2" />
             Lotteries
           </Button>
           <Button>
-            <Predictions className="me-2" />
+            <Predictions className="f-icon me-2" />
             Predictions
           </Button>
         </div>
-        <div className="action-btn">
+        <div className="action-btn my-lg-0 my-3">
           <Link to="/fixed-swap">
             <Button>Create auction</Button>
           </Link>
         </div>
       </div>
       <div className="search-filter">
-        <div className="d-flex align-items-center f-div">
+        <div className="d-flex align-items-center f-div my-lg-0 my-3">
           <p>Pool Type:</p>
           <Select
             options={poolOptions}
@@ -112,7 +112,7 @@ const Filters = () => {
           />
         </div>
         <span className="vr me-3 ms-3" />
-        <div className="d-flex align-items-center f-div">
+        <div className="d-flex align-items-center f-div my-lg-0 my-3">
           <p>Token Filter:</p>
           <Select
             options={tokenOptions}
@@ -121,7 +121,7 @@ const Filters = () => {
           />
         </div>
         <span className="vr me-3 ms-3" />
-        <div className="d-flex align-items-center f-div">
+        <div className="d-flex align-items-center f-div my-lg-0 my-3">
           <p>Status:</p>
           <Select
             options={statusOptions}
@@ -130,7 +130,7 @@ const Filters = () => {
           />
         </div>
         <span className="vr me-3 ms-3" />
-        <div className="search-filter-search position-relative f-div">
+        <div className="search-filter-search position-relative f-div my-lg-0 my-3">
           <Button onClick={() => searchBtnClick(!searchbtn)}>
             <span>
               <Search className="me-2" />
@@ -213,7 +213,7 @@ const Filters = () => {
           )}
         </div>
         <span className="vr me-3 ms-3" />
-        <div className="search-filter-view f-div">
+        <div className="search-filter-view f-div my-lg-0 my-3">
           <Button>
             <GridView />
           </Button>
