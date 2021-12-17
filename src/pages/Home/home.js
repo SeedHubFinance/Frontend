@@ -5,6 +5,8 @@ import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
 import Cardlist from "../../components/Cardlist/Cardlist";
 import CardPagination from "../../components/CardPagination/CardPagination";
+import { ToastContainer } from "react-toastify";
+
 import "./Home.scss";
 
 const Home = () => {
@@ -12,6 +14,7 @@ const Home = () => {
   return (
     <div className="homepage">
       <Header />
+      <ToastContainer />
       <div className="home-container">
         <div className="mb-4 me-2 text-end search-btn">
           <Button onClick={() => filterbtnClick(!filterbtn)}>

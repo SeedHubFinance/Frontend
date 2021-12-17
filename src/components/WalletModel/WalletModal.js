@@ -3,6 +3,9 @@ import Web3 from "web3";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 import { Web3Context } from "../../context/web3Context";
 import { Modal, Button } from "react-bootstrap";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 // import { ETHicon } from "../../Assets/Images/Images";
 import { Images } from "../../Assets/Images/Images";
 import "./WalletModal.scss";
@@ -11,41 +14,34 @@ const WalletModal = (props) => {
   const [web3, setWeb3] = useContext(Web3Context);
   const provider = new WalletConnectProvider({
     infuraId: "759fef0c863e4e29b9183e3438f90b1d",
-    qrcodeModalOptions: {
-      mobileLinks: [
-        "rainbow",
-        "metamask",
-        "argent",
-        "trust",
-        "imtoken",
-        "pillar",
-      ],
-      desktopLinks: ["Tokenary", "Infinity Wallet", "Ambire Wallet"],
-    },
   });
 
   const handleWalletConnect = async (e) => {
+    props.onHide();
     e.preventDefault();
     if (!provider.connected) {
       try {
         await provider.enable();
         await setWeb3(new Web3(provider));
       } catch (e) {
-        await provider.disconnect();
-        window.location.reload();
-        window.alert(e.message);
+        toast.error(e.message);
       }
     }
     // setWeb3(new Web3(provider));
   };
   const handleMetamask = async () => {
+    props.onHide();
     if (window.ethereum) {
       try {
+        // props.connectButton.current.disabled = true;
         await window.ethereum.enable();
         setWeb3(new Web3(window.ethereum));
       } catch (e) {
-        console.log(e);
-        window.alert(e.message);
+        if (e.message.includes("wallet_requestPermissions")) {
+          e.message =
+            "Request Already in Pending Please go to metamask Wallet for further procedure";
+        }
+        toast.error(e.message);
       }
     }
   };

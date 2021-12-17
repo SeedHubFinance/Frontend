@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext, useEffect, useRef } from "react";
 import WalletModal from "../WalletModel/WalletModal";
 import { Button } from "react-bootstrap";
 import { Web3Context } from "../../context/web3Context";
@@ -8,8 +8,6 @@ const ConnectedButton = () => {
   const [web3, setWeb3] = useContext(Web3Context);
   const [address, setAddress] = useState(null);
   const [connected, setConnected] = useState(false);
-
-  // Model State
   const [modalShow, setModalShow] = useState(false);
 
   useEffect(() => {
@@ -36,7 +34,11 @@ const ConnectedButton = () => {
         Connect Wallet
       </button>
       <Modal /> */}
-      <Button className="btn-connect-wallet" onClick={() => setModalShow(true)}>
+      <Button
+        disabled={false}
+        className="btn-connect-wallet"
+        onClick={() => setModalShow(true)}
+      >
         Connect Wallet
       </Button>
 
