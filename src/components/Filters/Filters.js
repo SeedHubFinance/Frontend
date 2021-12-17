@@ -109,6 +109,7 @@ const Filters = () => {
             options={poolOptions}
             defaultValue={poolOptions[0]}
             styles={customStyles}
+            isSearchable={false}
           />
         </div>
         <span className="vr me-3 ms-3" />
@@ -118,6 +119,7 @@ const Filters = () => {
             options={tokenOptions}
             defaultValue={tokenOptions[0]}
             styles={customStyles}
+            isSearchable={false}
           />
         </div>
         <span className="vr me-3 ms-3" />
@@ -127,6 +129,7 @@ const Filters = () => {
             options={statusOptions}
             defaultValue={statusOptions[0]}
             styles={customStyles}
+            isSearchable={false}
           />
         </div>
         <span className="vr me-3 ms-3" />
