@@ -1,3 +1,4 @@
+@import "../../Assets/Style/StyleData.scss";
 .filters-container {
   margin-bottom: 20px;
   .filter-tabs {
@@ -16,17 +17,28 @@
         border: none;
         display: flex;
         align-items: center;
-        font-weight: bold;
         font-size: 1rem;
+        font-weight: 500;
         height: 24px;
         line-height: 24px;
         padding: 0px 8px;
         margin-right: 20px;
-        color: rgb(0, 0, 0);
+        color: #706f6f;
         cursor: pointer;
         border-radius: 0px;
+
+        .f-icon {
+          path {
+            fill: #fff;
+            stroke: $primary-color;
+          }
+          rect {
+            fill: $primary-color;
+          }
+        }
+
         &:active {
-          background-color: #000;
+          background-color: $dark-clr;
           color: #fff;
         }
         &:active svg path {
@@ -40,7 +52,7 @@
     .action-btn {
       .btn {
         font-weight: bold;
-        border: 1px solid rgba(0, 0, 0, 0.4);
+        border: 1px solid $primary-color-two;
         width: 160px;
         height: 48px;
         box-sizing: border-box;
@@ -48,31 +60,33 @@
         -webkit-box-align: center;
         align-items: center;
         -webkit-box-pack: center;
-        border-radius: 0;
+        border-radius: $borderRadius;
         justify-content: center;
         cursor: pointer;
         background-color: rgb(255, 255, 255);
-        color: rgb(0, 0, 0);
+        color: $secondary-color-three;
         &:focus {
           box-shadow: none;
         }
         &:hover {
-          border-color: #000;
+          border-color: $dark-clr;
         }
       }
     }
   }
   .search-filter {
-    z-index: 10;
     min-height: 80px;
     padding: 20px 0;
-    border-top: 2px solid #000;
-    border-bottom: 2px solid #000;
+    border-top: 2px solid $dark-clr;
+    border-bottom: 2px solid $dark-clr;
     display: flex;
 
     * {
       font-size: 14px;
+    }
+    .css-1jwi8f4-singleValue {
       font-weight: bold;
+      color: $dark-clr;
     }
     .css-b62m3t-container {
       width: -webkit-fill-available;
@@ -80,6 +94,8 @@
 
     p {
       white-space: nowrap;
+      font-weight: bold;
+      color: $dark-clr;
     }
     .f-div {
       flex: 2 2 20%;
@@ -108,15 +124,15 @@
 
     .css-1gtu0rj-indicatorContainer {
       transform: rotate(180deg);
-      color: #000;
+      color: $dark-clr;
       padding: 0;
     }
     .css-tlfecz-indicatorContainer {
-      color: #000;
+      color: $dark-clr;
       padding: 0;
     }
     .css-1okebmr-indicatorSeparator {
-      background-color: #fff;
+      background-color: #fff0;
     }
     .search-filter-search {
       display: flex;
@@ -125,7 +141,7 @@
         background-color: transparent;
         border: none;
         padding: 0;
-        color: #000;
+        color: $dark-clr;
         width: 100%;
         display: flex;
         align-items: center;
@@ -133,6 +149,91 @@
         &:focus {
           border: none;
           box-shadow: none;
+        }
+        svg {
+          path {
+            fill: $dark-clr;
+          }
+        }
+      }
+      .search-box {
+        position: absolute;
+        top: 60px;
+        left: -20px;
+        width: 350px;
+        min-height: 254px;
+        padding: 20px 24px;
+        box-sizing: border-box;
+        background-color: rgb(255, 255, 255);
+        border: 1px solid rgb(234, 234, 234);
+        z-index: 10;
+
+        .search-option {
+          display: flex;
+          flex-wrap: wrap;
+          -webkit-box-align: center;
+          align-items: center;
+          margin-bottom: 20px;
+
+          label {
+            display: block;
+            width: 14px;
+            height: 14px;
+            cursor: pointer;
+            margin-right: 8px;
+            background: url("../../Assets/Images/iconcheck.svg") 0px 0px /
+              contain no-repeat;
+            &.checked {
+              background: url("../../Assets/Images/iconchecked.svg") 0px 0px /
+                contain no-repeat;
+            }
+          }
+          p {
+            font-size: 16px;
+            font-weight: 400;
+          }
+          .implicit {
+            width: 100%;
+            input {
+              border-top: none;
+              border-right: none;
+              border-left: none;
+              border-image: initial;
+              border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+              width: 100%;
+              line-height: 36px;
+              font-size: 16px;
+              font-weight: 500;
+              outline: none;
+              margin-top: 5px;
+            }
+            &.hidden {
+              display: none;
+            }
+          }
+        }
+        .search-box-btn {
+          display: flex;
+          -webkit-box-pack: justify;
+          justify-content: space-between;
+          margin-top: 16px;
+          button {
+            width: 144px;
+            height: 48px;
+            box-sizing: border-box;
+            border: 1px solid rgba(0, 0, 0, 0.2);
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            &.black {
+              background-color: $dark-clr;
+              color: rgb(255, 255, 255);
+            }
+            &.white {
+              color: $dark-clr;
+              background-color: rgb(255, 255, 255);
+            }
+          }
         }
       }
     }
@@ -150,6 +251,29 @@
           border: none;
           box-shadow: none;
         }
+        svg {
+          rect {
+            fill: $dark-clr;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 991px) {
+  .filters-container {
+    .filter-tabs {
+      .filter-btns {
+        button {
+          margin: 5px;
+        }
+      }
+    }
+    .search-filter {
+      flex-direction: column;
+      .vr {
+        display: none;
       }
     }
   }

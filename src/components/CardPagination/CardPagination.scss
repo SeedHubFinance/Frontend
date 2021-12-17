@@ -1,17 +1,23 @@
+@import "../../Assets/Style/StyleData.scss";
 .pagination-wapper {
   margin-top: 20px;
-  margin-bottom: 30px;
 
-  border-top: 2px solid #000;
-  border-bottom: 2px solid #000;
+  border-top: 2px solid $dark-clr;
+  border-bottom: 2px solid $dark-clr;
   display: flex;
   justify-content: space-between;
   .pagination-btns {
     .btn {
       background-color: transparent;
-      color: #000;
+      color: $dark-clr;
       border: none;
       font-size: 12px;
+      border-radius: 0;
+      box-shadow: none;
+      &:hover {
+        color: #fff;
+        background-color: $dark-clr;
+      }
     }
   }
 
@@ -19,10 +25,10 @@
     margin-bottom: 0;
 
     li.page-item.active {
-      background-color: black;
+      background-color: $dark-clr;
       font-size: 12px;
       span {
-        background-color: black;
+        background-color: $dark-clr;
         border: none;
         padding-left: 15px;
         padding-right: 15px;
@@ -32,10 +38,16 @@
     li.page-item a {
       background-color: transparent;
       border: none;
-      color: black;
+      color: $dark-clr;
       font-size: 12px;
       padding-left: 20px;
+      border-radius: 0;
       padding-right: 20px;
+      box-shadow: none;
+      &:hover {
+        color: #fff;
+        background-color: $dark-clr;
+      }
     }
   }
 }

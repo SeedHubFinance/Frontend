@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import Select from "react-select";
 
@@ -14,88 +15,205 @@ import { ReactComponent as Lotteries } from "../../Assets/Images/lott.svg";
 import { ReactComponent as Search } from "../../Assets/Images/search.svg";
 import { ReactComponent as ArrowDown } from "../../Assets/Images/arrowdown.svg";
 
+// Token Option images
+import { ReactComponent as AllToken } from "../../Assets/Images/alltoken.svg";
+import { ReactComponent as CoinMark } from "../../Assets/Images/coinmark.svg";
+import { ReactComponent as CoinGecko } from "../../Assets/Images/coingecko-1.svg";
+
 // Sass file
 import "./Filters.scss";
 
 const poolOptions = [
-  { value: "chocolate", label: "Fixed Swap Action" },
-  { value: "strawberry", label: "Strawberry" },
-  { value: "vanilla", label: "Vanilla" },
+  { value: "swap", label: "Fixed Swap Auction" },
+  { value: "sealed", label: "Sealed-Bid Auction" },
+  { value: "dutch", label: "Dutch Auction" },
 ];
 
 const tokenOptions = [
-  { value: "chocolate", label: "All Token" },
-  { value: "strawberry", label: "Strawberry" },
-  { value: "vanilla", label: "Vanilla" },
+  {
+    value: "all",
+    label: <AllToken />,
+  },
+  { value: "coinmark", label: <CoinMark /> },
+  { value: "coingecko", label: <CoinGecko /> },
 ];
 
 const statusOptions = [
-  { value: "chocolate", label: "All" },
-  { value: "strawberry", label: "Strawberry" },
-  { value: "vanilla", label: "Vanilla" },
+  { value: "all", label: "All" },
+  { value: "live", label: "Live & Filled" },
+  { value: "closed", label: "Closed" },
 ];
 
+const customStyles = {
+  option: (provided, state) => ({
+    ...provided,
+    color: "#706f6f",
+    backgroundColor: "white",
+  }),
+
+  singleValue: (provided, state) => {
+    const opacity = state.isDisabled ? 0.5 : 1;
+    const transition = "opacity 300ms";
+
+    return { ...provided, opacity, transition };
+  },
+};
+
 const Filters = () => {
+  const [searchbtn, searchBtnClick] = useState(false);
+  const [poolid_checkbox, setcheckbox_poolid] = useState(false);
+  const [pn_checkbox, setcheckbox_pn] = useState(false);
+  const [tca_checkbox, setcheckbox_tca] = useState(false);
+  const [ts_checkbox, setcheckbox_ts] = useState(false);
+  const [acwa_checkbox, setcheckbox_acwa] = useState(false);
+
   return (
     <div className="filters-container">
-      <div className="filter-tabs">
-        <div className="filter-btns">
+      <div className="filter-tabs flex-lg-row flex-column align-items-lg-center align-items-start">
+        <div className="filter-btns flex-lg-row flex-column align-items-lg-center align-items-start">
           <Button>
-            <TokenSale className="me-2" />
+            <TokenSale className="f-icon me-2" />
             Token Sale
           </Button>
           <Button>
-            <LiquidityLockAuction className="me-2" />
+            <LiquidityLockAuction className="f-icon me-2" />
             Liquidity Lock Auction
           </Button>
           <Button>
-            <NFTAuctionHouse className="me-2" />
+            <NFTAuctionHouse className="f-icon me-2" />
             NFT Auction House
           </Button>
           <Button>
-            <SocialVerifiedPools className="me-2" />
+            <SocialVerifiedPools className="f-icon me-2" />
             Social Verified Pools
           </Button>
           <Button>
-            <Lotteries className="me-2" />
+            <Lotteries className="f-icon me-2" />
             Lotteries
           </Button>
           <Button>
-            <Predictions className="me-2" />
+            <Predictions className="f-icon me-2" />
             Predictions
           </Button>
         </div>
-        <div className="action-btn">
-          <Button>Create auction</Button>
+        <div className="action-btn my-lg-0 my-3">
+          <Link to="/fixed-swap">
+            <Button>Create auction</Button>
+          </Link>
         </div>
       </div>
       <div className="search-filter">
-        <div className="d-flex align-items-center f-div">
+        <div className="d-flex align-items-center f-div my-lg-0 my-3">
           <p>Pool Type:</p>
-          <Select options={poolOptions} defaultValue={poolOptions[0]} />
+          <Select
+            options={poolOptions}
+            defaultValue={poolOptions[0]}
+            styles={customStyles}
+          />
         </div>
         <span className="vr me-3 ms-3" />
-        <div className="d-flex align-items-center f-div">
+        <div className="d-flex align-items-center f-div my-lg-0 my-3">
           <p>Token Filter:</p>
-          <Select options={tokenOptions} defaultValue={tokenOptions[0]} />
+          <Select
+            options={tokenOptions}
+            defaultValue={tokenOptions[0]}
+            styles={customStyles}
+          />
         </div>
         <span className="vr me-3 ms-3" />
-        <div className="d-flex align-items-center f-div">
+        <div className="d-flex align-items-center f-div my-lg-0 my-3">
           <p>Status:</p>
-          <Select options={statusOptions} defaultValue={statusOptions[0]} />
+          <Select
+            options={statusOptions}
+            defaultValue={statusOptions[0]}
+            styles={customStyles}
+          />
         </div>
         <span className="vr me-3 ms-3" />
-        <div className="search-filter-search f-div">
-          <Button>
+        <div className="search-filter-search position-relative f-div my-lg-0 my-3">
+          <Button onClick={() => searchBtnClick(!searchbtn)}>
             <span>
               <Search className="me-2" />
               Search by
             </span>
             <ArrowDown />
           </Button>
+          {searchbtn ? (
+            <div className="search-box">
+              <div className="search-option">
+                <label
+                  onClick={() => setcheckbox_poolid(!poolid_checkbox)}
+                  for="Pool ID"
+                  className={`${poolid_checkbox ? "checked" : null}`}
+                ></label>
+                <p>Pool ID</p>
+                <div className={`implicit ${poolid_checkbox ? "" : "hidden"}`}>
+                  <input type="text" placeholder="Enter Pool ID " value="" />
+                </div>
+              </div>
+              <div className="search-option">
+                <label
+                  onClick={() => setcheckbox_pn(!pn_checkbox)}
+                  for="Pool Name"
+                  className={`${pn_checkbox ? "checked" : null}`}
+                ></label>
+                <p>Pool Name</p>
+                <div className={`implicit ${pn_checkbox ? "" : "hidden"}`}>
+                  <input type="text" placeholder="Enter Pool Name " value="" />
+                </div>
+              </div>
+              <div className="search-option">
+                <label
+                  onClick={() => setcheckbox_tca(!tca_checkbox)}
+                  for="Token Contract Address"
+                  className={`${tca_checkbox ? "checked" : null}`}
+                ></label>
+                <p>Token Contract Address</p>
+                <div className={`implicit ${tca_checkbox ? "" : "hidden"}`}>
+                  <input
+                    type="text"
+                    placeholder="Enter Token Contract Address"
+                    value=""
+                  />
+                </div>
+              </div>
+              <div className="search-option">
+                <label
+                  onClick={() => setcheckbox_ts(!ts_checkbox)}
+                  for="Token Symbol"
+                  className={`${ts_checkbox ? "checked" : null}`}
+                ></label>
+                <p>Token Symbol</p>
+                <div className={`implicit ${ts_checkbox ? "" : "hidden"}`}>
+                  <input type="text" placeholder="Token Symbol" value="" />
+                </div>
+              </div>
+              <div className="search-option">
+                <label
+                  onClick={() => setcheckbox_acwa(!acwa_checkbox)}
+                  for="Auction creator wallet address"
+                  className={`${acwa_checkbox ? "checked" : null}`}
+                ></label>
+                <p>Auction creator wallet address</p>
+                <div className={`implicit ${acwa_checkbox ? "" : "hidden"}`}>
+                  <input
+                    type="text"
+                    placeholder="Enter Auction creator wallet address"
+                    value=""
+                  />
+                </div>
+              </div>
+              <div className="search-box-btn">
+                <button className="white">Сlear all</button>
+                <button className="black">Show Results</button>
+              </div>
+            </div>
+          ) : (
+            ""
+          )}
         </div>
         <span className="vr me-3 ms-3" />
-        <div className="search-filter-view f-div">
+        <div className="search-filter-view f-div my-lg-0 my-3">
           <Button>
             <GridView />
           </Button>

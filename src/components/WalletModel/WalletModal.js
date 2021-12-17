@@ -14,17 +14,6 @@ const WalletModal = (props) => {
   const [web3, setWeb3] = useContext(Web3Context);
   const provider = new WalletConnectProvider({
     infuraId: "759fef0c863e4e29b9183e3438f90b1d",
-    // qrcodeModalOptions: {
-    //   mobileLinks: [
-    //     "rainbow",
-    //     "metamask",
-    //     "argent",
-    //     "trust",
-    //     "imtoken",
-    //     "pillar",
-    //   ],
-    //   desktopLinks: ["encrypted ink"],
-    // },
   });
 
   const handleWalletConnect = async (e) => {
@@ -76,7 +65,7 @@ const WalletModal = (props) => {
         className="wallet-modal"
       >
         <Modal.Body>
-          <div class="modal-wrapper">
+          <div className="modal-wrapper">
             <div className="d-grid">
               <Button onClick={handleMetamask}>
                 <span>

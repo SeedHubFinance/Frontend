@@ -45,18 +45,14 @@ const ConnectedButton = () => {
       <WalletModal show={modalShow} onHide={() => setModalShow(false)} />
     </>
   ) : (
-    <div className="container justify-content-end">
-      <div className="row align-items-center">
-        <div className="col">
-          {(address?.substr(0, 4) || "") +
-            "..." +
-            (address?.substr(-4, 4) || "")}
-        </div>
-        <div className="col">
-          <Button variant="success" onClick={handleDisconnect}>
-            Disconnect
-          </Button>
-        </div>
+    <div className="d-flex align-items-center g-0">
+      <div className="col me-3">
+        {(address?.substr(0, 4) || "") + "..." + (address?.substr(-4, 4) || "")}
+      </div>
+      <div className="col">
+        <Button className="dis-btn" onClick={handleDisconnect}>
+          Disconnect
+        </Button>
       </div>
     </div>
   );
