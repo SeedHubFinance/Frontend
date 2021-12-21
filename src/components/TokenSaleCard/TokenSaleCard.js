@@ -1,4 +1,5 @@
 import React, { Fragment } from "react";
+import { Link } from "react-router-dom";
 import { Card, ProgressBar, Button } from "react-bootstrap";
 import "./TokenSaleCard.scss";
 
@@ -41,7 +42,9 @@ const Tokensalecard = () => {
             </div>
             <ProgressBar now={60} />
           </div>
-          <Button>Join Now</Button>
+          <Link to="/poolform">
+            <Button>Join Now</Button>
+          </Link>
         </Card.Body>
       </Card>
     </Fragment>
