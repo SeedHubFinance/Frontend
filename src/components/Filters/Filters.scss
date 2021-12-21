@@ -25,7 +25,7 @@
         margin-right: 20px;
         color: #706f6f;
         cursor: pointer;
-        border-radius: 0px;
+        border-radius: 5px;
 
         .f-icon {
           path {
@@ -37,11 +37,13 @@
           }
         }
 
-        &:active {
+        &:active,
+        &:hover {
           background-color: $dark-clr;
           color: #fff;
         }
-        &:active svg path {
+        &:active svg path,
+        &:hover svg path {
           fill: rgb(255, 255, 255) !important;
         }
         &:focus {
@@ -221,17 +223,19 @@
             width: 144px;
             height: 48px;
             box-sizing: border-box;
-            border: 1px solid rgba(0, 0, 0, 0.2);
+            border: none;
             font-weight: 700;
             font-size: 14px;
             cursor: pointer;
+            border-radius: 8px;
             &.black {
-              background-color: $dark-clr;
+              background-image: $gradient2;
               color: rgb(255, 255, 255);
             }
             &.white {
-              color: $dark-clr;
               background-color: rgb(255, 255, 255);
+              color: $secondary-color-three;
+              border: 1px solid rgba(0, 0, 0, 0.2);
             }
           }
         }

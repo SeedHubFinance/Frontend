@@ -1,18 +1,146 @@
-import React, { Fragment } from "react";
+import React, { useState, useEffect, useContext, Fragment } from "react";
 import { Row, Col, Button } from "react-bootstrap";
 import Header from "../../components/Header/Header";
 import Select from "react-select";
 import Footer from "../../components/Footer/Footer";
 import { ReactComponent as MaxIcon } from "../../Assets/Images/max.svg";
+import "react-calendar/dist/Calendar.css";
+
 import "./FixedSwap.scss";
 
+import Calendar from "react-calendar";
+import { Web3Context } from "../../context/web3Context";
+
+import coinABI from "../../contracts/ERC20ABI";
+import {
+  fixedSwapABI,
+  fixedSwapContractAddress,
+} from "../../contracts/FixedSwap";
+
 const poolOptions = [
-  { value: "swap", label: "ETH" },
-  { value: "sealed", label: "Sealed-Bid Auction" },
-  { value: "dutch", label: "Dutch Auction" },
+  { value: "eth", label: "ETH" },
+  { value: "usdt", label: "USDT" },
+  { value: "avax", label: "AVAX" },
 ];
 
-const Fixedswap = () => {
+const Fixedswap = (props) => {
+  const [tokenAddress, setTokenAddress] = useState("");
+  const [tokenName, setTokenName] = useState("");
+  const [tokenAllocation, setTokenAllocation] = useState(0);
+  const [swapRatio, setSwapRatio] = useState(null);
+  const [walletBalance, setWalletBalance] = useState(null);
+  const [maxAmountPerWallet, setMaxAmountPerWallet] = useState(null);
+  const [isOnlySeeHolder, setIsOnlySeedHolder] = useState(false);
+  const [isOnlyPrivate, setisOnlyPrivate] = useState(false);
+  const [isPublic, setIsPublic] = useState(true);
+  const [poolName, setPoolName] = useState("");
+  const [startTime, setStartTime] = useState(0);
+  const [endTime, setEndTime] = useState(0);
+  const [claimTime, setClaimTime] = useState(0);
+
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
+  const [claimDate, setClaimDate] = useState(new Date());
+
+  const [currency, setSelectedCurreny] = useState({
+    value: "eth",
+    label: "ETH",
+  });
+
+  const [currentBalance, setCurrentBalance] = useState("  ");
+
+  const [isFromValid, setIsFromValid] = useState(false);
+
+  const [web3, setWeb3] = useContext(Web3Context);
+  const [address, setAddress] = useState(Web3Context);
+
+  const getUserWalletAddress = async () => {
+    if (web3) {
+      let addressArray = await web3?.eth.getAccounts();
+      setAddress(addressArray[0]);
+    }
+  };
+
+  useEffect(() => {
+    getUserWalletAddress();
+  }, [web3, address]);
+
+  const getTimeStampsForDates = (date) => {
+    return new Date(date).getTime() / 1000;
+  };
+
+  const tokenAddressValidation = (address) => {
+    if (address.length != 42) {
+      return false;
+    }
+
+    // if (address.splice(0, 1) == "0x") return false;
+
+    return true;
+  };
+
+  const getTokenName = async (address) => {
+    let coinContract = new web3.eth.Contract(coinABI, address);
+
+    return await coinContract.methods.name().call();
+  };
+
+  const getTokenBalance = async () => {
+    let coinContract = new web3.eth.Contract(coinABI, tokenAddress);
+
+    return await coinContract.methods.balanceOf(address).call();
+  };
+
+  const checkIfFromIsValid = () => {};
+
+  const setToken = async (address) => {
+    console.log(address);
+
+    if (tokenAddressValidation(address)) {
+      setTokenAddress(address);
+      let name = await getTokenName(address);
+      setTokenName(name);
+    }
+  };
+
+  const getMaxBalanceForToken = async () => {
+    setCurrentBalance(await getTokenBalance());
+  };
+
+  const approveTokenTransafer = async () => {
+    let coinContract = new web3.eth.Contract(coinABI, tokenAddress);
+
+    return await coinContract.methods
+      .approve(fixedSwapContractAddress, tokenAllocation)
+      .send({ from: address });
+  };
+
+  const makePool = async () => {
+    let fixedSwapContract = new web3.eth.Contract(
+      fixedSwapABI,
+      fixedSwapContractAddress
+    );
+
+    const poolReq = [
+      poolName,
+      tokenAddress,
+      swapRatio,
+      maxAmountPerWallet,
+      currentBalance,
+      getTimeStampsForDates(startDate),
+      getTimeStampsForDates(endDate),
+      getTimeStampsForDates(claimDate),
+      isOnlySeeHolder,
+      false,
+    ];
+    console.log(poolReq);
+
+    await fixedSwapContract.methods
+      .createLiquidityPool(poolReq)
+      .send({ from: address })
+      .then((data) => console.log(data));
+  };
+
   return (
     <Fragment>
       <Header />
@@ -40,7 +168,8 @@ const Fixedswap = () => {
                   className="custom-input"
                   required
                   name="address"
-                  value=""
+                  defaultValue=""
+                  onChange={(e) => setToken(e.target.value)}
                 />
               </Col>
             </Row>
@@ -57,7 +186,7 @@ const Fixedswap = () => {
                       className="custom-input"
                       required
                       name="from"
-                      value=""
+                      defaultValue={tokenName}
                     />
                   </div>
                   <div className="to-select">
@@ -65,20 +194,24 @@ const Fixedswap = () => {
                     <Select
                       options={poolOptions}
                       defaultValue={poolOptions[0]}
+                      onChange={(e) => {
+                        setSelectedCurreny(e);
+                      }}
                     />
                   </div>
                 </div>
                 <div className="d-flex align-items-end my-5">
                   <div className="me-2">
                     <span className="label mb-2">Swap Ratio</span>
-                    <h5>1 ETH =</h5>
+                    <h5>1 {currency.label} =</h5>
                   </div>
 
                   <input
                     className="custom-input"
                     required
                     name="swapratio"
-                    value=""
+                    defaultValue=""
+                    onChange={(e) => setSwapRatio(e.target.value)}
                   />
                 </div>
                 <div className="d-flex justify-content-between">
@@ -90,22 +223,27 @@ const Fixedswap = () => {
                     className="custom-input"
                     required
                     name="amount"
-                    value=""
+                    type="number"
+                    defaultValue={web3?.utils.fromWei(currentBalance)}
+                    value={web3?.utils.fromWei(currentBalance)}
                   />
-                  <MaxIcon className="max-icon" />
+                  <MaxIcon
+                    className="max-icon"
+                    onClick={() => {
+                      getMaxBalanceForToken();
+                    }}
+                  />
+                  <Button
+                    className="sub-btn"
+                    disabled={tokenAddress === "" ? true : false}
+                    onClick={() => {
+                      approveTokenTransafer();
+                    }}
+                  >
+                    Approve For Transfer
+                  </Button>
                 </div>
-                <div className="d-flex align-items-end my-4">
-                  <div className="wka me-2">
-                    <span className="label">Bounce Level</span>
-                    <input
-                      className="custom-input"
-                      required
-                      name="bouncelevel"
-                      value=""
-                    />
-                  </div>
-                  <h5>ETH</h5>
-                </div>
+
                 <div className="d-flex align-items-end my-4">
                   <div className="me-2">
                     <span className="label mb-3">
@@ -118,7 +256,7 @@ const Fixedswap = () => {
                           required
                           name="nolimit"
                           type="radio"
-                          value="No limits"
+                          defaultValue="No limits"
                         />
                         No limits
                       </label>
@@ -128,9 +266,9 @@ const Fixedswap = () => {
                           required
                           name="eth"
                           type="radio"
-                          value="No limits"
+                          defaultValue="No limits"
                         />
-                        ETH
+                        {currency.label}
                       </label>
                     </div>
                   </div>
@@ -143,10 +281,11 @@ const Fixedswap = () => {
                       className="custom-input"
                       required
                       name="allocation"
-                      value=""
+                      type="number"
+                      onChange={(e) => setMaxAmountPerWallet(e.target.value)}
                     />
                   </div>
-                  <h5>ETH</h5>
+                  <h5>{currency.label}</h5>
                 </div>
                 <div className="divder"></div>
                 <div className="d-flex align-items-end my-4">
@@ -159,9 +298,9 @@ const Fixedswap = () => {
                           required
                           name="botholder"
                           type="radio"
-                          value="No limits"
+                          defaultValue="No limits"
                         />
-                        BOT holders
+                        Seed holders
                       </label>
                       <label className="me-5">
                         <input
@@ -169,7 +308,7 @@ const Fixedswap = () => {
                           required
                           name="public"
                           type="radio"
-                          value="No limits"
+                          defaultValue="No limits"
                         />
                         Public
                       </label>
@@ -179,7 +318,7 @@ const Fixedswap = () => {
                           required
                           name="private"
                           type="radio"
-                          value="No limits"
+                          defaultValue="No limits"
                         />
                         Private
                       </label>
@@ -194,7 +333,7 @@ const Fixedswap = () => {
                       type="password"
                       required
                       name="password"
-                      value=""
+                      defaultValue=""
                     />
                   </div>
                 </div>
@@ -204,40 +343,30 @@ const Fixedswap = () => {
                   className="custom-input"
                   required
                   name="poolname"
-                  value=""
+                  defaultValue=""
                 />
-                <span className="label my-4">Pool running time</span>
+
+                <span className="label my-4">Pool Start Time</span>
+                <div>
+                  <Calendar onChange={setStartDate} value={startDate} />
+                </div>
+                <span className="label my-4">Pool Ending Time</span>
                 <div className="d-flex align-items-center justify-content-between">
-                  <div className="">
-                    <span className="label">Days</span>
-                    <input
-                      className="custom-input"
-                      required
-                      name="days"
-                      value=""
-                    />
-                  </div>
-                  <div className="mx-4">
-                    <span className="label">Hours</span>
-                    <input
-                      className="custom-input"
-                      required
-                      name="hours"
-                      value=""
-                    />
-                  </div>
-                  <div className="">
-                    <span className="label">Minutes</span>
-                    <input
-                      className="custom-input"
-                      required
-                      name="minutes"
-                      value=""
-                    />
-                  </div>
+                  <Calendar onChange={setEndDate} value={endDate} />
+                </div>
+                <span className="label my-4">Claim Funds At</span>
+                <div className="d-flex align-items-center justify-content-between">
+                  <Calendar onChange={setClaimDate} value={claimDate} />
                 </div>
                 <span className="label my-4">Transaction Fee</span>
-                <Button className="sub-btn disable">Launch</Button>
+                <Button
+                  className="sub-btn"
+                  onClick={() => {
+                    makePool();
+                  }}
+                >
+                  Launch
+                </Button>
                 <p
                   style={{
                     color: "red",
@@ -245,7 +374,7 @@ const Fixedswap = () => {
                     textAlign: "center",
                   }}
                 >
-                  warning: Bounce does not support deflationary tokens
+                  warning: SeedHub does not support deflationary tokens
                 </p>
               </Col>
             </Row>
