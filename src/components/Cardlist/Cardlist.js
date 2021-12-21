@@ -7,11 +7,6 @@ const Cardlist = (props) => {
     <div className="cardlist">
       <TokenSaleCard />
       <TokenSaleCard />
-      <TokenSaleCard />
-      <TokenSaleCard />
-      <TokenSaleCard />
-      <TokenSaleCard />
-      <TokenSaleCard />
     </div>
   );
 };
