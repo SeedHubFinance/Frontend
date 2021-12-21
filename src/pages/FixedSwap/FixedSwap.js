@@ -1,4 +1,4 @@
-import React, { useState, useContext, Fragment } from "react";
+import React, { useState, useEffect, useContext, Fragment } from "react";
 import { Row, Col, Button } from "react-bootstrap";
 import Header from "../../components/Header/Header";
 import Select from "react-select";
@@ -12,6 +12,10 @@ import Calendar from "react-calendar";
 import { Web3Context } from "../../context/web3Context";
 
 import coinABI from "../../contracts/ERC20ABI";
+import {
+  fixedSwapABI,
+  fixedSwapContractAddress,
+} from "../../contracts/FixedSwap";
 
 const poolOptions = [
   { value: "eth", label: "ETH" },
@@ -20,9 +24,10 @@ const poolOptions = [
 ];
 
 const Fixedswap = (props) => {
-  const [tokenAddress, setTokenAddress] = useState(null);
+  const [tokenAddress, setTokenAddress] = useState("");
   const [tokenName, setTokenName] = useState("");
-  const [swapRation, setSwapRatio] = useState(null);
+  const [tokenAllocation, setTokenAllocation] = useState(0);
+  const [swapRatio, setSwapRatio] = useState(null);
   const [walletBalance, setWalletBalance] = useState(null);
   const [maxAmountPerWallet, setMaxAmountPerWallet] = useState(null);
   const [isOnlySeeHolder, setIsOnlySeedHolder] = useState(false);
@@ -42,10 +47,23 @@ const Fixedswap = (props) => {
     label: "ETH",
   });
 
+  const [currentBalance, setCurrentBalance] = useState("  ");
+
   const [isFromValid, setIsFromValid] = useState(false);
 
   const [web3, setWeb3] = useContext(Web3Context);
   const [address, setAddress] = useState(Web3Context);
+
+  const getUserWalletAddress = async () => {
+    if (web3) {
+      let addressArray = await web3?.eth.getAccounts();
+      setAddress(addressArray[0]);
+    }
+  };
+
+  useEffect(() => {
+    getUserWalletAddress();
+  }, [web3, address]);
 
   const getTimeStampsForDates = (date) => {
     return new Date(date).getTime() / 1000;
@@ -62,21 +80,65 @@ const Fixedswap = (props) => {
   };
 
   const getTokenName = async (address) => {
-    let coinContract = new web3.eth.Contract(coinABI, tokenAddress);
+    let coinContract = new web3.eth.Contract(coinABI, address);
 
     return await coinContract.methods.name().call();
+  };
+
+  const getTokenBalance = async () => {
+    let coinContract = new web3.eth.Contract(coinABI, tokenAddress);
+
+    return await coinContract.methods.balanceOf(address).call();
   };
 
   const checkIfFromIsValid = () => {};
 
   const setToken = async (address) => {
     console.log(address);
+
     if (tokenAddressValidation(address)) {
       setTokenAddress(address);
       let name = await getTokenName(address);
-      console.log(name);
       setTokenName(name);
     }
+  };
+
+  const getMaxBalanceForToken = async () => {
+    setCurrentBalance(await getTokenBalance());
+  };
+
+  const approveTokenTransafer = async () => {
+    let coinContract = new web3.eth.Contract(coinABI, tokenAddress);
+
+    return await coinContract.methods
+      .approve(fixedSwapContractAddress, tokenAllocation)
+      .send({ from: address });
+  };
+
+  const makePool = async () => {
+    let fixedSwapContract = new web3.eth.Contract(
+      fixedSwapABI,
+      fixedSwapContractAddress
+    );
+
+    const poolReq = [
+      poolName,
+      tokenAddress,
+      swapRatio,
+      maxAmountPerWallet,
+      currentBalance,
+      getTimeStampsForDates(startDate),
+      getTimeStampsForDates(endDate),
+      getTimeStampsForDates(claimDate),
+      isOnlySeeHolder,
+      false,
+    ];
+    console.log(poolReq);
+
+    await fixedSwapContract.methods
+      .createLiquidityPool(poolReq)
+      .send({ from: address })
+      .then((data) => console.log(data));
   };
 
   return (
@@ -149,6 +211,7 @@ const Fixedswap = (props) => {
                     required
                     name="swapratio"
                     defaultValue=""
+                    onChange={(e) => setSwapRatio(e.target.value)}
                   />
                 </div>
                 <div className="d-flex justify-content-between">
@@ -160,10 +223,27 @@ const Fixedswap = (props) => {
                     className="custom-input"
                     required
                     name="amount"
-                    defaultValue=""
+                    type="number"
+                    defaultValue={web3?.utils.fromWei(currentBalance)}
+                    value={web3?.utils.fromWei(currentBalance)}
                   />
-                  <MaxIcon className="max-icon" />
+                  <MaxIcon
+                    className="max-icon"
+                    onClick={() => {
+                      getMaxBalanceForToken();
+                    }}
+                  />
+                  <Button
+                    className="sub-btn"
+                    disabled={tokenAddress === "" ? true : false}
+                    onClick={() => {
+                      approveTokenTransafer();
+                    }}
+                  >
+                    Approve For Transfer
+                  </Button>
                 </div>
+
                 <div className="d-flex align-items-end my-4">
                   <div className="me-2">
                     <span className="label mb-3">
@@ -201,7 +281,8 @@ const Fixedswap = (props) => {
                       className="custom-input"
                       required
                       name="allocation"
-                      defaultValue=""
+                      type="number"
+                      onChange={(e) => setMaxAmountPerWallet(e.target.value)}
                     />
                   </div>
                   <h5>{currency.label}</h5>
@@ -281,7 +362,7 @@ const Fixedswap = (props) => {
                 <Button
                   className="sub-btn"
                   onClick={() => {
-                    getTokenName();
+                    makePool();
                   }}
                 >
                   Launch
