@@ -22,6 +22,7 @@
       .title {
         display: flex;
         justify-content: space-between;
+        flex-direction: row;
         font-style: normal;
         font-weight: bold;
         font-size: 36px;
@@ -103,6 +104,10 @@
       padding: 9px 9px 0px 0px;
       flex: 1 1 0%;
       outline: none;
+
+      &.p28 {
+        padding-right: 28px;
+      }
     }
     .divder {
       height: 2px;
@@ -161,6 +166,22 @@
   .fixed-swap-pool {
     .fixed-swap-form-container {
       width: 1280px;
+    }
+  }
+}
+@media only screen and (max-width: 768px) {
+  .fixed-swap-pool {
+    .fixed-swap-form-container {
+      padding: 40px 20px;
+      .form-header {
+        .title {
+          flex-direction: column;
+
+          .btn {
+            margin: 30px auto;
+          }
+        }
+      }
     }
   }
 }

@@ -180,7 +180,7 @@ const Fixedswap = (props) => {
               </Col>
               <Col md={5}>
                 <div className="d-flex align-items-center justify-content-between">
-                  <div className="">
+                  <div className="w-50 me-3">
                     <span className="label">From</span>
                     <input
                       className="custom-input"
@@ -189,7 +189,7 @@ const Fixedswap = (props) => {
                       defaultValue={tokenName}
                     />
                   </div>
-                  <div className="to-select">
+                  <div className="w-50 to-select">
                     <span className="label">To</span>
                     <Select
                       options={poolOptions}
@@ -220,7 +220,7 @@ const Fixedswap = (props) => {
                 </div>
                 <div className="position-relative">
                   <input
-                    className="custom-input"
+                    className="custom-input p28"
                     required
                     name="amount"
                     type="number"
@@ -234,7 +234,7 @@ const Fixedswap = (props) => {
                     }}
                   />
                   <Button
-                    className="sub-btn"
+                    className="sub-btn mt-3"
                     disabled={tokenAddress === "" ? true : false}
                     onClick={() => {
                       approveTokenTransafer();
@@ -254,7 +254,7 @@ const Fixedswap = (props) => {
                         <input
                           className="me-2"
                           required
-                          name="nolimit"
+                          name="mapw"
                           type="radio"
                           defaultValue="No limits"
                         />
@@ -264,7 +264,7 @@ const Fixedswap = (props) => {
                         <input
                           className="me-2"
                           required
-                          name="eth"
+                          name="mapw"
                           type="radio"
                           defaultValue="No limits"
                         />
@@ -296,7 +296,7 @@ const Fixedswap = (props) => {
                         <input
                           className="me-2"
                           required
-                          name="botholder"
+                          name="participant"
                           type="radio"
                           defaultValue="No limits"
                         />
@@ -306,7 +306,7 @@ const Fixedswap = (props) => {
                         <input
                           className="me-2"
                           required
-                          name="public"
+                          name="participant"
                           type="radio"
                           defaultValue="No limits"
                         />
@@ -316,7 +316,7 @@ const Fixedswap = (props) => {
                         <input
                           className="me-2"
                           required
-                          name="private"
+                          name="participant"
                           type="radio"
                           defaultValue="No limits"
                         />
@@ -358,7 +358,10 @@ const Fixedswap = (props) => {
                 <div className="d-flex align-items-center justify-content-between">
                   <Calendar onChange={setClaimDate} value={claimDate} />
                 </div>
-                <span className="label my-4">Transaction Fee</span>
+                <div className="d-flex align-items-center">
+                  <span className="label my-4">Transaction Fee :</span>
+                  <span className="label my-4 ms-2">0.00</span>
+                </div>
                 <Button
                   className="sub-btn"
                   onClick={() => {
