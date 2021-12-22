@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Card, ProgressBar, Button } from "react-bootstrap";
 import "./TokenSaleCard.scss";
 
-const Tokensalecard = () => {
+const Tokensalecard = ({ index, sellToken, swapRatio }) => {
   return (
     <Fragment>
       <Card className="mb-3">
@@ -13,7 +13,7 @@ const Tokensalecard = () => {
               <span>
                 <div className="dot me-2"></div> Live
               </span>
-              <p className="d-md-none"># 6189</p>
+              <p className="d-md-none"># {index}</p>
             </div>
             <div className="card-title text-break">ETH/SHIB</div>
           </div>
@@ -21,7 +21,11 @@ const Tokensalecard = () => {
             <div className="card-content pt-md-0 pt-4">
               <div>
                 <span>Address</span>
-                <p>0xA447...C354</p>
+                <p>
+                  {(sellToken?.substr(0, 4) || "") +
+                    "..." +
+                    (sellToken?.substr(-4, 4) || "")}
+                </p>
               </div>
               <div>
                 <span>Pair</span>
@@ -29,7 +33,7 @@ const Tokensalecard = () => {
               </div>
               <div>
                 <span>Swap Ratio</span>
-                <p>200 : 1</p>
+                <p>{swapRatio} : 1</p>
               </div>
               <div>
                 <span>Price</span>
