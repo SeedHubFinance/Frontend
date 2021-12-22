@@ -6,7 +6,7 @@ import "./ConnectButton.scss";
 
 const ConnectedButton = () => {
   const [web3, setWeb3] = useContext(Web3Context);
-  const [address, setAddress] = useState(null);
+  const [address, setAddress] = useState(Web3Context);
   const [connected, setConnected] = useState(false);
   const [modalShow, setModalShow] = useState(false);
 
@@ -14,7 +14,7 @@ const ConnectedButton = () => {
     if (!web3) return setAddress("");
     setConnected(window.ethereum.isConnected());
     web3?.eth.getAccounts().then((results) => setAddress(results[0]));
-    // setAddress(web3?.eth.getAccounts()[0]);
+    setAddress(web3?.eth.getAccounts()[0]);
   }, [web3]);
 
   const handleDisconnect = (e) => {
@@ -25,15 +25,6 @@ const ConnectedButton = () => {
 
   return !connected ? (
     <>
-      {/* <button
-        type="button"
-        className="btn btn-connect-wallet"
-        data-toggle="modal"
-        data-target="#exampleModalCenter"
-      >
-        Connect Wallet
-      </button>
-      <Modal /> */}
       <Button
         disabled={false}
         className="btn-connect-wallet"
