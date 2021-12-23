@@ -109,6 +109,28 @@
         padding-right: 28px;
       }
     }
+    .react-datetime-picker__wrapper {
+      padding: 10px;
+      border-radius: 8px;
+      border-color: $dark-clr;
+      .react-datetime-picker__inputGroup {
+        input,
+        span {
+          color: $dark-clr;
+        }
+      }
+
+      select {
+        color: $dark-clr;
+      }
+
+      svg {
+        line,
+        path {
+          fill: $dark-clr;
+        }
+      }
+    }
     .divder {
       height: 2px;
       width: 100%;
