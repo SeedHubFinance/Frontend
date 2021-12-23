@@ -14,7 +14,7 @@
     .form-header {
       font-style: normal;
       font-weight: bold;
-      font-size: 12px;
+      font-size: 14px;
       flex: 1 1 0%;
       line-height: 15px;
       color: $dark-clr;
@@ -64,7 +64,7 @@
     .label {
       font-style: normal;
       font-weight: bold;
-      font-size: 12px;
+      font-size: 0.9rem;
       line-height: 15px;
       display: flex;
       -webkit-box-align: center;
@@ -101,7 +101,7 @@
       font-weight: 500;
       font-size: 16px;
       line-height: 20px;
-      padding: 9px 9px 0px 0px;
+      padding: 9px 9px 4px 0px;
       flex: 1 1 0%;
       outline: none;
 
@@ -152,7 +152,7 @@
       -webkit-box-align: center;
       align-items: center;
       vertical-align: middle;
-      font-size: 14px;
+      font-size: 16px;
       color: $dark-clr;
       cursor: pointer;
     }

@@ -95,7 +95,7 @@ const Fixedswap = () => {
                     fontSize: "14px",
                   }}
                 >
-                  warning: Seed Hub does not support deflationary tokens
+                  warning: SeedHub does not support deflationary tokens
                 </p>
               </Col>
             </Row>

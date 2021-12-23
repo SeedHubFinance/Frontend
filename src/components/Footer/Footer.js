@@ -31,12 +31,12 @@ const Footer = () => {
           </Col>
           <Col lg={2} className="my-lg-0 my-3">
             <a href="https://docs.seedhub.network/" target="_blank">
-              Fixed-Swap Docs
+              SeedHub Docs
             </a>
           </Col>
           <Col lg={6}>
             <p className="text-lg-end">
-              Fixed-Swap is a fully decentralized protocol. Join the auction at
+              SeedHub is a fully decentralized protocol. Join the auction at
               your own risk.
             </p>
           </Col>
