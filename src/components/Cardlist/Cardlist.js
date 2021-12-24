@@ -36,7 +36,9 @@ const Cardlist = (props) => {
       {pools.map((pool, index) => {
         return (
           <TokenSaleCard
+            key={index}
             index={index}
+            name={pool.name}
             sellToken={pool.sellToken}
             swapRatio={pool.swapRatio}
           />
