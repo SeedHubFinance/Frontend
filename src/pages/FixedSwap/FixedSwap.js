@@ -66,7 +66,7 @@ const Fixedswap = (props) => {
   }, [web3, address]);
 
   const getTimeStampsForDates = (date) => {
-    return new Date(date).getTime() / 1000;
+    return Math.ceil(new Date(date).getTime() / 1000);
   };
 
   const tokenAddressValidation = (address) => {
@@ -344,6 +344,7 @@ const Fixedswap = (props) => {
                   required
                   name="poolname"
                   defaultValue=""
+                  onChange={(e) => setPoolName(e.target.value)}
                 />
 
                 <span className="label my-4">Pool Start Time</span>
