@@ -69,8 +69,8 @@ const Filters = () => {
 
   return (
     <div className="filters-container">
-      <div className="filter-tabs flex-lg-row flex-column align-items-lg-center align-items-start">
-        <div className="filter-btns flex-lg-row flex-column align-items-lg-center align-items-start">
+      <div className=" filter-tabs flex-lg-row flex-column align-items-lg-center align-items-start">
+        <div className="d-none filter-btns flex-lg-row flex-column align-items-lg-center align-items-start">
           <Button>
             <TokenSale className="f-icon me-2" />
             Token Sale
