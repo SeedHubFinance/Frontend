@@ -4,6 +4,7 @@ import FixedSwap from "./pages/FixedSwap/FixedSwap";
 import PoolForm from "./pages/PoolForm/PoolForm";
 import { Web3Provider } from "./context/web3Context";
 import "./App.scss";
+import "./Assets/font/stylesheet.css";
 
 function App() {
   return (

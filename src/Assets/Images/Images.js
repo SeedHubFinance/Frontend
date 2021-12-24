@@ -10,6 +10,7 @@ import SocialVerifiedPools from "./svp.svg";
 import TokenSale from "./ts.svg";
 import Predictions from "./predict.svg";
 import Lotteries from "./lott.svg";
+import Logo from "./logo.png";
 
 export const Images = {
   ETHicon,
@@ -24,4 +25,5 @@ export const Images = {
   SocialVerifiedPools,
   Predictions,
   Lotteries,
+  Logo,
 };
