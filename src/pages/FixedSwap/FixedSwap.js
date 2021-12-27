@@ -51,17 +51,25 @@ const Fixedswap = (props) => {
   const [passfield, setpassfield] = useState(false);
   const [limitfield, setlimitfield] = useState(false);
 
-  const [currentBalance, setCurrentBalance] = useState("  ");
+  const [currentBalance, setCurrentBalance] = useState("");
 
   const [isFromValid, setIsFromValid] = useState(false);
 
   const [web3, setWeb3] = useContext(Web3Context);
   const [address, setAddress] = useState(Web3Context);
 
+  const [isTransferNotApproved, setTransferApproval] = useState(true);
+
+  const [isWeb3Connected, setWeb3Status] = useState(false);
+
   const getUserWalletAddress = async () => {
     if (web3) {
       let addressArray = await web3?.eth.getAccounts();
       setAddress(addressArray[0]);
+      setWeb3Status(true);
+    } else {
+      alert("Please Connect Wallet");
+      setWeb3Status(false);
     }
   };
 
@@ -85,11 +93,11 @@ const Fixedswap = (props) => {
 
   const getTokenName = async (address) => {
     let coinContract = new web3.eth.Contract(coinABI, address);
-
+    setCurrentBalance(await getTokenBalance(address));
     return await coinContract.methods.name().call();
   };
 
-  const getTokenBalance = async () => {
+  const getTokenBalance = async (tokenAddress) => {
     let coinContract = new web3.eth.Contract(coinABI, tokenAddress);
 
     return await coinContract.methods.balanceOf(address).call();
@@ -114,10 +122,16 @@ const Fixedswap = (props) => {
   const approveTokenTransafer = async () => {
     let coinContract = new web3.eth.Contract(coinABI, tokenAddress);
 
+    console.log(tokenAllocation);
+
     return await coinContract.methods
       .approve(fixedSwapContractAddress, tokenAllocation)
-      .send({ from: address });
+      .send({ from: address })
+      .then(() => setTransferApproval(false))
+      .catch((e) => setTransferApproval(true));
   };
+
+  const validationForForm = (poolReq) => {};
 
   const makePool = async () => {
     let fixedSwapContract = new web3.eth.Contract(
@@ -130,7 +144,7 @@ const Fixedswap = (props) => {
       tokenAddress,
       parseInt(swapRatio),
       parseInt(maxAmountPerWallet),
-      parseInt(currentBalance),
+      parseInt(tokenAllocation),
       getTimeStampsForDates(startDate),
       getTimeStampsForDates(endDate),
       getTimeStampsForDates(claimDate),
@@ -145,15 +159,14 @@ const Fixedswap = (props) => {
         tokenAddress,
         swapRatio,
         maxAmountPerWallet,
-        currentBalance,
+        tokenAllocation,
         getTimeStampsForDates(startDate),
         getTimeStampsForDates(endDate),
         getTimeStampsForDates(claimDate),
         isOnlySeeHolder,
         false
       )
-      .send({ from: address })
-      .then((data) => console.log(data));
+      .send({ from: address });
   };
 
   return (
@@ -185,6 +198,7 @@ const Fixedswap = (props) => {
                   name="address"
                   defaultValue=""
                   onChange={(e) => setToken(e.target.value)}
+                  disabled={!isWeb3Connected}
                 />
               </Col>
             </Row>
@@ -202,6 +216,7 @@ const Fixedswap = (props) => {
                       required
                       name="from"
                       defaultValue={tokenName}
+                      disabled={!isWeb3Connected}
                     />
                   </div>
                   <div className="w-50 to-select">
@@ -227,6 +242,7 @@ const Fixedswap = (props) => {
                     name="swapratio"
                     defaultValue=""
                     onChange={(e) => setSwapRatio(e.target.value)}
+                    disabled={!isWeb3Connected}
                   />
                 </div>
                 <div className="d-flex justify-content-between">
@@ -240,7 +256,9 @@ const Fixedswap = (props) => {
                     name="amount"
                     type="number"
                     defaultValue={""}
-                    value={web3?.utils.fromWei(currentBalance)}
+                    disabled={!isWeb3Connected}
+                    max={currentBalance}
+                    onChange={(e) => setTokenAllocation(e.target.value)}
                   />
                   <MaxIcon
                     className="max-icon"
@@ -273,6 +291,7 @@ const Fixedswap = (props) => {
                           name="mapw"
                           type="radio"
                           defaultValue="No limits"
+                          disabled={!isWeb3Connected}
                         />
                         No limits
                       </label>
@@ -284,6 +303,7 @@ const Fixedswap = (props) => {
                           type="radio"
                           onClick={(e) => setlimitfield(true)}
                           defaultValue="No limits"
+                          disabled={!isWeb3Connected}
                         />
                         {currency.label}
                       </label>
@@ -304,6 +324,7 @@ const Fixedswap = (props) => {
                       name="allocation"
                       type="number"
                       onChange={(e) => setMaxAmountPerWallet(e.target.value)}
+                      disabled={!isWeb3Connected}
                     />
                   </div>
                   <h5>{currency.label}</h5>
@@ -321,6 +342,7 @@ const Fixedswap = (props) => {
                           name="participant"
                           type="radio"
                           defaultValue="No limits"
+                          disabled={!isWeb3Connected}
                         />
                         Seed holders
                       </label>
@@ -332,6 +354,7 @@ const Fixedswap = (props) => {
                           name="participant"
                           type="radio"
                           defaultValue="No limits"
+                          disabled={!isWeb3Connected}
                         />
                         Public
                       </label>
@@ -343,6 +366,7 @@ const Fixedswap = (props) => {
                           name="participant"
                           type="radio"
                           defaultValue="Private"
+                          disabled={!isWeb3Connected}
                         />
                         Private
                       </label>
@@ -362,6 +386,7 @@ const Fixedswap = (props) => {
                       required
                       name="password"
                       defaultValue=""
+                      disabled={!isWeb3Connected}
                     />
                   </div>
                 </div>
@@ -373,6 +398,7 @@ const Fixedswap = (props) => {
                   name="poolname"
                   defaultValue=""
                   onChange={(e) => setPoolName(e.target.value)}
+                  disabled={!isWeb3Connected}
                 />
 
                 <span className="label my-4">Pool Start Time</span>
@@ -399,6 +425,7 @@ const Fixedswap = (props) => {
                   onClick={() => {
                     makePool();
                   }}
+                  disabled={isTransferNotApproved}
                 >
                   Launch
                 </Button>
