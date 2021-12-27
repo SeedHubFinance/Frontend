@@ -43,17 +43,21 @@ const WalletModal = (props) => {
         }
         toast.error(e.message);
       }
+    } else {
+      toast.error("Install metamask extension");
     }
   };
-  // metamask events
-  window.ethereum.on("accountsChanged", (accounts) => {
-    if (accounts.length < 1) {
-      setWeb3(null);
-      window.location.reload();
-      return;
-    }
-    setWeb3(new Web3(window.ethereum));
-  });
+  if (window.ethereum) {
+    // metamask events
+    window.ethereum.on("accountsChanged", (accounts) => {
+      if (accounts.length < 1) {
+        setWeb3(null);
+        window.location.reload();
+        return;
+      }
+      setWeb3(new Web3(window.ethereum));
+    });
+  }
 
   return (
     <Fragment>

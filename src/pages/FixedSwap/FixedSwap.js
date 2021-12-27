@@ -70,7 +70,7 @@ const Fixedswap = (props) => {
   }, [web3, address]);
 
   const getTimeStampsForDates = (date) => {
-    return new Date(date).getTime() / 1000;
+    return Math.ceil(new Date(date).getTime() / 1000);
   };
 
   const tokenAddressValidation = (address) => {
@@ -128,9 +128,9 @@ const Fixedswap = (props) => {
     const poolReq = [
       poolName,
       tokenAddress,
-      swapRatio,
-      maxAmountPerWallet,
-      currentBalance,
+      parseInt(swapRatio),
+      parseInt(maxAmountPerWallet),
+      parseInt(currentBalance),
       getTimeStampsForDates(startDate),
       getTimeStampsForDates(endDate),
       getTimeStampsForDates(claimDate),
@@ -140,7 +140,18 @@ const Fixedswap = (props) => {
     console.log(poolReq);
 
     await fixedSwapContract.methods
-      .createLiquidityPool(poolReq)
+      .createLiquidityPool(
+        poolName,
+        tokenAddress,
+        swapRatio,
+        maxAmountPerWallet,
+        currentBalance,
+        getTimeStampsForDates(startDate),
+        getTimeStampsForDates(endDate),
+        getTimeStampsForDates(claimDate),
+        isOnlySeeHolder,
+        false
+      )
       .send({ from: address })
       .then((data) => console.log(data));
   };
@@ -361,6 +372,7 @@ const Fixedswap = (props) => {
                   required
                   name="poolname"
                   defaultValue=""
+                  onChange={(e) => setPoolName(e.target.value)}
                 />
 
                 <span className="label my-4">Pool Start Time</span>
