@@ -1,8 +1,9 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 import { Row, Col, Button } from "react-bootstrap";
 import { ProgressBar } from "react-bootstrap";
 import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
+import Countdown from "react-countdown";
 import { ReactComponent as MaxIcon } from "../../Assets/Images/max.svg";
 import "./PoolForm.scss";
 
@@ -11,8 +12,30 @@ const poolOptions = [
   { value: "sealed", label: "Sealed-Bid Auction" },
   { value: "dutch", label: "Dutch Auction" },
 ];
+// Countdown Timer
+const Completionist = () => <span>0 d : 0 h : 0 m : 0 s</span>;
+const renderer = ({ days, hours, minutes, seconds, completed }) => {
+  if (completed) {
+    // Render a complete state
+    return <Completionist />;
+  } else {
+    // Render a countdown
+    return (
+      <span>
+        <span className="mx-2">{days} d</span>:
+        <span className="mx-2">{hours} h</span>:
+        <span className="mx-2">{minutes} m</span>:
+        <span className="mx-2">{seconds} s</span>
+      </span>
+    );
+  }
+};
 
 const Fixedswap = () => {
+  const [bidamount, setbidamount] = useState(null);
+
+  useEffect(() => {}, [renderer]);
+
   return (
     <Fragment>
       <Header />
@@ -70,7 +93,9 @@ const Fixedswap = () => {
                 <div className="form-heading text-center mb-4">
                   Join The Pool
                 </div>
-                <p className="text-center fs-6">Countdown Timer</p>
+                <div className="text-center fs-6">
+                  <Countdown date={Date.now() + 150000} renderer={renderer} />
+                </div>
                 <div className="divder"></div>
                 <div className="d-flex justify-content-between">
                   <span className="label">Amount</span>
@@ -80,9 +105,13 @@ const Fixedswap = () => {
                   <input
                     className="custom-input"
                     required
+                    type="number"
                     name="amount"
+                    onChange={(e) => {
+                      setbidamount(e.target.value);
+                    }}
                     placeholder="Bid Amount"
-                    value=""
+                    value={bidamount}
                   />
                   <MaxIcon className="max-icon" />
                 </div>

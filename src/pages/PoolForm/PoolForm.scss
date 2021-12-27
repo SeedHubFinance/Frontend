@@ -129,6 +129,11 @@
       flex: 1 1 0%;
       outline: none;
     }
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
     .divder {
       height: 3px;
       width: 100%;
@@ -183,8 +188,8 @@
 }
 
 @media only screen and (min-width: 1367px) {
-  .fixed-swap-pool {
-    .fixed-swap-form-container {
+  .pool-form {
+    .pool-form-container {
       width: 1280px;
     }
   }
