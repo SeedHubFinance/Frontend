@@ -9,6 +9,7 @@ import {
 import { Web3Context } from "../../context/web3Context";
 import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
+import Countdown from "react-countdown";
 import { ReactComponent as MaxIcon } from "../../Assets/Images/max.svg";
 import "./PoolForm.scss";
 
@@ -17,6 +18,24 @@ const poolOptions = [
   { value: "sealed", label: "Sealed-Bid Auction" },
   { value: "dutch", label: "Dutch Auction" },
 ];
+// Countdown Timer
+const Completionist = () => <span>0 d : 0 h : 0 m : 0 s</span>;
+const renderer = ({ days, hours, minutes, seconds, completed }) => {
+  if (completed) {
+    // Render a complete state
+    return <Completionist />;
+  } else {
+    // Render a countdown
+    return (
+      <span>
+        <span className="mx-2">{days} d</span>:
+        <span className="mx-2">{hours} h</span>:
+        <span className="mx-2">{minutes} m</span>:
+        <span className="mx-2">{seconds} s</span>
+      </span>
+    );
+  }
+};
 
 const Fixedswap = (props) => {
   const [web3, setWeb3] = useContext(Web3Context);
@@ -51,6 +70,7 @@ const Fixedswap = (props) => {
       .catch((e) => console.log(e.response.message));
   };
 
+
   return (
     <Fragment>
       <Header />
@@ -63,6 +83,7 @@ const Fixedswap = (props) => {
                   Fixed-Swap
                   <div className="title">NEF Inu</div>
                   <div className="token-code">{location?.state?.sellToken}</div>
+
                 </div>
               </Col>
             </Row>
@@ -105,7 +126,9 @@ const Fixedswap = (props) => {
                 <div className="form-heading text-center mb-4">
                   Join The Pool
                 </div>
-                <p className="text-center fs-6">Countdown Timer</p>
+                <div className="text-center fs-6">
+                  <Countdown date={Date.now() + 150000} renderer={renderer} />
+                </div>
                 <div className="divder"></div>
                 <div className="d-flex justify-content-between">
                   <span className="label">Amount</span>
@@ -116,10 +139,15 @@ const Fixedswap = (props) => {
                     className="custom-input"
                     type="number"
                     required
+                    type="number"
                     name="amount"
+                    onChange={(e) => {
+                      setbidamount(e.target.value);
+                    }}
                     placeholder="Bid Amount"
                     onChange={(e) => setAmount(e.target.value)}
                     value={amount}
+
                   />
                   <MaxIcon className="max-icon" />
                 </div>
@@ -138,7 +166,7 @@ const Fixedswap = (props) => {
                     fontSize: "14px",
                   }}
                 >
-                  warning: Bounce does not support deflationary tokens
+                  warning: SeedHub does not support deflationary tokens
                 </p>
               </Col>
             </Row>

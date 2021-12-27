@@ -1,0 +1,79 @@
+@font-face {
+  font-family: "semplicitapro";
+  src: url("semplicitapro-semibold-webfont.woff2") format("woff2"),
+    url("semplicitapro-semibold-webfont.woff") format("woff");
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "semplicitapro";
+  src: url("semplicitapro-semibdit-webfont.woff2") format("woff2"),
+    url("semplicitapro-semibdit-webfont.woff") format("woff");
+  font-weight: 700;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "semplicitapro";
+  src: url("semplicitapro-medium-webfont.woff2") format("woff2"),
+    url("semplicitapro-medium-webfont.woff") format("woff");
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "semplicitapro";
+  src: url("semplicitapro-medit-webfont.woff2") format("woff2"),
+    url("semplicitapro-medit-webfont.woff") format("woff");
+  font-weight: 600;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "semplicitapro";
+  src: url("semplicitapro-ltit-webfont.woff2") format("woff2"),
+    url("semplicitapro-ltit-webfont.woff") format("woff");
+  font-weight: 200;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "semplicitapro";
+  src: url("semplicitapro-light-webfont.woff2") format("woff2"),
+    url("semplicitapro-light-webfont.woff") format("woff");
+  font-weight: 200;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "semplicitapro";
+  src: url("semplicitapro-italic-webfont.woff2") format("woff2"),
+    url("semplicitapro-italic-webfont.woff") format("woff");
+  font-weight: normal;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "semplicitapro";
+  src: url("semplicitapro-bolditalic-webfont.woff2") format("woff2"),
+    url("semplicitapro-bolditalic-webfont.woff") format("woff");
+  font-weight: 800;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "semplicitapro";
+  src: url("semplicitapro-bold-webfont.woff2") format("woff2"),
+    url("semplicitapro-bold-webfont.woff") format("woff");
+  font-weight: 800;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "semplicitapro";
+  src: url("semplicitapro-webfont.woff2") format("woff2"),
+    url("semplicitapro-webfont.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
