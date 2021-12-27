@@ -8,6 +8,7 @@ import "react-calendar/dist/Calendar.css";
 
 import "./FixedSwap.scss";
 
+import DateTimePicker from "react-datetime-picker";
 import Calendar from "react-calendar";
 import { Web3Context } from "../../context/web3Context";
 
@@ -47,6 +48,9 @@ const Fixedswap = (props) => {
     label: "ETH",
   });
 
+  const [passfield, setpassfield] = useState(false);
+  const [limitfield, setlimitfield] = useState(false);
+
   const [currentBalance, setCurrentBalance] = useState("  ");
 
   const [isFromValid, setIsFromValid] = useState(false);
@@ -66,7 +70,7 @@ const Fixedswap = (props) => {
   }, [web3, address]);
 
   const getTimeStampsForDates = (date) => {
-    return new Date(date).getTime() / 1000;
+    return Math.ceil(new Date(date).getTime() / 1000);
   };
 
   const tokenAddressValidation = (address) => {
@@ -124,9 +128,9 @@ const Fixedswap = (props) => {
     const poolReq = [
       poolName,
       tokenAddress,
-      swapRatio,
-      maxAmountPerWallet,
-      currentBalance,
+      parseInt(swapRatio),
+      parseInt(maxAmountPerWallet),
+      parseInt(currentBalance),
       getTimeStampsForDates(startDate),
       getTimeStampsForDates(endDate),
       getTimeStampsForDates(claimDate),
@@ -136,7 +140,18 @@ const Fixedswap = (props) => {
     console.log(poolReq);
 
     await fixedSwapContract.methods
-      .createLiquidityPool(poolReq)
+      .createLiquidityPool(
+        poolName,
+        tokenAddress,
+        swapRatio,
+        maxAmountPerWallet,
+        currentBalance,
+        getTimeStampsForDates(startDate),
+        getTimeStampsForDates(endDate),
+        getTimeStampsForDates(claimDate),
+        isOnlySeeHolder,
+        false
+      )
       .send({ from: address })
       .then((data) => console.log(data));
   };
@@ -224,7 +239,7 @@ const Fixedswap = (props) => {
                     required
                     name="amount"
                     type="number"
-                    defaultValue={web3?.utils.fromWei(currentBalance)}
+                    defaultValue={""}
                     value={web3?.utils.fromWei(currentBalance)}
                   />
                   <MaxIcon
@@ -254,6 +269,7 @@ const Fixedswap = (props) => {
                         <input
                           className="me-2"
                           required
+                          onClick={(e) => setlimitfield(false)}
                           name="mapw"
                           type="radio"
                           defaultValue="No limits"
@@ -266,6 +282,7 @@ const Fixedswap = (props) => {
                           required
                           name="mapw"
                           type="radio"
+                          onClick={(e) => setlimitfield(true)}
                           defaultValue="No limits"
                         />
                         {currency.label}
@@ -274,7 +291,11 @@ const Fixedswap = (props) => {
                   </div>
                 </div>
 
-                <div className="d-flex align-items-end my-4">
+                <div
+                  className={`d-flex align-items-end my-4 ${
+                    limitfield ? "" : "d-none"
+                  }`}
+                >
                   <div className="wka me-2">
                     <span className="label">Allocation</span>
                     <input
@@ -296,6 +317,7 @@ const Fixedswap = (props) => {
                         <input
                           className="me-2"
                           required
+                          onClick={(e) => setpassfield(false)}
                           name="participant"
                           type="radio"
                           defaultValue="No limits"
@@ -306,6 +328,7 @@ const Fixedswap = (props) => {
                         <input
                           className="me-2"
                           required
+                          onClick={(e) => setpassfield(false)}
                           name="participant"
                           type="radio"
                           defaultValue="No limits"
@@ -316,16 +339,21 @@ const Fixedswap = (props) => {
                         <input
                           className="me-2"
                           required
+                          onClick={(e) => setpassfield(true)}
                           name="participant"
                           type="radio"
-                          defaultValue="No limits"
+                          defaultValue="Private"
                         />
                         Private
                       </label>
                     </div>
                   </div>
                 </div>
-                <div className="d-flex align-items-end my-4">
+                <div
+                  className={`d-flex align-items-end my-4 ${
+                    passfield ? "" : "d-none"
+                  }`}
+                >
                   <div className="wka me-2">
                     <span className="label">Password</span>
                     <input
@@ -344,19 +372,23 @@ const Fixedswap = (props) => {
                   required
                   name="poolname"
                   defaultValue=""
+                  onChange={(e) => setPoolName(e.target.value)}
                 />
 
                 <span className="label my-4">Pool Start Time</span>
                 <div>
-                  <Calendar onChange={setStartDate} value={startDate} />
+                  <DateTimePicker onChange={setStartDate} value={startDate} />
+                  {/* <Calendar onChange={setStartDate} value={startDate} /> */}
                 </div>
                 <span className="label my-4">Pool Ending Time</span>
                 <div className="d-flex align-items-center justify-content-between">
-                  <Calendar onChange={setEndDate} value={endDate} />
+                  <DateTimePicker onChange={setEndDate} value={endDate} />
+                  {/* <Calendar onChange={setEndDate} value={endDate} /> */}
                 </div>
                 <span className="label my-4">Claim Funds At</span>
                 <div className="d-flex align-items-center justify-content-between">
-                  <Calendar onChange={setClaimDate} value={claimDate} />
+                  <DateTimePicker onChange={setClaimDate} value={claimDate} />
+                  {/* <Calendar onChange={setClaimDate} value={claimDate} /> */}
                 </div>
                 <div className="d-flex align-items-center">
                   <span className="label my-4">Transaction Fee :</span>

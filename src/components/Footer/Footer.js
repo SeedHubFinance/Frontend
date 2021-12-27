@@ -15,18 +15,28 @@ const Footer = () => {
         <Row className="w-100 g-0 align-items-center text-center">
           <Col lg={4}>
             <div className="footer-icons justify-content-lg-start justify-content-center">
-              <MediumIcon />
-              <TwitterIcon />
-              <TelegramIcon />
-              <MsgIcon />
+              <a href="https://medium.com/@seedhub/" target="_blank">
+                <MediumIcon />
+              </a>
+              <a href="https://twitter.com/seedhubnetwork" target="_blank">
+                <TwitterIcon />
+              </a>
+              <a href="https://t.me/seedhub" target="_blank">
+                <TelegramIcon />
+              </a>
+              <a href="https://github.com/SeedHubnetwork" target="_blank">
+                <MsgIcon />
+              </a>
             </div>
           </Col>
           <Col lg={2} className="my-lg-0 my-3">
-            <p>Fixed-Swap Docs</p>
+            <a href="https://docs.seedhub.network/" target="_blank">
+              SeedHub Docs
+            </a>
           </Col>
           <Col lg={6}>
             <p className="text-lg-end">
-              Fixed-Swap is a fully decentralized protocol. Join the auction at
+              SeedHub is a fully decentralized protocol. Join the auction at
               your own risk.
             </p>
           </Col>

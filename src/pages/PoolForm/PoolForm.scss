@@ -12,7 +12,7 @@
     }
     .leftcol {
       p {
-        font-size: 12px;
+        font-size: 14px;
         color: $dark-clr;
         padding-top: 15px;
       }
@@ -32,7 +32,7 @@
         span {
           display: flex;
           align-items: center;
-          font-size: 12px;
+          font-size: 14px;
           color: $primary-color-two;
         }
 
@@ -57,7 +57,7 @@
     .form-header {
       font-style: normal;
       font-weight: bold;
-      font-size: 12px;
+      font-size: 14px;
       flex: 1 1 0%;
       text-align: center;
       line-height: 15px;
@@ -68,7 +68,7 @@
         justify-content: center;
         font-style: normal;
         font-weight: bold;
-        font-size: 36px;
+        font-size: 2.2rem;
         color: $dark-clr;
         line-height: 44px;
         padding: 16px 0px;

@@ -24,8 +24,11 @@ const Fixedswap = () => {
                 <div className="form-header">
                   Fixed-Swap
                   <div className="title">NEF Inu</div>
-                  <div className="token-code">
-                    0x7a31504980cfBda4A744c66113Ff9c3A15112EbB
+                  <div className="d-flex justify-content-center align-items-center">
+                    <p>Contract Address:</p>
+                    <p className="ms-3">
+                      0x7a31504980cfBda4A744c66113Ff9c3A15112EbB
+                    </p>
                   </div>
                 </div>
               </Col>
@@ -92,7 +95,7 @@ const Fixedswap = () => {
                     fontSize: "14px",
                   }}
                 >
-                  warning: Bounce does not support deflationary tokens
+                  warning: SeedHub does not support deflationary tokens
                 </p>
               </Col>
             </Row>
