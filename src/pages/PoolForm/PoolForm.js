@@ -144,7 +144,6 @@ const Fixedswap = (props) => {
                     placeholder="Bid Amount"
                     onChange={(e) => setAmount(e.target.value)}
                   />
-                  <MaxIcon className="max-icon" />
                 </div>
                 <Button
                   onClick={handleClick}

@@ -9,11 +9,11 @@ const Tokensalecard = ({ index, name, sellToken, swapRatio }) => {
       <Card className="mb-3">
         <Card.Body className="d-flex flex-column flex-md-row">
           <div className="card-head d-flex flex-column justify-content-md-between">
-            <div className="d-flex justify-content-between">
+            <div className="d-flex justify-content-between pe-4">
               <span>
                 <div className="dot me-2"></div> Live
               </span>
-              <p className="d-md-none"># {index}</p>
+              <p className=""># {index}</p>
             </div>
             <div className="card-title text-break">ETH/SHIB</div>
           </div>
