@@ -70,6 +70,10 @@ const Fixedswap = (props) => {
 
   const [isWeb3Connected, setWeb3Status] = useState(false);
 
+  const [whitelist, setWhitelist] = useState("");
+
+  const [listdata, setListData] = useState([]);
+
   const getUserWalletAddress = async () => {
     if (web3) {
       let addressArray = await web3?.eth.getAccounts();
@@ -397,7 +401,7 @@ const Fixedswap = (props) => {
                           defaultValue="Private"
                           disabled={!isWeb3Connected}
                         />
-                        Private
+                        Whitelist
                       </label>
                     </div>
                   </div>
@@ -408,15 +412,35 @@ const Fixedswap = (props) => {
                   }`}
                 >
                   <div className="wka me-2">
-                    <span className="label">Password</span>
-                    <input
-                      className="custom-input"
-                      type="password"
-                      required
-                      name="password"
-                      defaultValue=""
-                      disabled={!isWeb3Connected}
-                    />
+                    <span className="label">List</span>
+                    <div className="d-flex position-relative">
+                      <input
+                        className="custom-input"
+                        type="text"
+                        required
+                        name="password"
+                        onChange={(e) => {
+                          setWhitelist(e.target.value);
+                        }}
+                        value={whitelist}
+                        disabled={!isWeb3Connected}
+                      />
+                      <Button
+                        className="addlistbtn"
+                        onClick={() => {
+                          setListData((oldArray) => [...oldArray, whitelist]);
+                        }}
+                      >
+                        Add
+                      </Button>
+                    </div>
+                    <div className="listdiv mt-3">
+                      {listdata.map((e) => (
+                        <div className="my-2 d-flex align-items-center justify-content-between">
+                          <div>{e}</div>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </div>
                 <div className="divder"></div>
