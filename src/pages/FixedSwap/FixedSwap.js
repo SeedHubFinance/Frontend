@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useContext, Fragment } from "react";
+import React, {
+  useState,
+  useEffect,
+  useContext,
+  useRef,
+  Fragment,
+} from "react";
 import { Row, Col, Button } from "react-bootstrap";
 import Header from "../../components/Header/Header";
 import Select from "react-select";
@@ -38,6 +44,8 @@ const Fixedswap = (props) => {
   const [startTime, setStartTime] = useState(0);
   const [endTime, setEndTime] = useState(0);
   const [claimTime, setClaimTime] = useState(0);
+  const dateErrorRef = useRef(null);
+  const isFirstRun = useRef(true);
 
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
@@ -80,6 +88,27 @@ const Fixedswap = (props) => {
   useEffect(() => {
     getUserWalletAddress();
   }, [web3, address]);
+
+  useEffect(() => {
+    if (isFirstRun.current) {
+      isFirstRun.current = false;
+      return;
+    }
+    if (!(endDate > startDate)) {
+      setTransferApproval(false);
+      dateErrorRef.current.innerText =
+        "End date should be greater than start Date";
+      return;
+    }
+    if (!(claimDate > endDate)) {
+      setTransferApproval(false);
+      dateErrorRef.current.innerText =
+        "Claim data should be greater than end Date";
+      return;
+    }
+    setTransferApproval(true);
+    dateErrorRef.current.innerText = "";
+  }, [startDate, endDate, claimDate]);
 
   const getTimeStampsForDates = (date) => {
     return Math.ceil(new Date(date).getTime() / 1000);
@@ -453,6 +482,14 @@ const Fixedswap = (props) => {
                 >
                   Launch
                 </Button>
+                <p
+                  ref={dateErrorRef}
+                  style={{
+                    color: "red",
+                    marginTop: "5px",
+                    textAlign: "center",
+                  }}
+                ></p>
                 <p
                   style={{
                     color: "red",
