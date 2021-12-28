@@ -1,6 +1,8 @@
 import { useState, useContext, useEffect, useRef } from "react";
 import WalletModal from "../WalletModel/WalletModal";
 import { Button } from "react-bootstrap";
+import Disconnectbtn from "../../Assets/Images/disconnect.png";
+import Connectbtn from "../../Assets/Images/connect.png";
 import { Web3Context } from "../../context/web3Context";
 import "./ConnectButton.scss";
 
@@ -27,10 +29,18 @@ const ConnectedButton = () => {
     <>
       <Button
         disabled={false}
-        className="btn-connect-wallet"
+        className="btn-connect-wallet d-sm-block d-none"
         onClick={() => setModalShow(true)}
       >
         Connect Wallet
+      </Button>
+      <Button
+        disabled={false}
+        variant="outline-light"
+        className="d-block d-sm-none p-0"
+        onClick={() => setModalShow(true)}
+      >
+        <img src={Connectbtn} alt="/" width="40px" />
       </Button>
 
       <WalletModal show={modalShow} onHide={() => setModalShow(false)} />
@@ -41,7 +51,17 @@ const ConnectedButton = () => {
         {(address?.substr(0, 4) || "") + "..." + (address?.substr(-4, 4) || "")}
       </div>
       <div className="col">
-        <Button className="dis-btn" onClick={handleDisconnect}>
+        <Button
+          variant="outline-light"
+          className="d-block d-sm-none p-0"
+          onClick={handleDisconnect}
+        >
+          <img src={Disconnectbtn} alt="/" width="40px" />
+        </Button>
+        <Button
+          className="dis-btn d-sm-block d-none"
+          onClick={handleDisconnect}
+        >
           Disconnect
         </Button>
       </div>

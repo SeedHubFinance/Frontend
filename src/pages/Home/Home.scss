@@ -23,13 +23,15 @@
   .homepage {
     .home-container {
       .search-btn {
-        display: block;
-        .btn {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        .filbtn {
           font-weight: bold;
           border: none;
           border-radius: $borderRadius;
           width: 40px;
-          height: 40px;
+          height: 48px;
           font-size: 0.9rem;
           line-height: normal;
           box-sizing: border-box;
@@ -46,6 +48,28 @@
           &:focus {
             box-shadow: none;
             color: rgb(255, 255, 255);
+          }
+        }
+        .ca {
+          font-weight: bold;
+          border: 1px solid $primary-color-two;
+          width: 160px;
+          height: 48px;
+          box-sizing: border-box;
+          display: flex;
+          -webkit-box-align: center;
+          align-items: center;
+          -webkit-box-pack: center;
+          border-radius: $borderRadius;
+          justify-content: center;
+          cursor: pointer;
+          background-color: rgb(255, 255, 255);
+          color: $secondary-color-three;
+          &:focus {
+            box-shadow: none;
+          }
+          &:hover {
+            border-color: $dark-clr;
           }
         }
       }
