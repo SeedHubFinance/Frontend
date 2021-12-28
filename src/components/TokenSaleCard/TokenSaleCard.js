@@ -22,7 +22,7 @@ const Tokensalecard = ({
               </span>
               <p className=""># {index}</p>
             </div>
-            <div className="card-title text-break">ETH/SHIB</div>
+            <div className="card-title text-break">{name}</div>
           </div>
           <div className="content-wapper d-flex flex-column pe-md-4">
             <div className="card-content pt-md-0 pt-4">
@@ -36,15 +36,11 @@ const Tokensalecard = ({
               </div>
               <div>
                 <span>Pair</span>
-                <p>LINK /ETH</p>
+                <p>LINK /AVAX</p>
               </div>
               <div>
                 <span>Swap Ratio</span>
                 <p>{swapRatio} : 1</p>
-              </div>
-              <div>
-                <span>Price</span>
-                <p>$ 22.8378</p>
               </div>
               <div>
                 <span>Participants</span>
