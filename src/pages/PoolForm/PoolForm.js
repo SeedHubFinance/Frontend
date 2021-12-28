@@ -6,6 +6,7 @@ import {
   fixedSwapABI,
   fixedSwapContractAddress,
 } from "../../contracts/FixedSwap";
+import coinABI from "../../contracts/ERC20ABI";
 import { Web3Context } from "../../context/web3Context";
 import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
@@ -35,15 +36,28 @@ const renderer = ({ days, hours, minutes, seconds, completed }) => {
 const Fixedswap = (props) => {
   const [web3, setWeb3] = useContext(Web3Context);
   const [address, setAddress] = useState("");
-
   const [price, setPrice] = useState(null);
   const [error, setError] = useState(null);
+  const [tokenSymbol, setTokenSymbol] = useState(null);
   const [amount, setAmount] = useState();
   const location = useLocation();
-
   const [bidAmount, setBidAmount] = useState(null);
 
   const [isWeb3Connected, setWeb3Status] = useState(false);
+
+  const getSymbol = async () => {
+    if (web3?.eth) {
+      const tokenContract = new web3.eth.Contract(
+        coinABI,
+        location.state.sellToken
+      );
+      await tokenContract.methods
+        .symbol()
+        .call()
+        .then((e) => setTokenSymbol(e))
+        .catch((e) => setError(e.message));
+    }
+  };
 
   const getUserWalletAddress = async () => {
     if (web3) {
@@ -58,6 +72,7 @@ const Fixedswap = (props) => {
 
   useEffect(() => {
     getUserWalletAddress();
+    getSymbol();
   }, [web3, address]);
 
   const handleClick = async (e) => {
@@ -84,7 +99,7 @@ const Fixedswap = (props) => {
               <Col>
                 <div className="form-header">
                   Seed Hub
-                  <div className="title">NEF Inu</div>
+                  <div className="title">{location.state.name}</div>
                   <div className="token-code">{location?.state?.sellToken}</div>
                 </div>
               </Col>
@@ -100,7 +115,7 @@ const Fixedswap = (props) => {
                   </div>
                   <p>Fixed Swap Ratio</p>
                   <h3>
-                    1 ETH = {location.state.swapRatio} {location.state.name}
+                    1 ETH = {location.state.swapRatio} {tokenSymbol}
                   </h3>
                   <div className="divder"></div>
                   <div className="row">
@@ -111,7 +126,7 @@ const Fixedswap = (props) => {
                     </div> */}
                     <div className="col">
                       <p className="mb-3">Maximum Allocation per wallet</p>
-                      <h3>No limit</h3>
+                      <h3>{location.state.maxAmountPerWallet}</h3>
                       <div className="divder"></div>
                     </div>
                   </div>
@@ -129,7 +144,10 @@ const Fixedswap = (props) => {
                   Join The Pool
                 </div>
                 <div className="text-center fs-6">
-                  <Countdown date={Date.now() + 150000} renderer={renderer} />
+                  <Countdown
+                    date={new Date(location.state.endAuctionAt * 1000)}
+                    renderer={renderer}
+                  />
                 </div>
                 <div className="divder"></div>
                 <div className="d-flex justify-content-between">
