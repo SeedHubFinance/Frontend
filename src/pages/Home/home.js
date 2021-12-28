@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Button } from "react-bootstrap";
+import { Link } from "react-router-dom";
 import Filters from "../../components/Filters/Filters";
 import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
@@ -17,7 +18,10 @@ const Home = () => {
       <ToastContainer />
       <div className="home-container">
         <div className="mb-4 me-2 text-end search-btn">
-          <Button onClick={() => filterbtnClick(!filterbtn)}>
+          <Link to="/fixed-swap" className="me-2">
+            <Button className="ca">Create auction</Button>
+          </Link>
+          <Button className="filbtn" onClick={() => filterbtnClick(!filterbtn)}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="16"

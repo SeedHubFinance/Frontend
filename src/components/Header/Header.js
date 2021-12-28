@@ -18,7 +18,7 @@ const Header = () => {
             </Navbar.Brand>
             <Navbar.Toggle
               aria-controls="responsive-navbar-nav"
-              className="order-lg-1 order-2 ms-3"
+              className="order-lg-1 order-2 ms-0 ms-sm-3"
             />
             <Navbar.Collapse id="responsive-navbar-nav">
               <Nav className="ms-md-auto">

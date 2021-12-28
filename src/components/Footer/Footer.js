@@ -6,7 +6,7 @@ import "./Footer.scss";
 import { ReactComponent as MediumIcon } from "../../Assets/Images/medium.svg";
 import { ReactComponent as TelegramIcon } from "../../Assets/Images/telegram.svg";
 import { ReactComponent as TwitterIcon } from "../../Assets/Images/twitter.svg";
-import { ReactComponent as MsgIcon } from "../../Assets/Images/msg.svg";
+import { ReactComponent as MsgIcon } from "../../Assets/Images/github.svg";
 
 const Footer = () => {
   return (
