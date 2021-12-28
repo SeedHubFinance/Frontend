@@ -30,7 +30,7 @@ const Fixedswap = (props) => {
   const [tokenAllocation, setTokenAllocation] = useState(0);
   const [swapRatio, setSwapRatio] = useState(null);
   const [walletBalance, setWalletBalance] = useState(null);
-  const [maxAmountPerWallet, setMaxAmountPerWallet] = useState(null);
+  const [maxAmountPerWallet, setMaxAmountPerWallet] = useState(100000000000000);
   const [isOnlySeeHolder, setIsOnlySeedHolder] = useState(false);
   const [isOnlyPrivate, setisOnlyPrivate] = useState(false);
   const [isPublic, setIsPublic] = useState(true);

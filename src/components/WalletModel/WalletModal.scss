@@ -1,6 +1,8 @@
+@import "../../Assets/Style/StyleData.scss";
 .modal-content {
   border-radius: 0;
-  border: 1px solid rgba(0, 0, 0, 0.4);
+  border-radius: 8px;
+  border: 1px solid $primary-color-two;
 
   .modal-wrapper {
     width: 90%;
@@ -8,8 +10,8 @@
     .btn {
       font-weight: normal;
       border: 0;
-      border-bottom: 1px solid rgba(0, 0, 0, 0.4);
-      border-radius: 0;
+      border-bottom: 1px solid $primary-color-two;
+      border-radius: 1px;
       font-size: 1.1rem;
       line-height: normal;
       display: flex;
@@ -33,7 +35,8 @@
     .closebtn {
       margin-top: 30px;
       font-weight: bold;
-      border: 1px solid rgba(0, 0, 0, 0.4);
+      border-radius: 8px;
+      border: 1px solid $primary-color-two;
       width: 100%;
       height: 48px;
       box-sizing: border-box;
@@ -44,7 +47,7 @@
       justify-content: center;
       cursor: pointer;
       background-color: rgb(255, 255, 255);
-      color: rgb(0, 0, 0);
+      color: $dark-clr;
     }
   }
 }
