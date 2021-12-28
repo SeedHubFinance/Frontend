@@ -13,11 +13,6 @@ import Countdown from "react-countdown";
 import { ReactComponent as MaxIcon } from "../../Assets/Images/max.svg";
 import "./PoolForm.scss";
 
-const poolOptions = [
-  { value: "swap", label: "ETH" },
-  { value: "sealed", label: "Sealed-Bid Auction" },
-  { value: "dutch", label: "Dutch Auction" },
-];
 // Countdown Timer
 const Completionist = () => <span>0 d : 0 h : 0 m : 0 s</span>;
 const renderer = ({ days, hours, minutes, seconds, completed }) => {
@@ -39,22 +34,29 @@ const renderer = ({ days, hours, minutes, seconds, completed }) => {
 
 const Fixedswap = (props) => {
   const [web3, setWeb3] = useContext(Web3Context);
+  const [address, setAddress] = useState("");
+
   const [price, setPrice] = useState(null);
   const [error, setError] = useState(null);
   const [amount, setAmount] = useState();
   const location = useLocation();
 
-  const getPrice = async (address) => {
-    const contract = new web3.eth.Contract(fixedSwapABI, address);
-    return await contract.methods.calculatePrice(1, 2).call();
+  const [isWeb3Connected, setWeb3Status] = useState(false);
+
+  const getUserWalletAddress = async () => {
+    if (web3) {
+      let addressArray = await web3?.eth.getAccounts();
+      setAddress(addressArray[0]);
+      setWeb3Status(true);
+    } else {
+      alert("Please Connect Wallet");
+      setWeb3Status(false);
+    }
   };
 
   useEffect(() => {
-    if (price) return;
-    getPrice(fixedSwapContractAddress)
-      .then((e) => setPrice(web3.utils.fromWei(e)))
-      .catch((e) => setError(e.message));
-  }, [price]);
+    getUserWalletAddress();
+  }, [web3, address]);
 
   const handleClick = async (e) => {
     e.preventDefault();
@@ -62,14 +64,13 @@ const Fixedswap = (props) => {
       fixedSwapABI,
       fixedSwapContractAddress
     );
-    const addBid = await contract.methods
-      .addBid(location.state.index, amount)
-      .call();
-    addBid
-      .then((e) => console.log(e))
-      .catch((e) => console.log(e.response.message));
+    await contract.methods.addBid(location.state.index, amount).send({
+      from: address,
+      value: await contract.methods
+        .calculatePrice(amount, location.state.swapRatio)
+        .call(),
+    });
   };
-
 
   return (
     <Fragment>
@@ -80,10 +81,9 @@ const Fixedswap = (props) => {
             <Row className="g-0 mb-5">
               <Col>
                 <div className="form-header">
-                  Fixed-Swap
+                  Seed Hub
                   <div className="title">NEF Inu</div>
                   <div className="token-code">{location?.state?.sellToken}</div>
-
                 </div>
               </Col>
             </Row>
@@ -141,20 +141,14 @@ const Fixedswap = (props) => {
                     required
                     type="number"
                     name="amount"
-                    onChange={(e) => {
-                      setbidamount(e.target.value);
-                    }}
                     placeholder="Bid Amount"
                     onChange={(e) => setAmount(e.target.value)}
-                    value={amount}
-
                   />
                   <MaxIcon className="max-icon" />
                 </div>
                 <Button
                   onClick={handleClick}
                   disabled={amount > 0 ? false : true}
-                  className="sub-btn disable mt-5 mb-3"
                 >
                   GO
                 </Button>
