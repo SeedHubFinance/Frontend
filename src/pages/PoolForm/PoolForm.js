@@ -41,6 +41,8 @@ const Fixedswap = (props) => {
   const [amount, setAmount] = useState();
   const location = useLocation();
 
+  const [bidAmount, setBidAmount] = useState(null);
+
   const [isWeb3Connected, setWeb3Status] = useState(false);
 
   const getUserWalletAddress = async () => {
@@ -134,9 +136,19 @@ const Fixedswap = (props) => {
                   <span className="label">Amount</span>
                   <span className="label">Balance: 0 ETH</span>
                 </div>
-                <div className="position-relative">
+                <div className="d-flex">
                   <input
-                    className="custom-input"
+                    className="custom-input me-3"
+                    type="number"
+                    required
+                    type="number"
+                    name="amount"
+                    placeholder="Bid Price"
+                    onChange={(e) => setAmount(e.target.value)}
+                  />
+                  <input
+                    className="custom-input ms-3"
+                    disabled
                     type="number"
                     required
                     type="number"
