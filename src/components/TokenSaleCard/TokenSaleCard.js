@@ -3,7 +3,14 @@ import { Link } from "react-router-dom";
 import { Card, ProgressBar, Button } from "react-bootstrap";
 import "./TokenSaleCard.scss";
 
-const Tokensalecard = ({ index, name, sellToken, swapRatio }) => {
+const Tokensalecard = ({
+  index,
+  name,
+  sellToken,
+  swapRatio,
+  maxAmountPerWallet,
+  endAuctionAt,
+}) => {
   return (
     <Fragment>
       <Card className="mb-3">
@@ -46,7 +53,17 @@ const Tokensalecard = ({ index, name, sellToken, swapRatio }) => {
             </div>
             <ProgressBar now={60} />
           </div>
-          <Link to="/poolform" state={{ index, name, sellToken, swapRatio }}>
+          <Link
+            to="/poolform"
+            state={{
+              index,
+              name,
+              sellToken,
+              swapRatio,
+              maxAmountPerWallet,
+              endAuctionAt,
+            }}
+          >
             <Button>Join Now</Button>
           </Link>
         </Card.Body>

@@ -41,6 +41,8 @@ const Cardlist = (props) => {
             name={pool.name}
             sellToken={pool.sellToken}
             swapRatio={pool.swapRatio}
+            maxAmountPerWallet={pool.maxAmountPerWallet}
+            endAuctionAt={pool.endAuctionAt}
           />
         );
       })}
