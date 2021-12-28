@@ -166,6 +166,7 @@ const Fixedswap = (props) => {
                 <Button
                   onClick={handleClick}
                   disabled={amount > 0 ? false : true}
+                  className="sub-btn mt-3"
                 >
                   GO
                 </Button>
