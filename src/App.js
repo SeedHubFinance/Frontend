@@ -15,7 +15,6 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/fixed-swap" element={<FixedSwap />} />
           <Route path="/poolform" element={<PoolForm />} />
-          <Route path="/fixedPriceSale" element={<FixedPriceSalePage />} />
         </Routes>
       </div>
     </Web3Provider>
