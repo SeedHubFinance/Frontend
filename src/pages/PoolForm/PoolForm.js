@@ -36,12 +36,11 @@ const renderer = ({ days, hours, minutes, seconds, completed }) => {
 const Fixedswap = (props) => {
   const [web3, setWeb3] = useContext(Web3Context);
   const [address, setAddress] = useState("");
-  const [price, setPrice] = useState(null);
   const [error, setError] = useState(null);
   const [tokenSymbol, setTokenSymbol] = useState(null);
-  const [amount, setAmount] = useState();
   const location = useLocation();
-  const [bidAmount, setBidAmount] = useState(null);
+  const [amount, setAmount] = useState();
+  const [bidPrice, setPriceAmount] = useState(0);
 
   const [isWeb3Connected, setWeb3Status] = useState(false);
 
@@ -85,8 +84,25 @@ const Fixedswap = (props) => {
       from: address,
       value: await contract.methods
         .calculatePrice(amount, location.state.swapRatio)
-        .call(),
+        .call()
+        .then(() => alert("Bid added Successfully!!"))
+        .catch(() => alert("Something went wrong")),
     });
+  };
+
+  const calculatePrice = async () => {
+    const contract = new web3.eth.Contract(
+      fixedSwapABI,
+      fixedSwapContractAddress
+    );
+
+    const price = await contract.methods
+      .calculatePrice(amount, location.state.swapRatio)
+      .call();
+
+    if (amount !== 0) {
+      setPriceAmount(price);
+    }
   };
 
   return (
@@ -167,8 +183,8 @@ const Fixedswap = (props) => {
                     required
                     type="number"
                     name="amount"
-                    placeholder="Bid Price"
-                    onChange={(e) => setAmount(e.target.value)}
+                    placeholder="Bid Amount"
+                    onChange={(e) => calculatePrice()}
                   />
                   <input
                     className="custom-input ms-3"
@@ -178,7 +194,7 @@ const Fixedswap = (props) => {
                     type="number"
                     name="amount"
                     placeholder="Bid Amount"
-                    onChange={(e) => setAmount(e.target.value)}
+                    value={bidPrice}
                   />
                 </div>
                 <Button
