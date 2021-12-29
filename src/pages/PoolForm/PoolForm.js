@@ -100,7 +100,9 @@ const Fixedswap = (props) => {
                 <div className="form-header">
                   Seed Hub
                   <div className="title">{location.state.name}</div>
-                  <div className="token-code">{location?.state?.sellToken}</div>
+                  <div className="token-code text-break">
+                    {location?.state?.sellToken}
+                  </div>
                 </div>
               </Col>
             </Row>
@@ -139,7 +141,10 @@ const Fixedswap = (props) => {
                   </div>
                 </div>
               </Col>
-              <Col md={5} className="offset-md-2 p-5 bg-off">
+              <Col
+                md={5}
+                className="offset-md-2 mt-4 mt-md-0 p-4 p-md-5 bg-off"
+              >
                 <div className="form-heading text-center mb-4">
                   Join The Pool
                 </div>

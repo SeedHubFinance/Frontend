@@ -194,3 +194,11 @@
     }
   }
 }
+
+@media only screen and (max-width: 768px) {
+  .pool-form {
+    .pool-form-container {
+      padding: 40px 20px 100px 20px;
+    }
+  }
+}
