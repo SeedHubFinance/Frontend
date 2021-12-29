@@ -90,18 +90,19 @@ const Fixedswap = (props) => {
     });
   };
 
-  const calculatePrice = async () => {
+  const calculatePrice = async (amount) => {
     const contract = new web3.eth.Contract(
       fixedSwapABI,
       fixedSwapContractAddress
     );
 
-    const price = await contract.methods
-      .calculatePrice(amount, location.state.swapRatio)
-      .call();
-
-    if (amount !== 0) {
-      setPriceAmount(price);
+    if (amount !== "") {
+      console.log(amount, location.state.swapRatio);
+      setAmount(amount);
+      const price = await contract.methods
+        .calculatePrice(amount, location.state.swapRatio)
+        .call();
+      setPriceAmount(web3.utils.fromWei(price));
     }
   };
 
@@ -114,7 +115,7 @@ const Fixedswap = (props) => {
             <Row className="g-0 mb-5">
               <Col>
                 <div className="form-header">
-                  Seed Hub
+                  SeedHub
                   <div className="title">{location.state.name}</div>
                   <div className="token-code text-break">
                     {location?.state?.sellToken}
@@ -184,7 +185,7 @@ const Fixedswap = (props) => {
                     type="number"
                     name="amount"
                     placeholder="Bid Amount"
-                    onChange={(e) => calculatePrice()}
+                    onChange={(e) => calculatePrice(e.target.value)}
                   />
                   <input
                     className="custom-input ms-3"
@@ -193,7 +194,7 @@ const Fixedswap = (props) => {
                     required
                     type="number"
                     name="amount"
-                    placeholder="Bid Amount"
+                    placeholder="Bid Price"
                     value={bidPrice}
                   />
                 </div>
