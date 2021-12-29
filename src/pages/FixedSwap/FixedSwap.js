@@ -222,7 +222,11 @@ const Fixedswap = (props) => {
         enableWhiteList,
         listdata
       )
-      .send({ from: address });
+      .send({ from: address })
+      .then(() => {
+        alert("Pool made and deployed");
+      })
+      .catch(() => alert("Something went wrong"));
   };
 
   const deleteItemFromArrayAtIndex = (index) => {
@@ -466,13 +470,6 @@ const Fixedswap = (props) => {
                         Confirm
                       </Button>
                     </div>
-                    {/* <div className="listdiv mt-3">
-                      {listdata.map((e, index) => (
-                        <div className="my-2">
-                          <div>{e}</div>
-                        </div>
-                      ))}
-                    </div> */}
                   </div>
                 </div>
                 <div className="divder"></div>
@@ -504,7 +501,9 @@ const Fixedswap = (props) => {
                 <div className="d-flex align-items-center">
                   <span className="label my-4">Transaction Fee :</span>
 
-                  <span className="label my-4 ms-2 text-break">{transactionFee}</span>
+                  <span className="label my-4 ms-2 text-break">
+                    {transactionFee}
+                  </span>
                 </div>
                 <Button
                   className="sub-btn"
