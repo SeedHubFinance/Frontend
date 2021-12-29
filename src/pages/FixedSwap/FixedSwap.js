@@ -289,7 +289,7 @@ const Fixedswap = (props) => {
                 </div>
                 <div className="position-relative">
                   <input
-                    className="custom-input p28"
+                    className="custom-input"
                     required
                     name="amount"
                     type="number"
@@ -298,12 +298,12 @@ const Fixedswap = (props) => {
                     max={currentBalance}
                     onChange={(e) => setTokenAllocation(e.target.value)}
                   />
-                  <MaxIcon
+                  {/* <MaxIcon
                     className="max-icon"
                     onClick={() => {
                       getMaxBalanceForToken();
                     }}
-                  />
+                  /> */}
                   <Button
                     className="sub-btn mt-3"
                     disabled={tokenAddress === "" ? true : false}
