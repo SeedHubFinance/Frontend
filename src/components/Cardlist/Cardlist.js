@@ -34,6 +34,7 @@ const Cardlist = (props) => {
   return (
     <div className="cardlist">
       {pools.map((pool, index) => {
+        console.log(pool);
         return (
           <TokenSaleCard
             key={index}
