@@ -80,14 +80,14 @@ const Fixedswap = (props) => {
       fixedSwapABI,
       fixedSwapContractAddress
     );
-    await contract.methods.addBid(location.state.index, amount).send({
-      from: address,
-      value: await contract.methods
-        .calculatePrice(amount, location.state.swapRatio)
-        .call()
-        .then(() => alert("Bid added Successfully!!"))
-        .catch(() => alert("Something went wrong")),
-    });
+    await contract.methods
+      .addBid(location.state.index, amount)
+      .send({
+        from: address,
+        value: web3.utils.toWei(bidPrice),
+      })
+      .then(() => alert("Bid added Successfully!!"))
+      .catch(() => alert("Something went wrong"));
   };
 
   const calculatePrice = async (amount) => {
