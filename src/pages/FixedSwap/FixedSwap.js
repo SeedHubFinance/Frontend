@@ -218,7 +218,8 @@ const Fixedswap = (props) => {
         getTimeStampsForDates(endDate),
         getTimeStampsForDates(claimDate),
         isOnlySeeHolder,
-        false
+        enableWhiteList,
+        listdata
       )
       .send({ from: address });
   };
