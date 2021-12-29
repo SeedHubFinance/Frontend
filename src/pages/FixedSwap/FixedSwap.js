@@ -249,7 +249,7 @@ const Fixedswap = (props) => {
             </Row>
             <Row className="my-5 g-0">
               <Col md={7}>
-                <div className="form-heading">Contract information</div>
+                <div className="form-heading mb-4">Contract information</div>
               </Col>
               <Col md={5}>
                 <span className="label">Token Contract address</span>
@@ -265,10 +265,10 @@ const Fixedswap = (props) => {
             </Row>
             <div className="divder"></div>
             <Row>
-              <Col md={7}>
+              <Col md={6} lg={7}>
                 <div className="form-heading">Pool settings</div>
               </Col>
-              <Col md={5}>
+              <Col md={6} lg={5}>
                 <div className="d-flex align-items-center justify-content-between">
                   <div className="w-50 me-3">
                     <span className="label">From</span>
@@ -312,7 +312,7 @@ const Fixedswap = (props) => {
                 </div>
                 <div className="position-relative">
                   <input
-                    className="custom-input p28"
+                    className="custom-input"
                     required
                     name="amount"
                     type="number"
@@ -321,12 +321,12 @@ const Fixedswap = (props) => {
                     max={currentBalance}
                     onChange={(e) => setTokenAllocation(e.target.value)}
                   />
-                  <MaxIcon
+                  {/* <MaxIcon
                     className="max-icon"
                     onClick={() => {
                       getMaxBalanceForToken();
                     }}
-                  />
+                  /> */}
                   <Button
                     className="sub-btn mt-3"
                     disabled={tokenAddress === "" ? true : false}
@@ -394,7 +394,7 @@ const Fixedswap = (props) => {
                 <div className="d-flex align-items-end my-4">
                   <div className="me-2">
                     <span className="label mb-3">Participant</span>
-                    <div className="d-flex">
+                    <div className="d-flex flex-wrap">
                       <label className="me-5">
                         <input
                           className="me-2"
@@ -444,41 +444,35 @@ const Fixedswap = (props) => {
                 >
                   <div className="wka me-2">
                     <span className="label">List</span>
-                    <div className="d-flex position-relative">
-                      <input
-                        className="custom-input"
-                        type="text"
-                        required
-                        name="password"
+                    <div className="position-relative">
+                      <textarea
+                        className="custom-input border mt-3 p-3"
+                        placeholder="Enter Addresses"
+                        name="whitelist"
+                        style={{ height: "150px" }}
                         onChange={(e) => {
                           setWhitelist(e.target.value);
                         }}
                         value={whitelist}
                         disabled={!isWeb3Connected}
-                      />
+                      ></textarea>
                       <Button
-                        className="addlistbtn"
+                        className="sub-btn mt-4"
                         onClick={() => {
-                          setListData((oldArray) => [...oldArray, whitelist]);
-                          setWhitelist("");
+                          const array = whitelist.split("\n");
+                          setListData(array);
                         }}
                       >
-                        Add
+                        Confirm
                       </Button>
                     </div>
-                    <div className="listdiv mt-3">
+                    {/* <div className="listdiv mt-3">
                       {listdata.map((e, index) => (
-                        <div className="my-2 d-flex align-items-center justify-content-between position-relative">
+                        <div className="my-2">
                           <div>{e}</div>
-                          <Button
-                            className="addlistbtn"
-                            onClick={() => deleteItemFromArrayAtIndex(index)}
-                          >
-                            X
-                          </Button>
                         </div>
                       ))}
-                    </div>
+                    </div> */}
                   </div>
                 </div>
                 <div className="divder"></div>
@@ -509,7 +503,8 @@ const Fixedswap = (props) => {
                 </div>
                 <div className="d-flex align-items-center">
                   <span className="label my-4">Transaction Fee :</span>
-                  <span className="label my-4 ms-2">{transactionFee}</span>
+
+                  <span className="label my-4 ms-2 text-break">{transactionFee}</span>
                 </div>
                 <Button
                   className="sub-btn"
