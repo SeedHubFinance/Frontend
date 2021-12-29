@@ -242,10 +242,10 @@ const Fixedswap = (props) => {
             </Row>
             <div className="divder"></div>
             <Row>
-              <Col md={7}>
+              <Col md={6} lg={7}>
                 <div className="form-heading">Pool settings</div>
               </Col>
-              <Col md={5}>
+              <Col md={6} lg={5}>
                 <div className="d-flex align-items-center justify-content-between">
                   <div className="w-50 me-3">
                     <span className="label">From</span>
@@ -418,38 +418,33 @@ const Fixedswap = (props) => {
                 >
                   <div className="wka me-2">
                     <span className="label">List</span>
-                    <div className="d-flex position-relative">
-                      <input
-                        className="custom-input"
-                        type="text"
-                        required
-                        name="password"
+                    <div className="position-relative">
+                      <textarea
+                        className="custom-input border mt-3 p-3"
+                        placeholder="Enter Addresses"
+                        name="whitelist"
+                        style={{ height: "150px" }}
                         onChange={(e) => {
                           setWhitelist(e.target.value);
                         }}
                         value={whitelist}
                         disabled={!isWeb3Connected}
-                      />
+                      ></textarea>
                       <Button
-                        className="addlistbtn"
+                        className="sub-btn mt-4"
                         onClick={() => {
-                          setListData((oldArray) => [...oldArray, whitelist]);
+                          const array = whitelist.split("\n");
+                          setListData(array);
                           setWhitelist("");
                         }}
                       >
-                        Add
+                        Confirm
                       </Button>
                     </div>
                     <div className="listdiv mt-3">
                       {listdata.map((e, index) => (
-                        <div className="my-2 d-flex align-items-center justify-content-between position-relative">
+                        <div className="my-2">
                           <div>{e}</div>
-                          <Button
-                            className="addlistbtn"
-                            onClick={() => deleteItemFromArrayAtIndex(index)}
-                          >
-                            X
-                          </Button>
                         </div>
                       ))}
                     </div>
