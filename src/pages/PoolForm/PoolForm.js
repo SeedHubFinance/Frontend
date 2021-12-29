@@ -107,7 +107,7 @@ const Fixedswap = (props) => {
               </Col>
             </Row>
             <Row>
-              <Col md={5}>
+              <Col md={6} lg={5}>
                 <div className="leftcol">
                   <div className="card-head mb-4 d-flex flex-column">
                     <span>
@@ -142,8 +142,9 @@ const Fixedswap = (props) => {
                 </div>
               </Col>
               <Col
-                md={5}
-                className="offset-md-2 mt-4 mt-md-0 p-4 p-md-5 bg-off"
+                md={6}
+                lg={5}
+                className="offset-lg-2 mt-4 mt-md-0 p-4 p-md-5 bg-off"
               >
                 <div className="form-heading text-center mb-4">
                   Join The Pool
