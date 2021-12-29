@@ -36,12 +36,11 @@ const renderer = ({ days, hours, minutes, seconds, completed }) => {
 const Fixedswap = (props) => {
   const [web3, setWeb3] = useContext(Web3Context);
   const [address, setAddress] = useState("");
-  const [price, setPrice] = useState(null);
   const [error, setError] = useState(null);
   const [tokenSymbol, setTokenSymbol] = useState(null);
-  const [amount, setAmount] = useState();
   const location = useLocation();
-  const [bidAmount, setBidAmount] = useState(null);
+  const [amount, setAmount] = useState();
+  const [bidPrice, setPriceAmount] = useState(0);
 
   const [isWeb3Connected, setWeb3Status] = useState(false);
 
@@ -85,8 +84,25 @@ const Fixedswap = (props) => {
       from: address,
       value: await contract.methods
         .calculatePrice(amount, location.state.swapRatio)
-        .call(),
+        .call()
+        .then(() => alert("Bid added Successfully!!"))
+        .catch(() => alert("Something went wrong")),
     });
+  };
+
+  const calculatePrice = async () => {
+    const contract = new web3.eth.Contract(
+      fixedSwapABI,
+      fixedSwapContractAddress
+    );
+
+    const price = await contract.methods
+      .calculatePrice(amount, location.state.swapRatio)
+      .call();
+
+    if (amount !== 0) {
+      setPriceAmount(price);
+    }
   };
 
   return (
@@ -107,7 +123,7 @@ const Fixedswap = (props) => {
               </Col>
             </Row>
             <Row>
-              <Col md={5}>
+              <Col md={6} lg={5}>
                 <div className="leftcol">
                   <div className="card-head mb-4 d-flex flex-column">
                     <span>
@@ -142,8 +158,9 @@ const Fixedswap = (props) => {
                 </div>
               </Col>
               <Col
-                md={5}
-                className="offset-md-2 mt-4 mt-md-0 p-4 p-md-5 bg-off"
+                md={6}
+                lg={5}
+                className="offset-lg-2 mt-4 mt-md-0 p-4 p-md-5 bg-off"
               >
                 <div className="form-heading text-center mb-4">
                   Join The Pool
@@ -166,8 +183,8 @@ const Fixedswap = (props) => {
                     required
                     type="number"
                     name="amount"
-                    placeholder="Bid Price"
-                    onChange={(e) => setAmount(e.target.value)}
+                    placeholder="Bid Amount"
+                    onChange={(e) => calculatePrice()}
                   />
                   <input
                     className="custom-input ms-3"
@@ -177,7 +194,7 @@ const Fixedswap = (props) => {
                     type="number"
                     name="amount"
                     placeholder="Bid Amount"
-                    onChange={(e) => setAmount(e.target.value)}
+                    value={bidPrice}
                   />
                 </div>
                 <Button
