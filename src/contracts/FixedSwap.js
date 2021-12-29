@@ -12,6 +12,11 @@ export const fixedSwapABI = [
         type: "uint256",
       },
       {
+        internalType: "uint256",
+        name: "seedTokenMinHolding",
+        type: "uint256",
+      },
+      {
         internalType: "address",
         name: "seedTokenAddress",
         type: "address",
@@ -480,12 +485,17 @@ export const fixedSwapABI = [
     outputs: [
       {
         internalType: "uint256",
-        name: "trasnctionFee",
+        name: "transctionFee",
         type: "uint256",
       },
       {
         internalType: "uint256",
         name: "seedTransactionFee",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "seedTokenMinHolding",
         type: "uint256",
       },
       {
@@ -513,6 +523,30 @@ export const fixedSwapABI = [
     name: "addBid",
     outputs: [],
     stateMutability: "payable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "funds",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "txFee",
+        type: "uint256",
+      },
+    ],
+    name: "calculateFee",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "pure",
     type: "function",
   },
   {
@@ -590,6 +624,74 @@ export const fixedSwapABI = [
         internalType: "bool",
         name: "enableWhiteList",
         type: "bool",
+      },
+      {
+        internalType: "address[]",
+        name: "whiteList",
+        type: "address[]",
+      },
+    ],
+    name: "create",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "string",
+        name: "name",
+        type: "string",
+      },
+      {
+        internalType: "address",
+        name: "sellToken",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "swapRatio",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "maxAmountPerWallet",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "amountOfSellToken",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "startAuctionAt",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "endAuctionAt",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "claimAuctionFundsAt",
+        type: "uint256",
+      },
+      {
+        internalType: "bool",
+        name: "onlySeedHolders",
+        type: "bool",
+      },
+      {
+        internalType: "bool",
+        name: "enableWhiteList",
+        type: "bool",
+      },
+      {
+        internalType: "address[]",
+        name: "whiteList",
+        type: "address[]",
       },
     ],
     name: "createLiquidityPool",
@@ -720,6 +822,19 @@ export const fixedSwapABI = [
   },
   {
     inputs: [],
+    name: "getSeedTokenMinHolding",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
     name: "getTransactionFee",
     outputs: [
       {
@@ -773,12 +888,48 @@ export const fixedSwapABI = [
   {
     inputs: [
       {
+        internalType: "uint256",
+        name: "index",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "amount",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "price",
+        type: "uint256",
+      },
+    ],
+    name: "swapToken",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
         internalType: "address",
         name: "newOwner",
         type: "address",
       },
     ],
     name: "transferOwnership",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "txFee",
+        type: "uint256",
+      },
+    ],
+    name: "updateMinSeedHolding",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -825,14 +976,25 @@ export const fixedSwapABI = [
   {
     inputs: [
       {
-        internalType: "address[]",
-        name: "whitelist",
-        type: "address[]",
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
       },
     ],
-    name: "updateWhiteList",
-    outputs: [],
-    stateMutability: "nonpayable",
+    name: "whiteLists",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
     type: "function",
   },
   {
@@ -851,4 +1013,4 @@ export const fixedSwapABI = [
 ];
 
 export const fixedSwapContractAddress =
-  "0xA0bAA46001da7422bEb7d07f20DC9bBc46a38fe5";
+  "0x0a673718FA977EA5A32deb543C29B341E9fD9987";

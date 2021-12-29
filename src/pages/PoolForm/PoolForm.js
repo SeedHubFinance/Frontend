@@ -41,6 +41,8 @@ const Fixedswap = (props) => {
   const [tokenSymbol, setTokenSymbol] = useState(null);
   const [amount, setAmount] = useState();
   const location = useLocation();
+  const [bidAmount, setBidAmount] = useState(null);
+
   const [isWeb3Connected, setWeb3Status] = useState(false);
 
   const getSymbol = async () => {
@@ -117,12 +119,12 @@ const Fixedswap = (props) => {
                   </h3>
                   <div className="divder"></div>
                   <div className="row">
-                    <div className="col-md-6 pe-md-4">
+                    {/* <div className="col">
                       <p className="mb-3">Price,$</p>
                       <h3>{price}</h3>
                       <div className="divder"></div>
-                    </div>
-                    <div className="col-md-6 ps-md-4">
+                    </div> */}
+                    <div className="col">
                       <p className="mb-3">Maximum Allocation per wallet</p>
                       <h3>{location.state.maxAmountPerWallet}</h3>
                       <div className="divder"></div>
@@ -152,9 +154,19 @@ const Fixedswap = (props) => {
                   <span className="label">Amount</span>
                   <span className="label">Balance: 0 ETH</span>
                 </div>
-                <div className="position-relative">
+                <div className="d-flex">
                   <input
-                    className="custom-input"
+                    className="custom-input me-3"
+                    type="number"
+                    required
+                    type="number"
+                    name="amount"
+                    placeholder="Bid Price"
+                    onChange={(e) => setAmount(e.target.value)}
+                  />
+                  <input
+                    className="custom-input ms-3"
+                    disabled
                     type="number"
                     required
                     type="number"

@@ -131,6 +131,21 @@
         }
       }
     }
+    .addlistbtn {
+      background-color: #fff;
+      border-color: $dark-clr;
+      color: #000;
+      font-weight: 500;
+      outline: none;
+      border: 1px solid;
+      font-size: 14px;
+      top: -3px;
+      box-shadow: none;
+      padding: 2px 5px;
+      border-radius: 0;
+      position: absolute;
+      right: 0;
+    }
     .divder {
       height: 2px;
       width: 100%;

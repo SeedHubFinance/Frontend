@@ -35,15 +35,11 @@ const Fixedswap = (props) => {
   const [tokenName, setTokenName] = useState("");
   const [tokenAllocation, setTokenAllocation] = useState(0);
   const [swapRatio, setSwapRatio] = useState(null);
-  const [walletBalance, setWalletBalance] = useState(null);
   const [maxAmountPerWallet, setMaxAmountPerWallet] = useState(100000000000000);
   const [isOnlySeeHolder, setIsOnlySeedHolder] = useState(false);
-  const [isOnlyPrivate, setisOnlyPrivate] = useState(false);
-  const [isPublic, setIsPublic] = useState(true);
+  const [enableWhiteList, setEnableWhitelist] = useState(false);
+
   const [poolName, setPoolName] = useState("");
-  const [startTime, setStartTime] = useState(0);
-  const [endTime, setEndTime] = useState(0);
-  const [claimTime, setClaimTime] = useState(0);
   const dateErrorRef = useRef(null);
   const isFirstRun = useRef(true);
 
@@ -70,11 +66,18 @@ const Fixedswap = (props) => {
 
   const [isWeb3Connected, setWeb3Status] = useState(false);
 
+  const [whitelist, setWhitelist] = useState("");
+
+  const [listdata, setListData] = useState([]);
+
+  const [transactionFee, setTransactionFee] = useState(0);
+
   const getUserWalletAddress = async () => {
     if (web3) {
       let addressArray = await web3?.eth.getAccounts();
       setAddress(addressArray[0]);
       setWeb3Status(true);
+      getTransactionFee();
     } else {
       alert("Please Connect Wallet");
       setWeb3Status(false);
@@ -90,13 +93,13 @@ const Fixedswap = (props) => {
       isFirstRun.current = false;
       return;
     }
-    if (!(endDate > startDate)) {
+    if (endDate < startDate) {
       setTransferApproval(false);
       dateErrorRef.current.innerText =
         "End date should be greater than start Date";
       return;
     }
-    if (!(claimDate > endDate)) {
+    if (claimDate < endDate) {
       setTransferApproval(false);
       dateErrorRef.current.innerText =
         "Claim data should be greater than end Date";
@@ -124,6 +127,17 @@ const Fixedswap = (props) => {
     let coinContract = new web3.eth.Contract(coinABI, address);
     setCurrentBalance(await getTokenBalance(address));
     return await coinContract.methods.name().call();
+  };
+
+  const getTransactionFee = async () => {
+    let fixedSwapContract = new web3.eth.Contract(
+      fixedSwapABI,
+      fixedSwapContractAddress
+    );
+
+    let transFee = await fixedSwapContract.methods.getTransactionFee().call();
+
+    setTransactionFee(web3.utils.fromWei(transFee));
   };
 
   const getTokenBalance = async (tokenAddress) => {
@@ -162,6 +176,16 @@ const Fixedswap = (props) => {
 
   const validationForForm = (poolReq) => {};
 
+  const setPoolType = (type) => {
+    switch (type) {
+      case "public":
+        setIsOnlySeedHolder(false);
+        setEnableWhitelist(false);
+      case "whitelist":
+        setEnableWhitelist(true);
+    }
+  };
+
   const makePool = async () => {
     let fixedSwapContract = new web3.eth.Contract(
       fixedSwapABI,
@@ -179,6 +203,7 @@ const Fixedswap = (props) => {
       getTimeStampsForDates(claimDate),
       isOnlySeeHolder,
       false,
+      listdata,
     ];
     console.log(poolReq);
 
@@ -196,6 +221,11 @@ const Fixedswap = (props) => {
         false
       )
       .send({ from: address });
+  };
+
+  const deleteItemFromArrayAtIndex = (index) => {
+    const data = listdata.splice(index, 1);
+    setListData(listdata);
   };
 
   return (
@@ -369,7 +399,7 @@ const Fixedswap = (props) => {
                           required
                           onClick={(e) => setpassfield(false)}
                           name="participant"
-                          type="radio"
+                          type="checkbox"
                           defaultValue="No limits"
                           disabled={!isWeb3Connected}
                         />
@@ -379,7 +409,7 @@ const Fixedswap = (props) => {
                         <input
                           className="me-2"
                           required
-                          onClick={(e) => setpassfield(false)}
+                          onChange={(e) => console.log(e)}
                           name="participant"
                           type="radio"
                           defaultValue="No limits"
@@ -391,13 +421,16 @@ const Fixedswap = (props) => {
                         <input
                           className="me-2"
                           required
-                          onClick={(e) => setpassfield(true)}
+                          onChange={(e) => {
+                            setPoolType(e.target.value);
+                            setpassfield(true);
+                          }}
                           name="participant"
                           type="radio"
-                          defaultValue="Private"
+                          value="whitelist"
                           disabled={!isWeb3Connected}
                         />
-                        Private
+                        Whitelist
                       </label>
                     </div>
                   </div>
@@ -408,15 +441,42 @@ const Fixedswap = (props) => {
                   }`}
                 >
                   <div className="wka me-2">
-                    <span className="label">Password</span>
-                    <input
-                      className="custom-input"
-                      type="password"
-                      required
-                      name="password"
-                      defaultValue=""
-                      disabled={!isWeb3Connected}
-                    />
+                    <span className="label">List</span>
+                    <div className="d-flex position-relative">
+                      <input
+                        className="custom-input"
+                        type="text"
+                        required
+                        name="password"
+                        onChange={(e) => {
+                          setWhitelist(e.target.value);
+                        }}
+                        value={whitelist}
+                        disabled={!isWeb3Connected}
+                      />
+                      <Button
+                        className="addlistbtn"
+                        onClick={() => {
+                          setListData((oldArray) => [...oldArray, whitelist]);
+                          setWhitelist("");
+                        }}
+                      >
+                        Add
+                      </Button>
+                    </div>
+                    <div className="listdiv mt-3">
+                      {listdata.map((e, index) => (
+                        <div className="my-2 d-flex align-items-center justify-content-between position-relative">
+                          <div>{e}</div>
+                          <Button
+                            className="addlistbtn"
+                            onClick={() => deleteItemFromArrayAtIndex(index)}
+                          >
+                            X
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </div>
                 <div className="divder"></div>
@@ -447,14 +507,14 @@ const Fixedswap = (props) => {
                 </div>
                 <div className="d-flex align-items-center">
                   <span className="label my-4">Transaction Fee :</span>
-                  <span className="label my-4 ms-2">0.00</span>
+                  <span className="label my-4 ms-2">{transactionFee}</span>
                 </div>
                 <Button
                   className="sub-btn"
                   onClick={() => {
                     makePool();
                   }}
-                  disabled={isTransferNotApproved}
+                  disabled={!isTransferNotApproved}
                 >
                   Launch
                 </Button>
