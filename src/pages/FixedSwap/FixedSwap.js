@@ -226,7 +226,7 @@ const Fixedswap = (props) => {
             </Row>
             <Row className="my-5 g-0">
               <Col md={7}>
-                <div className="form-heading">Contract information</div>
+                <div className="form-heading mb-4">Contract information</div>
               </Col>
               <Col md={5}>
                 <span className="label">Token Contract address</span>
@@ -371,7 +371,7 @@ const Fixedswap = (props) => {
                 <div className="d-flex align-items-end my-4">
                   <div className="me-2">
                     <span className="label mb-3">Participant</span>
-                    <div className="d-flex">
+                    <div className="d-flex flex-wrap">
                       <label className="me-5">
                         <input
                           className="me-2"
@@ -435,19 +435,18 @@ const Fixedswap = (props) => {
                         onClick={() => {
                           const array = whitelist.split("\n");
                           setListData(array);
-                          setWhitelist("");
                         }}
                       >
                         Confirm
                       </Button>
                     </div>
-                    <div className="listdiv mt-3">
+                    {/* <div className="listdiv mt-3">
                       {listdata.map((e, index) => (
                         <div className="my-2">
                           <div>{e}</div>
                         </div>
                       ))}
-                    </div>
+                    </div> */}
                   </div>
                 </div>
                 <div className="divder"></div>
@@ -478,7 +477,7 @@ const Fixedswap = (props) => {
                 </div>
                 <div className="d-flex align-items-center">
                   <span className="label my-4">Transaction Fee :</span>
-                  <span className="label my-4 ms-2">0.00</span>
+                  <span className="label my-4 ms-2 text-break">0.00</span>
                 </div>
                 <Button
                   className="sub-btn"
