@@ -223,6 +223,11 @@ const Fixedswap = (props) => {
       .send({ from: address });
   };
 
+  const deleteItemFromArrayAtIndex = (index) => {
+    const data = listdata.splice(index, 1);
+    setListData(listdata);
+  };
+
   return (
     <Fragment>
       <Header />
@@ -453,15 +458,22 @@ const Fixedswap = (props) => {
                         className="addlistbtn"
                         onClick={() => {
                           setListData((oldArray) => [...oldArray, whitelist]);
+                          setWhitelist("");
                         }}
                       >
                         Add
                       </Button>
                     </div>
                     <div className="listdiv mt-3">
-                      {listdata.map((e) => (
-                        <div className="my-2 d-flex align-items-center justify-content-between">
+                      {listdata.map((e, index) => (
+                        <div className="my-2 d-flex align-items-center justify-content-between position-relative">
                           <div>{e}</div>
+                          <Button
+                            className="addlistbtn"
+                            onClick={() => deleteItemFromArrayAtIndex(index)}
+                          >
+                            X
+                          </Button>
                         </div>
                       ))}
                     </div>
