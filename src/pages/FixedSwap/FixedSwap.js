@@ -177,6 +177,7 @@ const Fixedswap = (props) => {
   const validationForForm = (poolReq) => {};
 
   const setPoolType = (type) => {
+    console.log(type);
     switch (type) {
       case "public":
         setIsOnlySeedHolder(false);
@@ -398,7 +399,7 @@ const Fixedswap = (props) => {
                         <input
                           className="me-2"
                           required
-                          onClick={(e) => setpassfield(false)}
+                          onClick={(e) => console.log(e.target.value)}
                           name="participant"
                           type="checkbox"
                           defaultValue="No limits"
@@ -410,10 +411,10 @@ const Fixedswap = (props) => {
                         <input
                           className="me-2"
                           required
-                          onChange={(e) => console.log(e)}
+                          onChange={(e) => setPoolType(e.target.value)}
                           name="participant"
                           type="radio"
-                          defaultValue="No limits"
+                          value="public"
                           disabled={!isWeb3Connected}
                         />
                         Public
