@@ -10,6 +10,8 @@ const Tokensalecard = ({
   swapRatio,
   maxAmountPerWallet,
   endAuctionAt,
+  isOnlySeed,
+  isOnlyWhiteList,
 }) => {
   return (
     <Fragment>
@@ -44,7 +46,10 @@ const Tokensalecard = ({
               </div>
               <div>
                 <span>Participants</span>
-                <p>public</p>
+                <p>
+                  {isOnlyWhiteList ? "WhiteList only" : "Public"}
+                  {isOnlySeed ? "Only for seed Holders" : ""}
+                </p>
               </div>
             </div>
             <ProgressBar now={60} />

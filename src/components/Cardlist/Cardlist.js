@@ -34,6 +34,7 @@ const Cardlist = (props) => {
   return (
     <div className="cardlist">
       {pools.map((pool, index) => {
+        console.log(pool);
         return (
           <TokenSaleCard
             key={index}
@@ -43,6 +44,8 @@ const Cardlist = (props) => {
             swapRatio={pool.swapRatio}
             maxAmountPerWallet={pool.maxAmountPerWallet}
             endAuctionAt={pool.endAuctionAt}
+            isOnlySeed={pool.onlySeedHolders}
+            isOnlyWhiteList={pool.enableWhiteList}
           />
         );
       })}
