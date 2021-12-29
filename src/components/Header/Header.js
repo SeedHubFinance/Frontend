@@ -13,7 +13,7 @@ const Header = () => {
           <Navbar collapseOnSelect expand="lg">
             <Navbar.Brand className="logo fs-3 me-auto">
               <Link to="/">
-                <img src={Logo} width="150px" />
+                <img src={Logo} className="logoimg" width="150px" />
               </Link>
             </Navbar.Brand>
             <Navbar.Toggle
