@@ -72,7 +72,6 @@ const Fixedswap = (props) => {
   useEffect(() => {
     getUserWalletAddress();
     getSymbol();
-    console.log(props.isOnlyWhiteList);
   }, [web3, address]);
 
   const handleClick = async (e) => {
@@ -135,11 +134,11 @@ const Fixedswap = (props) => {
                       <span>Participants</span>
                       <p>
                         {location.state.isOnlyWhiteList
-                          ? "WhiteList only"
-                          : "Public"}
+                          ? "WhiteList "
+                          : "Public "}
                         {location.state.isOnlySeed
-                          ? "Only for seed Holders"
-                          : ""}
+                          ? "and for seed Holders"
+                          : "Only"}
                       </p>
                     </p>
                   </div>
@@ -149,11 +148,6 @@ const Fixedswap = (props) => {
                   </h3>
                   <div className="divder"></div>
                   <div className="row">
-                    {/* <div className="col">
-                      <p className="mb-3">Price,$</p>
-                      <h3>{price}</h3>
-                      <div className="divder"></div>
-                    </div> */}
                     <div className="col">
                       <p className="mb-3">Maximum Allocation per wallet</p>
                       <h3>{location.state.maxAmountPerWallet}</h3>
