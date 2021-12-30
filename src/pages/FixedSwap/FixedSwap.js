@@ -34,7 +34,7 @@ const Fixedswap = (props) => {
   const [tokenAddress, setTokenAddress] = useState("");
   const [tokenName, setTokenName] = useState("");
   const [tokenAllocation, setTokenAllocation] = useState(0);
-  const [swapRatio, setSwapRatio] = useState(null);
+  const [swapRatio, setSwapRatio] = useState(0);
   const [maxAmountPerWallet, setMaxAmountPerWallet] = useState(100000000000000);
   const [isOnlySeeHolder, setIsOnlySeedHolder] = useState(false);
   const [enableWhiteList, setEnableWhitelist] = useState(false);
@@ -56,8 +56,6 @@ const Fixedswap = (props) => {
   const [limitfield, setlimitfield] = useState(false);
 
   const [currentBalance, setCurrentBalance] = useState("");
-
-  const [isFromValid, setIsFromValid] = useState(false);
 
   const [web3, setWeb3] = useContext(Web3Context);
   const [address, setAddress] = useState(Web3Context);
@@ -118,7 +116,7 @@ const Fixedswap = (props) => {
       return false;
     }
 
-    // if (address.splice(0, 1) == "0x") return false;
+    if (address[0] !== "0" && address[1]) return false;
 
     return true;
   };
@@ -146,15 +144,13 @@ const Fixedswap = (props) => {
     return await coinContract.methods.balanceOf(address).call();
   };
 
-  const checkIfFromIsValid = () => {};
-
   const setToken = async (address) => {
-    console.log(address);
-
     if (tokenAddressValidation(address)) {
       setTokenAddress(address);
       let name = await getTokenName(address);
       setTokenName(name);
+    } else {
+      alert("Token Address is not valid");
     }
   };
 
@@ -174,16 +170,66 @@ const Fixedswap = (props) => {
       .catch((e) => setTransferApproval(true));
   };
 
-  const validationForForm = (poolReq) => {};
+  const validateDate = (startDate, endDate, claimDate) => {
+    if (startDate < endDate < claimDate) {
+      return true;
+    }
+    return false;
+  };
+
+  const validationForForm = (poolReq) => {
+    let erroMsg = "";
+
+    if (tokenAddress == undefined) {
+      erroMsg = "Token Address is not defined";
+      return { formState: false, erroMsg };
+    }
+
+    if (poolName.length == 0 || poolName == undefined) {
+      erroMsg = "Pool Name is not defined";
+      return { formState: false, erroMsg };
+    }
+
+    if (swapRatio == 0 || swapRatio == undefined) {
+      erroMsg = "Swap Ratio cannot be 0 or left empty";
+      return { formState: false, erroMsg };
+    }
+
+    if (maxAmountPerWallet == 0 || maxAmountPerWallet == undefined) {
+      erroMsg = "Maximum Amount Per Wallet cannot be 0 or left empty";
+
+      return { formState: false, erroMsg };
+    }
+
+    if (tokenAllocation == 0 || tokenAllocation == undefined) {
+      erroMsg = "Token Allocation cannot be 0 or left empty";
+
+      return { formState: false, erroMsg };
+    }
+
+    if (enableWhiteList && listdata.length == 0) {
+      erroMsg = "List be left empty for whitelist";
+      return { formState: false, erroMsg };
+    }
+
+    return { formState: true, erroMsg };
+  };
 
   const setPoolType = (type) => {
     console.log(type);
     switch (type) {
-      case "public":
+      case "whitelist": {
+        setEnableWhitelist(true);
+        console.log(true);
+      }
+      case "seed": {
+        setEnableWhitelist(true);
+      }
+      default: {
         setIsOnlySeedHolder(false);
         setEnableWhitelist(false);
-      case "whitelist":
-        setEnableWhitelist(true);
+        console.log("WTF");
+      }
     }
   };
 
@@ -193,20 +239,27 @@ const Fixedswap = (props) => {
       fixedSwapContractAddress
     );
 
-    const poolReq = [
+    const poolReq = {
       poolName,
       tokenAddress,
-      parseInt(swapRatio),
-      parseInt(maxAmountPerWallet),
-      parseInt(tokenAllocation),
-      getTimeStampsForDates(startDate),
-      getTimeStampsForDates(endDate),
-      getTimeStampsForDates(claimDate),
+      swapRatio: parseInt(swapRatio),
+      maxAmountPerWallet: parseInt(maxAmountPerWallet),
+      tokenAllocation: parseInt(tokenAllocation),
+      startDate: getTimeStampsForDates(startDate),
+      endDate: getTimeStampsForDates(endDate),
+      claimDate: getTimeStampsForDates(claimDate),
       isOnlySeeHolder,
-      false,
+      enableWhiteList,
       listdata,
-    ];
+    };
     console.log(poolReq);
+
+    let validation = validationForForm(poolReq);
+
+    if (!validation.formState) {
+      alert(validation.erroMsg);
+      return;
+    }
 
     await fixedSwapContract.methods
       .createLiquidityPool(
@@ -227,11 +280,6 @@ const Fixedswap = (props) => {
         alert("Pool made and deployed");
       })
       .catch(() => alert("Something went wrong"));
-  };
-
-  const deleteItemFromArrayAtIndex = (index) => {
-    const data = listdata.splice(index, 1);
-    setListData(listdata);
   };
 
   return (
@@ -325,12 +373,6 @@ const Fixedswap = (props) => {
                     max={currentBalance}
                     onChange={(e) => setTokenAllocation(e.target.value)}
                   />
-                  {/* <MaxIcon
-                    className="max-icon"
-                    onClick={() => {
-                      getMaxBalanceForToken();
-                    }}
-                  /> */}
                   <Button
                     className="sub-btn mt-3"
                     disabled={tokenAddress === "" ? true : false}
@@ -403,10 +445,11 @@ const Fixedswap = (props) => {
                         <input
                           className="me-2"
                           required
-                          onClick={(e) => console.log(e.target.value)}
+                          onChange={(e) =>
+                            setIsOnlySeedHolder(e.target.checked)
+                          }
                           name="participant"
                           type="checkbox"
-                          defaultValue="No limits"
                           disabled={!isWeb3Connected}
                         />
                         Seed holders
@@ -415,7 +458,10 @@ const Fixedswap = (props) => {
                         <input
                           className="me-2"
                           required
-                          onChange={(e) => setPoolType(e.target.value)}
+                          onChange={(e) => {
+                            setEnableWhitelist(!e.target.checked);
+                            setpassfield(false);
+                          }}
                           name="participant"
                           type="radio"
                           value="public"
@@ -428,7 +474,7 @@ const Fixedswap = (props) => {
                           className="me-2"
                           required
                           onChange={(e) => {
-                            setPoolType(e.target.value);
+                            setEnableWhitelist(e.target.checked);
                             setpassfield(true);
                           }}
                           name="participant"
@@ -499,11 +545,9 @@ const Fixedswap = (props) => {
                   {/* <Calendar onChange={setClaimDate} value={claimDate} /> */}
                 </div>
                 <div className="d-flex align-items-center">
-                  <span className="label my-4">Transaction Fee :</span>
+                  <span className="label my-4"></span>
 
-                  <span className="label my-4 ms-2 text-break">
-                    {transactionFee}
-                  </span>
+                  <span className="label my-4 ms-2 text-break"></span>
                 </div>
                 <Button
                   className="sub-btn"
