@@ -63,6 +63,8 @@ const Tokensalecard = ({
               swapRatio,
               maxAmountPerWallet,
               endAuctionAt,
+              isOnlyWhiteList,
+              isOnlySeed,
             }}
           >
             <Button>Join Now</Button>

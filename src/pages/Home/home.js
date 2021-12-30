@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import Filters from "../../components/Filters/Filters";
@@ -7,11 +7,25 @@ import Footer from "../../components/Footer/Footer";
 import Cardlist from "../../components/Cardlist/Cardlist";
 import CardPagination from "../../components/CardPagination/CardPagination";
 import { ToastContainer } from "react-toastify";
+import { Web3Context } from "../../context/web3Context";
 
 import "./Home.scss";
 
 const Home = () => {
   const [filterbtn, filterbtnClick] = useState(false);
+
+  const [web3, setWeb3] = useContext(Web3Context);
+
+  const checkWalletConnection = async () => {
+    if (!web3) {
+      alert("Please Connect Wallet To View Pools");
+    }
+  };
+
+  useEffect(() => {
+    checkWalletConnection();
+  }, [web3]);
+
   return (
     <div className="homepage">
       <Header />
