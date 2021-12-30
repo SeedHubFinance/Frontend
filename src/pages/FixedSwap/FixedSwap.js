@@ -44,6 +44,7 @@ const Fixedswap = (props) => {
   const isFirstRun = useRef(true);
 
   let date = new Date();
+  const [currentDate, setCurrentDate] = useState(date);
   const [startDate, setStartDate] = useState(date);
   const [endDate, setEndDate] = useState(date);
   const [claimDate, setClaimDate] = useState(date);
@@ -90,6 +91,11 @@ const Fixedswap = (props) => {
   useEffect(() => {
     if (isFirstRun.current) {
       isFirstRun.current = false;
+      return;
+    }
+    if (startDate <= currentDate) {
+      dateErrorRef.current.innerText =
+        "Start date should be greater than current Date";
       return;
     }
     if (endDate < startDate) {
