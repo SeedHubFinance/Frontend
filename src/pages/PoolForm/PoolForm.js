@@ -69,6 +69,8 @@ const Fixedswap = (props) => {
     }
   };
 
+  const calculateAmountForPrice = () => {};
+
   useEffect(() => {
     getUserWalletAddress();
     getSymbol();
@@ -91,21 +93,7 @@ const Fixedswap = (props) => {
       .catch(() => alert("Something went wrong"));
   };
 
-  const calculatePrice = async (amount) => {
-    const contract = new web3.eth.Contract(
-      fixedSwapABI,
-      fixedSwapContractAddress
-    );
-
-    if (amount !== "") {
-      console.log(amount, location.state.swapRatio);
-      setAmount(amount);
-      const price = await contract.methods
-        .calculatePrice(amount, location.state.swapRatio)
-        .call();
-      setPriceAmount(web3.utils.fromWei(price));
-    }
-  };
+  const calculatePrice = async (price) => {};
 
   return (
     <Fragment>
@@ -196,7 +184,7 @@ const Fixedswap = (props) => {
                     type="number"
                     name="amount"
                     placeholder="Bid Amount"
-                    onChange={(e) => calculatePrice(e.target.value)}
+                    onChange={(e) => calculateAmount(e.target.value)}
                   />
                   <input
                     className="custom-input ms-3"
@@ -206,7 +194,7 @@ const Fixedswap = (props) => {
                     type="number"
                     name="amount"
                     placeholder="Bid Price"
-                    value={bidPrice}
+                    value={bidAmount}
                   />
                 </div>
                 <Button
