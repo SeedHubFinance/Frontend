@@ -271,6 +271,16 @@ const Fixedswap = (props) => {
       .catch(() => alert("Something went wrong"));
   };
 
+  const sanatizeArray = (array) => {
+    let output = [];
+    for (let i = 0; i < array.length; i++) {
+      if (tokenAddressValidation(array[i])) {
+        output.push(array[i]);
+      }
+    }
+    setListData(output);
+  };
+
   return (
     <Fragment>
       <Header />
@@ -499,7 +509,7 @@ const Fixedswap = (props) => {
                         className="sub-btn mt-4"
                         onClick={() => {
                           const array = whitelist.split("\n");
-                          setListData(array);
+                          sanatizeArray(array);
                         }}
                       >
                         Confirm
