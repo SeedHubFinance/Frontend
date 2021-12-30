@@ -72,6 +72,7 @@ const Fixedswap = (props) => {
   useEffect(() => {
     getUserWalletAddress();
     getSymbol();
+    console.log(props.isOnlyWhiteList);
   }, [web3, address]);
 
   const handleClick = async (e) => {
@@ -130,7 +131,17 @@ const Fixedswap = (props) => {
                     <span>
                       <div className="dot me-2"></div> Live
                     </span>
-                    <p>Participant: Public</p>
+                    <p>
+                      <span>Participants</span>
+                      <p>
+                        {location.state.isOnlyWhiteList
+                          ? "WhiteList only"
+                          : "Public"}
+                        {location.state.isOnlySeed
+                          ? "Only for seed Holders"
+                          : ""}
+                      </p>
+                    </p>
                   </div>
                   <p>Fixed Swap Ratio</p>
                   <h3>
