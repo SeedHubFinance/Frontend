@@ -43,9 +43,10 @@ const Fixedswap = (props) => {
   const dateErrorRef = useRef(null);
   const isFirstRun = useRef(true);
 
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
-  const [claimDate, setClaimDate] = useState(new Date());
+  let date = new Date();
+  const [startDate, setStartDate] = useState(date);
+  const [endDate, setEndDate] = useState(date);
+  const [claimDate, setClaimDate] = useState(date);
 
   const [currency, setSelectedCurreny] = useState({
     value: "eth",
@@ -92,19 +93,19 @@ const Fixedswap = (props) => {
       return;
     }
     if (endDate < startDate) {
-      setTransferApproval(false);
+      setTransferApproval(true);
       dateErrorRef.current.innerText =
         "End date should be greater than start Date";
       return;
     }
     if (claimDate < endDate) {
-      setTransferApproval(false);
+      setTransferApproval(true);
       dateErrorRef.current.innerText =
         "Claim data should be greater than end Date";
       return;
     }
-    setTransferApproval(true);
     dateErrorRef.current.innerText = "";
+    setTransferApproval(false);
   }, [startDate, endDate, claimDate]);
 
   const getTimeStampsForDates = (date) => {
@@ -180,7 +181,7 @@ const Fixedswap = (props) => {
   const validationForForm = (poolReq) => {
     let erroMsg = "";
 
-    if (tokenAddress == undefined) {
+    if (tokenAddress.length == 0 || tokenAddress == undefined) {
       erroMsg = "Token Address is not defined";
       return { formState: false, erroMsg };
     }
@@ -213,24 +214,6 @@ const Fixedswap = (props) => {
     }
 
     return { formState: true, erroMsg };
-  };
-
-  const setPoolType = (type) => {
-    console.log(type);
-    switch (type) {
-      case "whitelist": {
-        setEnableWhitelist(true);
-        console.log(true);
-      }
-      case "seed": {
-        setEnableWhitelist(true);
-      }
-      default: {
-        setIsOnlySeedHolder(false);
-        setEnableWhitelist(false);
-        console.log("WTF");
-      }
-    }
   };
 
   const makePool = async () => {
@@ -554,7 +537,7 @@ const Fixedswap = (props) => {
                   onClick={() => {
                     makePool();
                   }}
-                  disabled={!isTransferNotApproved}
+                  disabled={isTransferNotApproved}
                 >
                   Launch
                 </Button>
