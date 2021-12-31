@@ -106,6 +106,11 @@ const Fixedswap = (props) => {
     }
   };
 
+  const calculateAmountFromPrice = (price) => {
+    setAmount(location.state.swapRatio * price);
+    setPriceAmount(price);
+  };
+
   return (
     <Fragment>
       <Header />
@@ -190,7 +195,7 @@ const Fixedswap = (props) => {
                     type="number"
                     name="amount"
                     placeholder="Bid Amount"
-                    onChange={(e) => calculatePrice(e.target.value)}
+                    onChange={(e) => calculateAmountFromPrice(e.target.value)}
                   />
                   <input
                     className="custom-input ms-3"
@@ -200,7 +205,7 @@ const Fixedswap = (props) => {
                     type="number"
                     name="amount"
                     placeholder="Bid Price"
-                    value={bidPrice}
+                    value={amount}
                   />
                 </div>
                 <Button
