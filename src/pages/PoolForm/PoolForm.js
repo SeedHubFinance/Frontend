@@ -194,7 +194,7 @@ const Fixedswap = (props) => {
                     required
                     type="number"
                     name="amount"
-                    placeholder="Bid Amount"
+                    placeholder="Bid Price"
                     onChange={(e) => calculateAmountFromPrice(e.target.value)}
                   />
                   <input
@@ -204,7 +204,7 @@ const Fixedswap = (props) => {
                     required
                     type="number"
                     name="amount"
-                    placeholder="Bid Price"
+                    placeholder="Bid Amount"
                     value={amount}
                   />
                 </div>
