@@ -1013,4 +1013,4 @@ export const fixedSwapABI = [
 ];
 
 export const fixedSwapContractAddress =
-  "0x0a673718FA977EA5A32deb543C29B341E9fD9987";
+  "0xB2Fba2FB54e70d5819527cd148E7Fa62a205872f";

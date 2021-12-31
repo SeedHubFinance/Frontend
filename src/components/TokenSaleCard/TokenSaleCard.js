@@ -47,8 +47,8 @@ const Tokensalecard = ({
               <div>
                 <span>Participants</span>
                 <p>
-                  {isOnlyWhiteList ? "WhiteList only" : "Public"}
-                  {isOnlySeed ? "Only for seed Holders" : ""}
+                  {isOnlyWhiteList ? "WhiteList " : "Public "}
+                  {isOnlySeed ? "and for seed Holders" : ""}
                 </p>
               </div>
             </div>
