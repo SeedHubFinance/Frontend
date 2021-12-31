@@ -39,6 +39,8 @@ const Fixedswap = (props) => {
   const [isOnlySeeHolder, setIsOnlySeedHolder] = useState(false);
   const [enableWhiteList, setEnableWhitelist] = useState(false);
 
+  const [decimal, setDecimal] = useState(0);
+
   const [poolName, setPoolName] = useState("");
   const dateErrorRef = useRef(null);
   const isFirstRun = useRef(true);
@@ -156,6 +158,7 @@ const Fixedswap = (props) => {
       setTokenAddress(address);
       let name = await getTokenName(address);
       setTokenName(name);
+      await getDecimal(address);
     } else {
       alert("Token Address is not valid");
     }
@@ -228,6 +231,8 @@ const Fixedswap = (props) => {
       fixedSwapContractAddress
     );
 
+    let coinContract = new web3.eth.Contract(coinABI, tokenAddress);
+
     const poolReq = {
       poolName,
       tokenAddress,
@@ -249,6 +254,8 @@ const Fixedswap = (props) => {
       alert(validation.erroMsg);
       return;
     }
+
+    let decimals = await coinContract.methods.decimals().call();
 
     await fixedSwapContract.methods
       .createLiquidityPool(
@@ -279,6 +286,12 @@ const Fixedswap = (props) => {
       }
     }
     setListData(output);
+  };
+
+  const getDecimal = async (address) => {
+    let coinContract = new web3.eth.Contract(coinABI, address);
+    let decimals = await coinContract.methods.decimals().call();
+    setDecimal(decimals);
   };
 
   return (
@@ -370,7 +383,11 @@ const Fixedswap = (props) => {
                     defaultValue={""}
                     disabled={!isWeb3Connected}
                     max={currentBalance}
-                    onChange={(e) => setTokenAllocation(e.target.value)}
+                    onChange={(e) =>
+                      setTokenAllocation(
+                        parseInt(e.target.value) * 10 ** decimal
+                      )
+                    }
                   />
                   <Button
                     className="sub-btn mt-3"
