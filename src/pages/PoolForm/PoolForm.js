@@ -38,6 +38,8 @@ const Fixedswap = (props) => {
   const [address, setAddress] = useState("");
   const [error, setError] = useState(null);
   const [tokenSymbol, setTokenSymbol] = useState(null);
+  const [tokenDecimals, setTokenDecimals] = useState(0);
+
   const location = useLocation();
   const [amount, setAmount] = useState();
   const [bidPrice, setPriceAmount] = useState(0);
@@ -58,6 +60,20 @@ const Fixedswap = (props) => {
     }
   };
 
+  const getDecimals = async () => {
+    if (web3?.eth) {
+      const tokenContract = new web3.eth.Contract(
+        coinABI,
+        location.state.sellToken
+      );
+      await tokenContract.methods
+        .decimals()
+        .call()
+        .then((e) => setTokenDecimals(e))
+        .catch((e) => setError(e.message));
+    }
+  };
+
   const getUserWalletAddress = async () => {
     if (web3) {
       let addressArray = await web3?.eth.getAccounts();
@@ -72,6 +88,7 @@ const Fixedswap = (props) => {
   useEffect(() => {
     getUserWalletAddress();
     getSymbol();
+    getDecimals();
   }, [web3, address]);
 
   const handleClick = async (e) => {
@@ -80,8 +97,9 @@ const Fixedswap = (props) => {
       fixedSwapABI,
       fixedSwapContractAddress
     );
+    console.log(amount * 10 ** tokenDecimals + "");
     await contract.methods
-      .addBid(location.state.index, amount)
+      .addBid(location.state.index, amount * 10 ** tokenDecimals + "")
       .send({
         from: address,
         value: web3.utils.toWei(bidPrice),
@@ -194,7 +212,7 @@ const Fixedswap = (props) => {
                     required
                     type="number"
                     name="amount"
-                    placeholder="Bid Amount"
+                    placeholder="Bid Price"
                     onChange={(e) => calculateAmountFromPrice(e.target.value)}
                   />
                   <input
@@ -204,7 +222,7 @@ const Fixedswap = (props) => {
                     required
                     type="number"
                     name="amount"
-                    placeholder="Bid Price"
+                    placeholder="Bid Amount"
                     value={amount}
                   />
                 </div>
