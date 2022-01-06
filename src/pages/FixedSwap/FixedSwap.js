@@ -251,8 +251,6 @@ const Fixedswap = (props) => {
       fixedSwapContractAddress
     );
 
-    let coinContract = new web3.eth.Contract(coinABI, tokenAddress);
-
     const poolReq = {
       poolName,
       tokenAddress,
@@ -275,14 +273,12 @@ const Fixedswap = (props) => {
       return;
     }
 
-    let decimals = await coinContract.methods.decimals().call();
-
     await fixedSwapContract.methods
       .createLiquidityPool(
         poolName,
         tokenAddress,
         swapRatio,
-        maxAmountPerWallet,
+        web3.utils.toWei(maxAmountPerWallet),
         tokenAllocation,
         getTimeStampsForDates(startDate),
         getTimeStampsForDates(endDate),
