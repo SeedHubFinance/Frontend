@@ -68,6 +68,8 @@ const Fixedswap = (props) => {
 
   const [isTransferNotApproved, setTransferApproval] = useState(true);
 
+  const [isApproved, setApproval] = useState(false);
+
   const [isWeb3Connected, setWeb3Status] = useState(false);
 
   const [whitelist, setWhitelist] = useState("");
@@ -196,8 +198,8 @@ const Fixedswap = (props) => {
     return await coinContract.methods
       .approve(fixedSwapContractAddress, toFixed(tokenAllocation).toString())
       .send({ from: address })
-      .then(() => setTransferApproval(false))
-      .catch((e) => setTransferApproval(true));
+      .then(() => setApproval(true))
+      .catch((e) => setApproval(false));
   };
 
   const validateDate = (startDate, endDate, claimDate) => {
@@ -584,9 +586,13 @@ const Fixedswap = (props) => {
                 <Button
                   className="sub-btn"
                   onClick={() => {
-                    makePool();
+                    if (isApproved) {
+                      makePool();
+                    } else {
+                      alert("Please approve or wait for approval of funds");
+                    }
                   }}
-                  disabled={isTransferNotApproved}
+                  disabled={isTransferNotApproved && !isWeb3Connected}
                 >
                   Launch
                 </Button>
