@@ -256,7 +256,7 @@ const Fixedswap = (props) => {
                 </div>
                 <Button
                   onClick={handleClick}
-                  disabled={amount > 0 ? false : true}
+                  disabled={amount > 0 && isWeb3Connected ? false : true}
                   className="sub-btn mt-3"
                 >
                   GO
