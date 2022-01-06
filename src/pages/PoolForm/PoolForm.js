@@ -91,6 +91,24 @@ const Fixedswap = (props) => {
     getDecimals();
   }, [web3, address]);
 
+  function toFixed(x) {
+    if (Math.abs(x) < 1.0) {
+      var e = parseInt(x.toString().split("e-")[1]);
+      if (e) {
+        x *= Math.pow(10, e - 1);
+        x = "0." + new Array(e).join("0") + x.toString().substring(2);
+      }
+    } else {
+      var e = parseInt(x.toString().split("+")[1]);
+      if (e > 20) {
+        e -= 20;
+        x /= Math.pow(10, e);
+        x += new Array(e + 1).join("0");
+      }
+    }
+    return x;
+  }
+
   const handleClick = async (e) => {
     e.preventDefault();
     const contract = new web3.eth.Contract(
@@ -98,8 +116,12 @@ const Fixedswap = (props) => {
       fixedSwapContractAddress
     );
     console.log(amount * 10 ** tokenDecimals + "");
+
+    let amountString = toFixed(
+      Math.ceil(amount * 10 ** tokenDecimals)
+    ).toString();
     await contract.methods
-      .addBid(location.state.index, amount * 10 ** tokenDecimals + "")
+      .addBid(location.state.index, amountString)
       .send({
         from: address,
         value: web3.utils.toWei(bidPrice),
