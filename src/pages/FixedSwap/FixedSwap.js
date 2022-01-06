@@ -35,7 +35,9 @@ const Fixedswap = (props) => {
   const [tokenName, setTokenName] = useState("");
   const [tokenAllocation, setTokenAllocation] = useState(0);
   const [swapRatio, setSwapRatio] = useState(0);
-  const [maxAmountPerWallet, setMaxAmountPerWallet] = useState(100000000000000);
+  const [maxAmountPerWallet, setMaxAmountPerWallet] = useState(
+    "100000000000000000000000000"
+  );
   const [isOnlySeeHolder, setIsOnlySeedHolder] = useState(false);
   const [enableWhiteList, setEnableWhitelist] = useState(false);
 
@@ -174,7 +176,7 @@ const Fixedswap = (props) => {
     console.log(tokenAllocation);
 
     return await coinContract.methods
-      .approve(fixedSwapContractAddress, tokenAllocation)
+      .approve(fixedSwapContractAddress, tokenAllocation.toString())
       .send({ from: address })
       .then(() => setTransferApproval(false))
       .catch((e) => setTransferApproval(true));

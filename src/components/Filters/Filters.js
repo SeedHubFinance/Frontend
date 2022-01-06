@@ -102,7 +102,7 @@ const Filters = () => {
           </Link>
         </div>
       </div>
-      <div className="search-filter">
+      <div className="search-filter d-none">
         <div className="d-flex align-items-center f-div my-lg-0 my-3">
           <p>Pool Type:</p>
           <Select
