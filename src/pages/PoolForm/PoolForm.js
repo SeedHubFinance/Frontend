@@ -118,6 +118,14 @@ const Fixedswap = (props) => {
     console.log(amount * 10 ** tokenDecimals + "");
 
     let amountString = toFixed(amount * 10 ** tokenDecimals).toString();
+
+    if (amountString.indexOf(".") !== -1) {
+      let index = amountString.indexOf(".");
+      amountString = Math.ceil(
+        toFixed(amount * 10 ** tokenDecimals)
+      ).toString();
+    }
+
     await contract.methods
       .addBid(location.state.index, amountString)
       .send({
