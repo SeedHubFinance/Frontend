@@ -13,15 +13,7 @@ import "./Home.scss";
 
 const Home = () => {
   const [filterbtn, filterbtnClick] = useState(false);
-  const [filters, setFilters] = useState({
-    name: "",
-    address: "",
-    id: -1,
-    tokenSymbol: "",
-    status: "",
-    pooltype: "",
-    view: true,
-  });
+
   const [web3, setWeb3] = useContext(Web3Context);
 
   const checkWalletConnection = async () => {
@@ -34,10 +26,6 @@ const Home = () => {
     checkWalletConnection();
   }, [web3]);
 
-  // const updateFilter = (filter) => {
-  //   setFilter(filter);
-  // };
-
   return (
     <div className="homepage">
       <Header />
@@ -47,7 +35,10 @@ const Home = () => {
           <Link to="/fixed-swap" className="me-2">
             <Button className="ca">Create auction</Button>
           </Link>
-          <Button className="filbtn" onClick={() => filterbtnClick(!filterbtn)}>
+          <Button
+            className="filbtn d-none"
+            onClick={() => filterbtnClick(!filterbtn)}
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="16"
@@ -61,10 +52,11 @@ const Home = () => {
           </Button>
         </div>
         <div className={`filters ${filterbtn ? "show" : null}`}>
-          <Filters filter={filters} setFilters={setFilters} />
+          <Filters />
         </div>
 
-        <Cardlist filter={filters} />
+        <Cardlist />
+        <CardPagination />
       </div>
       <Footer />
     </div>
