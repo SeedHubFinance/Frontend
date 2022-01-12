@@ -25,18 +25,18 @@ import "./Filters.scss";
 
 const poolOptions = [
   { value: "swap", label: "Fixed Swap Auction" },
-  // { value: "sealed", label: "Sealed-Bid Auction" },
-  // { value: "dutch", label: "Dutch Auction" },
+  { value: "sealed", label: "Sealed-Bid Auction" },
+  { value: "dutch", label: "Dutch Auction" },
 ];
 
-// const tokenOptions = [
-//   {
-//     value: "all",
-//     label: <AllToken />,
-//   },
-//   { value: "coinmark", label: <CoinMark /> },
-//   { value: "coingecko", label: <CoinGecko /> },
-// ];
+const tokenOptions = [
+  {
+    value: "all",
+    label: <AllToken />,
+  },
+  { value: "coinmark", label: <CoinMark /> },
+  { value: "coingecko", label: <CoinGecko /> },
+];
 
 const statusOptions = [
   { value: "all", label: "All" },
@@ -59,18 +59,13 @@ const customStyles = {
   },
 };
 
-const Filters = ({ filter, setFilters }) => {
+const Filters = () => {
   const [searchbtn, searchBtnClick] = useState(false);
   const [poolid_checkbox, setcheckbox_poolid] = useState(false);
   const [pn_checkbox, setcheckbox_pn] = useState(false);
   const [tca_checkbox, setcheckbox_tca] = useState(false);
   const [ts_checkbox, setcheckbox_ts] = useState(false);
-  // const [acwa_checkbox, setcheckbox_acwa] = useState(false);
-
-  const [poolid_filter, setFilter_poolid] = useState("");
-  const [pn_filter, setFilter_pn] = useState("");
-  const [tca_filter, setFilter_tca] = useState("");
-  const [ts_filter, setFilter_ts] = useState("");
+  const [acwa_checkbox, setcheckbox_acwa] = useState(false);
 
   return (
     <div className="filters-container">
@@ -107,7 +102,7 @@ const Filters = ({ filter, setFilters }) => {
           </Link>
         </div>
       </div>
-      <div className="search-filter">
+      <div className="search-filter d-none">
         <div className="d-flex align-items-center f-div my-lg-0 my-3">
           <p>Pool Type:</p>
           <Select
@@ -117,7 +112,7 @@ const Filters = ({ filter, setFilters }) => {
             isSearchable={false}
           />
         </div>
-        {/* <span className="vr me-3 ms-3" />
+        <span className="vr me-3 ms-3" />
         <div className="d-flex align-items-center f-div my-lg-0 my-3">
           <p>Token Filter:</p>
           <Select
@@ -126,7 +121,7 @@ const Filters = ({ filter, setFilters }) => {
             styles={customStyles}
             isSearchable={false}
           />
-        </div> */}
+        </div>
         <span className="vr me-3 ms-3" />
         <div className="d-flex align-items-center f-div my-lg-0 my-3">
           <p>Status:</p>
@@ -156,12 +151,7 @@ const Filters = ({ filter, setFilters }) => {
                 ></label>
                 <p>Pool ID</p>
                 <div className={`implicit ${poolid_checkbox ? "" : "hidden"}`}>
-                  <input
-                    type="text"
-                    placeholder="Enter Pool ID "
-                    onChange={(e) => setFilter_poolid(e.target.value)}
-                    value={poolid_filter}
-                  />
+                  <input type="text" placeholder="Enter Pool ID " value="" />
                 </div>
               </div>
               <div className="search-option">
@@ -172,12 +162,7 @@ const Filters = ({ filter, setFilters }) => {
                 ></label>
                 <p>Pool Name</p>
                 <div className={`implicit ${pn_checkbox ? "" : "hidden"}`}>
-                  <input
-                    type="text"
-                    placeholder="Enter Pool Name "
-                    onChange={(e) => setFilter_pn(e.target.value)}
-                    value={pn_filter}
-                  />
+                  <input type="text" placeholder="Enter Pool Name " value="" />
                 </div>
               </div>
               <div className="search-option">
@@ -191,8 +176,7 @@ const Filters = ({ filter, setFilters }) => {
                   <input
                     type="text"
                     placeholder="Enter Token Contract Address"
-                    onChange={(e) => setFilter_tca(e.target.value)}
-                    value={tca_filter}
+                    value=""
                   />
                 </div>
               </div>
@@ -204,15 +188,10 @@ const Filters = ({ filter, setFilters }) => {
                 ></label>
                 <p>Token Symbol</p>
                 <div className={`implicit ${ts_checkbox ? "" : "hidden"}`}>
-                  <input
-                    type="text"
-                    placeholder="Token Symbol"
-                    onChange={(e) => setFilter_ts(e.target.value)}
-                    value={ts_filter}
-                  />
+                  <input type="text" placeholder="Token Symbol" value="" />
                 </div>
               </div>
-              {/* <div className="search-option">
+              <div className="search-option">
                 <label
                   onClick={() => setcheckbox_acwa(!acwa_checkbox)}
                   for="Auction creator wallet address"
@@ -226,37 +205,10 @@ const Filters = ({ filter, setFilters }) => {
                     value=""
                   />
                 </div>
-              </div> */}
+              </div>
               <div className="search-box-btn">
-                <button
-                  className="white"
-                  onClick={() => {
-                    setcheckbox_poolid(false);
-                    setcheckbox_pn(false);
-                    setcheckbox_tca(false);
-                    setcheckbox_ts(false);
-                    setFilter_ts("");
-                    setFilter_tca("");
-                    setFilter_pn("");
-                    setFilter_poolid("");
-                  }}
-                >
-                  Сlear all
-                </button>
-                <button
-                  className="black"
-                  onClick={() => {
-                    setFilters({
-                      ...filter,
-                      name: pn_filter,
-                      id: poolid_filter,
-                      address: tca_filter,
-                      tokenSymbol: ts_filter,
-                    });
-                  }}
-                >
-                  Show Results
-                </button>
+                <button className="white">Сlear all</button>
+                <button className="black">Show Results</button>
               </div>
             </div>
           ) : (
@@ -265,18 +217,10 @@ const Filters = ({ filter, setFilters }) => {
         </div>
         <span className="vr me-3 ms-3" />
         <div className="search-filter-view f-div my-lg-0 my-3">
-          <Button
-            onClick={() => {
-              setFilters({ ...filter, view: false });
-            }}
-          >
+          <Button>
             <GridView />
           </Button>
-          <Button
-            onClick={() => {
-              setFilters({ ...filter, view: true });
-            }}
-          >
+          <Button>
             <ListView />
           </Button>
         </div>

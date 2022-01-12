@@ -12,21 +12,12 @@ const Tokensalecard = ({
   endAuctionAt,
   isOnlySeed,
   isOnlyWhiteList,
-  view,
 }) => {
   return (
     <Fragment>
       <Card className="mb-3">
-        <Card.Body
-          className={`d-flex ${
-            view ? "flex-column flex-md-row" : "flex-column"
-          }`}
-        >
-          <div
-            className={`card-head d-flex flex-column ${
-              view ? "justify-content-md-between" : ""
-            }`}
-          >
+        <Card.Body className="d-flex flex-column flex-md-row">
+          <div className="card-head d-flex flex-column justify-content-md-between">
             <div className="d-flex justify-content-between pe-4">
               <span>
                 <div className="dot me-2"></div> Live
@@ -35,11 +26,7 @@ const Tokensalecard = ({
             </div>
             <div className="card-title text-break">{name}</div>
           </div>
-          <div
-            className={`content-wapper d-flex flex-column ${
-              view ? "pe-md-4" : "pe-0"
-            }`}
-          >
+          <div className="content-wapper d-flex flex-column pe-md-4">
             <div className="card-content pt-md-0 pt-4">
               <div>
                 <span>Address</span>
@@ -58,8 +45,8 @@ const Tokensalecard = ({
                 <p>{swapRatio} : 1</p>
               </div>
               <div>
-                <span className="me-3">Participants</span>
-                <p className={view ? "text-end text-md-start" : "text-end"}>
+                <span>Participants</span>
+                <p>
                   {isOnlyWhiteList ? "WhiteList " : "Public "}
                   {isOnlySeed ? "and for seed Holders" : ""}
                 </p>
