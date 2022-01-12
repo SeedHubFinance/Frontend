@@ -13,6 +13,15 @@ import "./Home.scss";
 
 const Home = () => {
   const [filterbtn, filterbtnClick] = useState(false);
+  const [filters, setFilters] = useState({
+    name: "",
+    address: "",
+    id: -1,
+    tokenSymbol: "",
+    status: "",
+    pooltype: "",
+    view: true,
+  });
 
   const [web3, setWeb3] = useContext(Web3Context);
 
@@ -52,10 +61,10 @@ const Home = () => {
           </Button>
         </div>
         <div className={`filters ${filterbtn ? "show" : null}`}>
-          <Filters />
+          <Filters filter={filters} setFilters={setFilters} />
         </div>
 
-        <Cardlist />
+        <Cardlist filter={filters} />
         <CardPagination />
       </div>
       <Footer />
