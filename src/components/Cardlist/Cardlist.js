@@ -32,7 +32,7 @@ const Cardlist = (props) => {
   }, [web3]);
 
   return (
-    <div className="cardlist">
+    <div className={props.filter.view ? "cardlist" : "grid-view"}>
       {pools.map((pool, index) => {
         console.log(pool);
         return (
@@ -46,6 +46,7 @@ const Cardlist = (props) => {
             endAuctionAt={pool.endAuctionAt}
             isOnlySeed={pool.onlySeedHolders}
             isOnlyWhiteList={pool.enableWhiteList}
+            view={props.filter.view}
           />
         );
       })}

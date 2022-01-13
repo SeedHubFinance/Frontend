@@ -9,3 +9,18 @@
     flex-wrap: wrap;
   }
 }
+.grid-view {
+  min-height: 520px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  @media only screen and (max-width: 1200px) {
+    gap: 10px;
+  }
+  @media only screen and (max-width: 992px) {
+    gap: 25px;
+  }
+  @media only screen and (max-width: 992px) {
+    gap: 10px;
+  }
+}
