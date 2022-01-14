@@ -4,6 +4,8 @@ import "./Cardlist.scss";
 import coinABI from "../../contracts/ERC20ABI";
 import { Web3Context } from "../../context/web3Context";
 
+import ReactPaginate from "react-paginate";
+
 import {
   fixedSwapABI,
   fixedSwapContractAddress,
@@ -20,6 +22,33 @@ const Cardlist = ({
   const [pools, setPools] = useState([]);
   const [filteredPools, setFilteredPools] = useState([]);
   // const [searchByFilter, setSearchByFilter] = useState([]);
+
+  //-------- Pagination--------
+
+  const [currentItems, setCurrentItems] = useState([]);
+  const [pageCount, setPageCount] = useState(0);
+  const [itemOffset, setItemOffset] = useState(0);
+
+  const itemsPerPage = 8;
+
+  useEffect(() => {
+    // Fetch items from another resources.
+    const endOffset = itemOffset + itemsPerPage;
+    console.log(`Loading items from ${itemOffset} to ${endOffset}`);
+    setCurrentItems(filteredPools.slice(itemOffset, endOffset));
+    setPageCount(Math.ceil(filteredPools.length / itemsPerPage));
+  }, [itemOffset, itemsPerPage, filteredPools]);
+
+  // Invoke when user click to request another page.
+  const handlePageClick = (event) => {
+    const newOffset = (event.selected * itemsPerPage) % filteredPools.length;
+    console.log(
+      `User requested page number ${event.selected}, which is offset ${newOffset}`
+    );
+    setItemOffset(newOffset);
+  };
+
+  // -------------------
 
   const getAllPools = async () => {
     if (web3) {
@@ -47,6 +76,12 @@ const Cardlist = ({
 
   useEffect(() => {
     getAllPools();
+    if (currentItems.length > 0) {
+      setCurrentItems([]);
+      setPageCount(0);
+      setItemOffset(0);
+    }
+    console.log("Web3");
   }, [web3]);
 
   const symbolFilter = async (pool) => {
@@ -111,24 +146,39 @@ const Cardlist = ({
   }, [pools, filter]);
 
   return (
-    <div className={searchBy.view ? "cardlist" : "grid-view"}>
-      {filteredPools.map((pool, index) => {
-        return (
-          <TokenSaleCard
-            key={index}
-            index={index}
-            name={pool.name}
-            sellToken={pool.sellToken}
-            swapRatio={pool.swapRatio}
-            maxAmountPerWallet={pool.maxAmountPerWallet}
-            endAuctionAt={pool.endAuctionAt}
-            isOnlySeed={pool.onlySeedHolders}
-            isOnlyWhiteList={pool.enableWhiteList}
-            view={searchBy.view}
-          />
-        );
-      })}
-    </div>
+    <>
+      <div className={searchBy.view ? "cardlist" : "grid-view"}>
+        {currentItems.map((pool, index) => {
+          return (
+            <TokenSaleCard
+              key={index + itemOffset}
+              index={index + itemOffset}
+              name={pool.name}
+              sellToken={pool.sellToken}
+              swapRatio={pool.swapRatio}
+              maxAmountPerWallet={pool.maxAmountPerWallet}
+              endAuctionAt={pool.endAuctionAt}
+              isOnlySeed={pool.onlySeedHolders}
+              isOnlyWhiteList={pool.enableWhiteList}
+              view={searchBy.view}
+            />
+          );
+        })}
+      </div>
+      <div className="pagination-wapper2">
+        <ReactPaginate
+          breakLabel="..."
+          nextLabel="Next"
+          onPageChange={handlePageClick}
+          pageRangeDisplayed={5}
+          pageCount={pageCount}
+          containerClassName="paginate"
+          previousLabel="Prev"
+          previousLabel="Prev"
+          renderOnZeroPageCount={null}
+        />
+      </div>
+    </>
   );
 };
 export default Cardlist;
