@@ -101,7 +101,7 @@ const Cardlist = ({
         }
       }
       if (searchBy.name) {
-        if (searchBy.name.toUpperCase() !== pool.name.toUpperCase()) {
+        if (!pool.name.toUpperCase().includes(searchBy.name.toUpperCase())) {
           return false;
         }
       }
