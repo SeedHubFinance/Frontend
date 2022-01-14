@@ -51,13 +51,18 @@ const Fixedswap = (props) => {
   const [bidPrice, setPriceAmount] = useState(0);
 
   const [isWeb3Connected, setWeb3Status] = useState(false);
-  const statusRef = useRef("");
-  useEffect(() => {
-    const date = new Date(location.state.endAuctionAt * 1000);
+  // const statusRef = useRef("");
+  // useEffect(() => {
+  //   const date = new Date(location.state.endAuctionAt * 1000);
+  //   date < new Date()
+  //     ? (statusRef.current.innerText = "Closed")
+  //     : (statusRef.current.innerText = "Live");
+  // }, []);
+  const date = new Date(location.state.endAuctionAt * 1000);
+  const statusObj =
     date < new Date()
-      ? (statusRef.current.innerText = "Closed")
-      : (statusRef.current.innerText = "Live");
-  }, []);
+      ? { status: "Closed", isClosed: true }
+      : { status: "Live", isClosed: false };
 
   const getSymbol = async () => {
     if (web3?.eth) {
@@ -192,8 +197,14 @@ const Fixedswap = (props) => {
                 <div className="leftcol">
                   <div className="card-head mb-4 d-flex flex-column">
                     <span>
-                      <div className="dot me-2"></div>{" "}
-                      <div ref={statusRef}></div>
+                      <div
+                        className={`${
+                          statusObj.isClosed ? "dotClose" : "dotLive"
+                        } me-2`}
+                      />
+                      <div className={statusObj.isClosed && "closed"}>
+                        {statusObj.status}
+                      </div>
                     </span>
                     <p>
                       <span>Participants</span>

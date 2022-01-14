@@ -15,13 +15,19 @@ const Tokensalecard = ({
   isOnlyWhiteList,
   view,
 }) => {
-  const statusRef = useRef("");
-  useEffect(() => {
-    const date = new Date(endAuctionAt * 1000);
+  // const statusRef = useRef("");
+  // useEffect(() => {
+  //   const date = new Date(endAuctionAt * 1000);
+  //   if (date < new Date()) {
+  //     return (statusRef.current.innerText = "Closed");
+  //   }
+  //   return (statusRef.current.innerText = "Live");
+  // }, []);
+  const date = new Date(endAuctionAt * 1000);
+  const statusObj =
     date < new Date()
-      ? (statusRef.current.innerText = "Closed")
-      : (statusRef.current.innerText = "Live");
-  }, []);
+      ? { status: "Closed", isClosed: true }
+      : { status: "Live", isClosed: false };
 
   return (
     <Fragment>
@@ -38,8 +44,14 @@ const Tokensalecard = ({
           >
             <div className="d-flex justify-content-between pe-4">
               <span>
-                <div className="dot me-2"></div>
-                <div ref={statusRef}>Live</div>
+                <div
+                  className={`${
+                    statusObj.isClosed ? "dotClose" : "dotLive"
+                  } me-2`}
+                ></div>
+                <div className={statusObj.isClosed && "closed"}>
+                  {statusObj.status}
+                </div>
               </span>
               <p className=""># {index}</p>
             </div>
