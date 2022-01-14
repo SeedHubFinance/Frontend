@@ -1,7 +1,8 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useRef } from "react";
 import { Link } from "react-router-dom";
 import { Card, ProgressBar, Button } from "react-bootstrap";
 import "./TokenSaleCard.scss";
+import { useEffect, useState } from "react/cjs/react.development";
 
 const Tokensalecard = ({
   index,
@@ -14,6 +15,14 @@ const Tokensalecard = ({
   isOnlyWhiteList,
   view,
 }) => {
+  const statusRef = useRef("");
+  useEffect(() => {
+    const date = new Date(endAuctionAt * 1000);
+    date < new Date()
+      ? (statusRef.current.innerText = "Closed")
+      : (statusRef.current.innerText = "Live");
+  }, []);
+
   return (
     <Fragment>
       <Card className="mb-3">
@@ -29,7 +38,8 @@ const Tokensalecard = ({
           >
             <div className="d-flex justify-content-between pe-4">
               <span>
-                <div className="dot me-2"></div> Live
+                <div className="dot me-2"></div>
+                <div ref={statusRef}>Live</div>
               </span>
               <p className=""># {index}</p>
             </div>
