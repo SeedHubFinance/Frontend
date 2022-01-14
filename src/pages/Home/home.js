@@ -92,7 +92,7 @@ const Home = () => {
           showResult={showResult}
           setShowResult={setShowResult}
         />
-        <CardPagination />
+        {/* <CardPagination /> */}
       </div>
       <Footer />
     </div>
