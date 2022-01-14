@@ -1,6 +1,7 @@
 import React, { useContext, useState, useEffect } from "react";
 import TokenSaleCard from "../TokenSaleCard/TokenSaleCard";
 import "./Cardlist.scss";
+import coinABI from "../../contracts/ERC20ABI";
 import { Web3Context } from "../../context/web3Context";
 
 import ReactPaginate from "react-paginate";
@@ -10,41 +11,17 @@ import {
   fixedSwapContractAddress,
 } from "../../contracts/FixedSwap";
 
-const Cardlist = (props) => {
+const Cardlist = ({
+  filter,
+  searchBy,
+  setSearchBy,
+  showResult,
+  setShowResult,
+}) => {
   const [web3, setWeb3] = useContext(Web3Context);
   const [pools, setPools] = useState([]);
-
-  // ----pagination----
-  // We start with an empty list of items.
-  const [currentItems, setCurrentItems] = useState([]);
-  const [pageCount, setPageCount] = useState(0);
-  // Here we use item offsets; we could also use page offsets
-  // following the API or data you're working with.
-  const [itemOffset, setItemOffset] = useState(0);
-
-  const itemsPerPage = 8;
-  let cards = [];
-  // console.log(currentItems);
-
-  useEffect(() => {
-    // Fetch items from another resources.
-    const endOffset = itemOffset + itemsPerPage;
-    console.log(`Loading items from ${itemOffset} to ${endOffset}`);
-    console.log(pools);
-    setCurrentItems(pools.slice(itemOffset, endOffset));
-    setPageCount(Math.ceil(pools.length / itemsPerPage));
-  }, [itemOffset, itemsPerPage, pools]);
-
-  // Invoke when user click to request another page.
-  const handlePageClick = (event) => {
-    const newOffset = (event.selected * itemsPerPage) % pools.length;
-    console.log(
-      `User requested page number ${event.selected}, which is offset ${newOffset}`
-    );
-    setItemOffset(newOffset);
-  };
-
-  // ---------------------------------------
+  const [filteredPools, setFilteredPools] = useState([]);
+  // const [searchByFilter, setSearchByFilter] = useState([]);
 
   const getAllPools = async () => {
     if (web3) {
@@ -55,10 +32,18 @@ const Cardlist = (props) => {
 
       let addresses = await web3?.eth.getAccounts();
 
-      await fixedSwapContract.methods
+      const data = await fixedSwapContract.methods
         .getAllPools()
-        .call({ from: addresses[0] })
-        .then((data) => setPools(data));
+        .call({ from: addresses[0] });
+      const finalData = [];
+      await Promise.all(
+        data.map(async (d) => {
+          const tokenContract = new web3.eth.Contract(coinABI, d.sellToken);
+          const tokenSymbol = await tokenContract.methods.symbol().call();
+          finalData.push({ tokenSymbol, ...d });
+        })
+      );
+      setPools(finalData);
     }
   };
 
@@ -72,41 +57,86 @@ const Cardlist = (props) => {
     console.log("Web3");
   }, [web3]);
 
-  return (
-    <>
-      <div className={props.filter.view ? "cardlist" : "grid-view"}>
-        {currentItems.map((pool, index) => {
-          return (
-            <TokenSaleCard
-              key={index + itemOffset}
-              index={index + itemOffset}
-              name={pool.name}
-              sellToken={pool.sellToken}
-              swapRatio={pool.swapRatio}
-              maxAmountPerWallet={pool.maxAmountPerWallet}
-              endAuctionAt={pool.endAuctionAt}
-              isOnlySeed={pool.onlySeedHolders}
-              isOnlyWhiteList={pool.enableWhiteList}
-              view={props.filter.view}
-            />
-          );
+  const symbolFilter = async (pool) => {
+    const tokenContract = new web3.eth.Contract(coinABI, pool.sellToken);
+    const tokenSymbol = await tokenContract.methods.symbol().call();
+    if (tokenSymbol.toUpperCase() !== searchBy.tokenSymbol.toUpperCase()) {
+      return false;
+    }
+    return true;
+  };
 
-          // if filter for e.g filter.name == pool.name return TokenSaleCard
-        })}
-      </div>
-      <ReactPaginate
-        breakLabel="..."
-        nextLabel="Next"
-        containerClassName="paginate"
-        nextLinkClassName="next-btn"
-        onPageChange={handlePageClick}
-        pageRangeDisplayed={5}
-        pageCount={pageCount}
-        previousLinkClassName="prev-btn"
-        previousLabel="Prev"
-        renderOnZeroPageCount={null}
-      />
-    </>
+  const filteredData = () => {
+    const filterData = filteredPools.filter((pool, index) => {
+      if (searchBy.id > -1) {
+        if (parseInt(searchBy.id) !== index) {
+          return false;
+        }
+      }
+      if (searchBy.name) {
+        if (searchBy.name.toUpperCase() !== pool.name.toUpperCase()) {
+          return false;
+        }
+      }
+      if (searchBy.sellToken) {
+        if (searchBy.sellToken.toUpperCase() !== pool.sellToken.toUpperCase()) {
+          return false;
+        }
+      }
+      if (searchBy.tokenSymbol) {
+        if (
+          searchBy.tokenSymbol.toUpperCase() !== pool.tokenSymbol.toUpperCase()
+        ) {
+          return false;
+        }
+      }
+      return true;
+    });
+    console.log(filterData);
+    // filterData.then((e) => console.log(e));
+    setFilteredPools(filterData);
+  };
+
+  useEffect(() => {
+    if (showResult === false) return getAllPools();
+    filteredData();
+  }, [showResult]);
+
+  useEffect(() => {
+    if (!pools) return;
+    let data = pools.filter((item) => {
+      if (filter.status === "all") {
+        return true;
+      }
+      if (filter.status === "live") {
+        return new Date(item.endAuctionAt * 1000) > new Date();
+      }
+      if (filter.status === "closed") {
+        return new Date(item.endAuctionAt * 1000) < new Date();
+      }
+    });
+    setFilteredPools(data);
+  }, [pools, filter]);
+
+  return (
+    <div className={searchBy.view ? "cardlist" : "grid-view"}>
+      {filteredPools.map((pool, index) => {
+        return (
+          <TokenSaleCard
+            key={index}
+            index={index}
+            name={pool.name}
+            sellToken={pool.sellToken}
+            swapRatio={pool.swapRatio}
+            maxAmountPerWallet={pool.maxAmountPerWallet}
+            endAuctionAt={pool.endAuctionAt}
+            isOnlySeed={pool.onlySeedHolders}
+            isOnlyWhiteList={pool.enableWhiteList}
+            view={searchBy.view}
+          />
+        );
+      })}
+    </div>
   );
 };
 export default Cardlist;

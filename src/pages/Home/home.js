@@ -11,18 +11,35 @@ import { Web3Context } from "../../context/web3Context";
 
 import "./Home.scss";
 
+const statusOptions = [
+  { value: "all", label: "All" },
+  { value: "live", label: "Live & Filled" },
+  { value: "closed", label: "Closed" },
+];
+
 const Home = () => {
   const [filterbtn, filterbtnClick] = useState(false);
-  const [filters, setFilters] = useState({
-    name: "",
-    address: "",
+  // const [filters, setFilters] = useState({
+  //   address: "",
+  //   id: -1,
+  //   tokenSymbol: "",
+  //   status: statusOptions[0].value,
+  //   pooltype: "",
+  //   view: true,
+  // });
+
+  const [filter, setFilter] = useState({
+    status: statusOptions[0].value,
+    poolType: "",
+  });
+  const [searchBy, setSearchBy] = useState({
     id: -1,
+    name: "",
     tokenSymbol: "",
-    status: "",
-    pooltype: "",
+    sellToken: "",
     view: true,
   });
-
+  const [showResult, setShowResult] = useState(false);
   const [web3, setWeb3] = useContext(Web3Context);
 
   const checkWalletConnection = async () => {
@@ -58,10 +75,24 @@ const Home = () => {
           </Button>
         </div>
         <div className={`filters ${filterbtn ? "show" : null}`}>
-          <Filters filter={filters} setFilters={setFilters} />
+          <Filters
+            showResult={showResult}
+            setShowResult={setShowResult}
+            filter={filter}
+            setFilter={setFilter}
+            searchBy={searchBy}
+            setSearchBy={setSearchBy}
+            statusOptions={statusOptions}
+          />
         </div>
-
-        <Cardlist filter={filters} />
+        <Cardlist
+          filter={filter}
+          searchBy={searchBy}
+          setSearchBy={setSearchBy}
+          showResult={showResult}
+          setShowResult={setShowResult}
+        />
+        <CardPagination />
       </div>
       <Footer />
     </div>
