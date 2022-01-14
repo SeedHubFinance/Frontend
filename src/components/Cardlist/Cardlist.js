@@ -64,10 +64,10 @@ const Cardlist = ({
         .call({ from: addresses[0] });
       const finalData = [];
       await Promise.all(
-        data.map(async (d) => {
+        data.map(async (d, index) => {
           const tokenContract = new web3.eth.Contract(coinABI, d.sellToken);
           const tokenSymbol = await tokenContract.methods.symbol().call();
-          finalData.push({ tokenSymbol, ...d });
+          finalData.push({ tokenSymbol, index, ...d });
         })
       );
       setPools(finalData);
@@ -96,7 +96,7 @@ const Cardlist = ({
   const filteredData = () => {
     const filterData = filteredPools.filter((pool, index) => {
       if (searchBy.id > -1) {
-        if (parseInt(searchBy.id) !== index) {
+        if (parseInt(searchBy.id) !== pool.index) {
           return false;
         }
       }
@@ -148,11 +148,11 @@ const Cardlist = ({
   return (
     <>
       <div className={searchBy.view ? "cardlist" : "grid-view"}>
-        {currentItems.map((pool, index) => {
+        {currentItems.map((pool) => {
           return (
             <TokenSaleCard
-              key={index + itemOffset}
-              index={index + itemOffset}
+              key={pool.index + itemOffset}
+              index={pool.index + itemOffset}
               name={pool.name}
               sellToken={pool.sellToken}
               swapRatio={pool.swapRatio}
