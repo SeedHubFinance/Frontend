@@ -5,6 +5,9 @@
   border-radius: 10px;
   box-shadow: 0 0 3px #ff937350;
 
+  .closed {
+    color: $dark-clr;
+  }
   .card-head {
     flex: 1 1 20%;
     span {
@@ -18,7 +21,7 @@
       font-size: 14px;
       color: $dark-clr;
     }
-    .dot {
+    .dotLive {
       display: inline-block;
       height: 10px;
       width: 10px;
@@ -26,6 +29,16 @@
       border-radius: 50%;
       display: inline-block;
     }
+
+    .dotClose {
+      display: inline-block;
+      height: 10px;
+      width: 10px;
+      background-color: $dark-clr;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
     .card-title {
       line-height: normal;
 
