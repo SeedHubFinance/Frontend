@@ -5,6 +5,7 @@ import React, {
   useRef,
   Fragment,
 } from "react";
+import { useNavigate } from "react-router-dom";
 import { Row, Col, Button } from "react-bootstrap";
 import Header from "../../components/Header/Header";
 import Select from "react-select";
@@ -23,6 +24,7 @@ import {
   fixedSwapABI,
   fixedSwapContractAddress,
 } from "../../contracts/FixedSwap";
+import { toast } from "react-toastify";
 
 const poolOptions = [
   { value: "eth", label: "ETH" },
@@ -31,6 +33,7 @@ const poolOptions = [
 ];
 
 const Fixedswap = (props) => {
+  const navigate = useNavigate();
   const [tokenAddress, setTokenAddress] = useState("");
   const [tokenName, setTokenName] = useState("");
   const [tokenAllocation, setTokenAllocation] = useState(0);
@@ -291,7 +294,8 @@ const Fixedswap = (props) => {
       )
       .send({ from: address })
       .then(() => {
-        alert("Pool made and deployed");
+        toast.success("Pool successfully created");
+        navigate("/");
       })
       .catch(() => alert("Something went wrong"));
   };

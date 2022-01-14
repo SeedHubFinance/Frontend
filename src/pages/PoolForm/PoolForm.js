@@ -1,4 +1,10 @@
-import React, { Fragment, useContext, useState, useEffect } from "react";
+import React, {
+  Fragment,
+  useContext,
+  useState,
+  useEffect,
+  useRef,
+} from "react";
 import { Row, Col, Button } from "react-bootstrap";
 import { useLocation } from "react-router-dom";
 import { ProgressBar } from "react-bootstrap";
@@ -45,6 +51,13 @@ const Fixedswap = (props) => {
   const [bidPrice, setPriceAmount] = useState(0);
 
   const [isWeb3Connected, setWeb3Status] = useState(false);
+  const statusRef = useRef("");
+  useEffect(() => {
+    const date = new Date(location.state.endAuctionAt * 1000);
+    date < new Date()
+      ? (statusRef.current.innerText = "Closed")
+      : (statusRef.current.innerText = "Live");
+  }, []);
 
   const getSymbol = async () => {
     if (web3?.eth) {
@@ -179,7 +192,8 @@ const Fixedswap = (props) => {
                 <div className="leftcol">
                   <div className="card-head mb-4 d-flex flex-column">
                     <span>
-                      <div className="dot me-2"></div> Live
+                      <div className="dot me-2"></div>{" "}
+                      <div ref={statusRef}></div>
                     </span>
                     <p>
                       <span>Participants</span>
