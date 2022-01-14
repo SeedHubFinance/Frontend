@@ -90,6 +90,7 @@ const Filters = ({
     if (!ts_checkbox) {
       data.tokenSymbol = "";
     }
+    setShowResult(false);
     setSearchBy({ ...searchBy, ...data });
   }, [poolid_checkbox, pn_checkbox, tca_checkbox, ts_checkbox]);
 
