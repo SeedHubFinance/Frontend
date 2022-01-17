@@ -70,7 +70,7 @@ const Cardlist = ({
           finalData.push({ tokenSymbol, index, ...d });
         })
       );
-      setPools(finalData);
+      setPools(finalData.reverse());
     }
   };
 
@@ -145,14 +145,18 @@ const Cardlist = ({
     setFilteredPools(data);
   }, [pools, filter]);
 
+  useEffect(() => {
+    console.log(filteredPools);
+  }, [filteredData]);
+
   return (
     <>
       <div className={searchBy.view ? "cardlist" : "grid-view"}>
         {currentItems.map((pool) => {
           return (
             <TokenSaleCard
-              key={pool.index + itemOffset}
-              index={pool.index + itemOffset}
+              key={pool.index}
+              index={pool.index}
               name={pool.name}
               sellToken={pool.sellToken}
               swapRatio={pool.swapRatio}
