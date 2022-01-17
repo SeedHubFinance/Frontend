@@ -95,7 +95,7 @@ const Cardlist = ({
 
   const filteredData = () => {
     const filterData = filteredPools.filter((pool, index) => {
-      if (searchBy.id > -1) {
+      if (searchBy.id) {
         if (parseInt(searchBy.id) !== pool.index) {
           return false;
         }
