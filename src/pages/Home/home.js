@@ -33,7 +33,7 @@ const Home = () => {
     poolType: "",
   });
   const [searchBy, setSearchBy] = useState({
-    id: -1,
+    id: "",
     name: "",
     tokenSymbol: "",
     sellToken: "",

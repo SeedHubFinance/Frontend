@@ -79,7 +79,7 @@ const Filters = ({
   useEffect(() => {
     let data = searchBy;
     if (!poolid_checkbox) {
-      data.id = -1;
+      data.id = "";
     }
     if (!pn_checkbox) {
       data.name = "";
@@ -183,6 +183,7 @@ const Filters = ({
                     type="number"
                     placeholder="Enter Pool ID "
                     value={searchBy.id}
+                    min={0}
                     onChange={(e) => {
                       setSearchBy({ ...searchBy, id: e.target.value });
                       setShowResult(false);
