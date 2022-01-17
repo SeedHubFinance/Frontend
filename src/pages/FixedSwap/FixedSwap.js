@@ -394,7 +394,9 @@ const Fixedswap = (props) => {
                 </div>
                 <div className="d-flex justify-content-between">
                   <span className="label">Amount</span>
-                  <span className="label">Balance {currentBalance}</span>
+                  <span className="label">
+                    Balance {currentBalance / 10 ** decimal}
+                  </span>
                 </div>
                 <div className="position-relative">
                   <input
