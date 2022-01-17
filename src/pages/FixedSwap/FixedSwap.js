@@ -394,7 +394,7 @@ const Fixedswap = (props) => {
                 </div>
                 <div className="d-flex justify-content-between">
                   <span className="label">Amount</span>
-                  <span className="label">Balance --</span>
+                  <span className="label">Balance {currentBalance}</span>
                 </div>
                 <div className="position-relative">
                   <input
@@ -405,6 +405,7 @@ const Fixedswap = (props) => {
                     defaultValue={""}
                     disabled={!isWeb3Connected}
                     max={currentBalance}
+                    min={0}
                     onChange={(e) =>
                       setTokenAllocation(
                         parseInt(e.target.value) * 10 ** decimal
