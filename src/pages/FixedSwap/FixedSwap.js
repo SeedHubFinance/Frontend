@@ -406,7 +406,7 @@ const Fixedswap = (props) => {
                     type="number"
                     defaultValue={""}
                     disabled={!isWeb3Connected}
-                    max={currentBalance}
+                    max={currentBalance / 10 ** decimal}
                     min={0}
                     onChange={(e) =>
                       setTokenAllocation(
