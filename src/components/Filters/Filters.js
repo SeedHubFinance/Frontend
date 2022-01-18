@@ -293,7 +293,7 @@ const Filters = ({
           )}
         </div>
         <span className="vr me-3 ms-3" />
-        <div className="search-filter-view f-div my-lg-0 my-3">
+        <div className="search-filter-view d-md-flex d-none f-div my-lg-0 my-3">
           <Button
             onClick={() => {
               setSearchBy({ ...searchBy, view: false });
