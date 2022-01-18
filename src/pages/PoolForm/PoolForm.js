@@ -45,7 +45,7 @@ const Fixedswap = (props) => {
   const [error, setError] = useState(null);
   const [tokenSymbol, setTokenSymbol] = useState(null);
   const [tokenDecimals, setTokenDecimals] = useState(0);
-
+  const [currentBalance, setCurrentBalance] = useState("");
   const location = useLocation();
   const [amount, setAmount] = useState();
   const [bidPrice, setPriceAmount] = useState(0);
@@ -103,10 +103,28 @@ const Fixedswap = (props) => {
     }
   };
 
+  const getTokenBalance = () => {
+    if (address) {
+      let coinContract = new web3.eth.Contract(
+        coinABI,
+        location.state.sellToken
+      );
+      coinContract.methods
+        .balanceOf(address)
+        .call()
+        .then((e) => {
+          console.log("Hello");
+          setCurrentBalance(e);
+        })
+        .catch((e) => setError(e.message));
+    }
+  };
+
   useEffect(() => {
     getUserWalletAddress();
     getSymbol();
     getDecimals();
+    getTokenBalance();
   }, [web3, address]);
 
   function toFixed(x) {
@@ -259,7 +277,9 @@ const Fixedswap = (props) => {
                 <div className="divder"></div>
                 <div className="d-flex justify-content-between">
                   <span className="label">Amount</span>
-                  <span className="label">Balance: 0 ETH</span>
+                  <span className="label">
+                    Balance: {currentBalance / 10 ** tokenDecimals} ETH
+                  </span>
                 </div>
                 <div className="d-flex">
                   <input
