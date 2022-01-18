@@ -70,7 +70,8 @@ const Cardlist = ({
           finalData.push({ tokenSymbol, index, ...d });
         })
       );
-      setPools(finalData.reverse());
+      console.table(finalData);
+      setPools(finalData.sort((a, b) => (a["index"] > b["index"] ? -1 : 1)));
     }
   };
 
