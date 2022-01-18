@@ -434,7 +434,14 @@ const Fixedswap = (props) => {
                       Maximum Allocation per Wallet
                     </span>
                     <div className="d-flex">
-                      <label className="me-5">
+                      <label
+                        className="me-5"
+                        style={
+                          !isApproved
+                            ? { cursor: "default" }
+                            : { cursor: "pointer" }
+                        }
+                      >
                         <input
                           className="me-2"
                           required
@@ -446,7 +453,13 @@ const Fixedswap = (props) => {
                         />
                         No limits
                       </label>
-                      <label>
+                      <label
+                        style={
+                          !isApproved
+                            ? { cursor: "default" }
+                            : { cursor: "pointer" }
+                        }
+                      >
                         <input
                           className="me-2"
                           required
@@ -485,7 +498,14 @@ const Fixedswap = (props) => {
                   <div className="me-2">
                     <span className="label mb-3">Participant</span>
                     <div className="d-flex flex-wrap">
-                      <label className="me-5">
+                      <label
+                        className="me-5"
+                        style={
+                          !isApproved
+                            ? { cursor: "default" }
+                            : { cursor: "pointer" }
+                        }
+                      >
                         <input
                           className="me-2"
                           required
@@ -498,7 +518,14 @@ const Fixedswap = (props) => {
                         />
                         Seed holders
                       </label>
-                      <label className="me-5">
+                      <label
+                        className="me-5"
+                        style={
+                          !isApproved
+                            ? { cursor: "default" }
+                            : { cursor: "pointer" }
+                        }
+                      >
                         <input
                           className="me-2"
                           required
@@ -513,7 +540,13 @@ const Fixedswap = (props) => {
                         />
                         Public
                       </label>
-                      <label>
+                      <label
+                        style={
+                          !isApproved
+                            ? { cursor: "default" }
+                            : { cursor: "pointer" }
+                        }
+                      >
                         <input
                           className="me-2"
                           required
