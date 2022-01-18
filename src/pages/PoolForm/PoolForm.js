@@ -56,11 +56,11 @@ const Fixedswap = (props) => {
   const [tokenDecimals, setTokenDecimals] = useState(0);
   const [isClosed, setIsClosed] = useState(false);
   const [isExpired, setIsExpired] = useState(false);
-
-  const location = useLocation();
   const [amount, setAmount] = useState();
   const [bidPrice, setPriceAmount] = useState(0);
   const [isWeb3Connected, setWeb3Status] = useState(false);
+  const location = useLocation();
+
   // const statusRef = useRef("");
   // useEffect(() => {
   //   const date = new Date(location.state.endAuctionAt * 1000);
@@ -196,6 +196,14 @@ const Fixedswap = (props) => {
     setPriceAmount(price);
   };
 
+  const handleClaim = async (e) => {
+    e.preventDefault();
+    const contract = new web3.eth.Contract(
+      fixedSwapABI,
+      fixedSwapContractAddress
+    );
+    await contract.methods()
+  };
   return (
     <Fragment>
       <Header />
@@ -330,7 +338,7 @@ const Fixedswap = (props) => {
                   lg={5}
                   className="offset-lg-2 mt-4 mt-md-0 p-4 p-md-5 bg-off"
                 >
-                  {true ? (
+                  {!isExpired ? (
                     <>
                       <div className="form-heading text-center mb-4">
                         Claim For Pool
@@ -349,6 +357,7 @@ const Fixedswap = (props) => {
                         <Button
                           disabled={isWeb3Connected ? false : true}
                           className="sub-btn mt-3"
+                          onClick={handleClaim}
                         >
                           Claim Funds
                         </Button>
