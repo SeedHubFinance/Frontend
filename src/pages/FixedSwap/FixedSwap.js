@@ -371,6 +371,7 @@ const Fixedswap = (props) => {
                     <Select
                       options={poolOptions}
                       defaultValue={poolOptions[0]}
+                      isDisabled={!isWeb3Connected}
                       onChange={(e) => {
                         setSelectedCurreny(e);
                       }}
@@ -387,6 +388,8 @@ const Fixedswap = (props) => {
                     className="custom-input"
                     required
                     name="swapratio"
+                    type="number"
+                    min="0"
                     defaultValue=""
                     onChange={(e) => setSwapRatio(e.target.value)}
                     disabled={!isWeb3Connected}
