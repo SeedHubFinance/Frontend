@@ -22,8 +22,10 @@ import "./PoolForm.scss";
 
 // Countdown Timer
 // const Completionist = () => <span>0 d : 0 h : 0 m : 0 s</span>;
-const renderer = ({ days, hours, minutes, seconds }) => {
-  console.log(seconds);
+const renderer = ({ days, hours, minutes, seconds, completed }) => {
+  if (completed) {
+    return <></>;
+  }
   // Render a countdown
   return (
     <span>
@@ -202,7 +204,7 @@ const Fixedswap = (props) => {
       fixedSwapABI,
       fixedSwapContractAddress
     );
-    await contract.methods()
+    await contract.methods();
   };
   return (
     <Fragment>
@@ -338,34 +340,30 @@ const Fixedswap = (props) => {
                   lg={5}
                   className="offset-lg-2 mt-4 mt-md-0 p-4 p-md-5 bg-off"
                 >
-                  {!isExpired ? (
-                    <>
-                      <div className="form-heading text-center mb-4">
-                        Claim For Pool
-                      </div>
-                      <div className="text-center fs-6">
-                        <Countdown
-                          key={1}
-                          date={
-                            new Date(location.state.claimAuctionFundsAt * 1000)
-                          }
-                          renderer={renderer}
-                          onComplete={() => {
-                            setIsExpired(true);
-                          }}
-                        />
-                        <Button
-                          disabled={isWeb3Connected ? false : true}
-                          className="sub-btn mt-3"
-                          onClick={handleClaim}
-                        >
-                          Claim Funds
-                        </Button>
-                      </div>
-                    </>
-                  ) : (
-                    <div className="form-heading text-center mb-4">Expired</div>
-                  )}
+                  <>
+                    <div className="form-heading text-center mb-4">
+                      Claim For Pool
+                    </div>
+                    <div className="text-center fs-6">
+                      <Countdown
+                        key={1}
+                        date={
+                          new Date(location.state.claimAuctionFundsAt * 1000)
+                        }
+                        renderer={renderer}
+                        onComplete={() => {
+                          setIsExpired(true);
+                        }}
+                      />
+                      <Button
+                        disabled={!isExpired}
+                        className="sub-btn mt-3"
+                        onClick={handleClaim}
+                      >
+                        Claim Funds
+                      </Button>
+                    </div>
+                  </>
                 </Col>
               )}
             </Row>
