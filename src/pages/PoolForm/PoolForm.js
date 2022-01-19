@@ -21,23 +21,34 @@ import { ReactComponent as MaxIcon } from "../../Assets/Images/max.svg";
 import "./PoolForm.scss";
 
 // Countdown Timer
-const Completionist = () => <span>0 d : 0 h : 0 m : 0 s</span>;
+// const Completionist = () => <span>0 d : 0 h : 0 m : 0 s</span>;
 const renderer = ({ days, hours, minutes, seconds, completed }) => {
   if (completed) {
-    // Render a complete state
-    return <Completionist />;
-  } else {
-    // Render a countdown
-    return (
-      <span>
-        <span className="mx-2">{days} d</span>:
-        <span className="mx-2">{hours} h</span>:
-        <span className="mx-2">{minutes} m</span>:
-        <span className="mx-2">{seconds} s</span>
-      </span>
-    );
+    return <></>;
   }
+  // Render a countdown
+  return (
+    <span>
+      <span className="mx-2">{days} d</span>:
+      <span className="mx-2">{hours} h</span>:
+      <span className="mx-2">{minutes} m</span>:
+      <span className="mx-2">{seconds} s</span>
+    </span>
+  );
 };
+
+// const renderer2 = ({ days, hours, minutes, seconds }) => {
+//   console.lo
+//   // Render a countdown
+//   return (
+//     <span>
+//       <span className="mx-2">{days} d</span>:
+//       <span className="mx-2">{hours} h</span>:
+//       <span className="mx-2">{minutes} m</span>:
+//       <span className="mx-2">{seconds} s</span>
+//     </span>
+//   );
+// };
 
 const Fixedswap = (props) => {
   const [web3, setWeb3] = useContext(Web3Context);
@@ -45,12 +56,14 @@ const Fixedswap = (props) => {
   const [error, setError] = useState(null);
   const [tokenSymbol, setTokenSymbol] = useState(null);
   const [tokenDecimals, setTokenDecimals] = useState(0);
+  const [isClosed, setIsClosed] = useState(false);
+  const [isExpired, setIsExpired] = useState(false);
   const [currentBalance, setCurrentBalance] = useState("");
   const location = useLocation();
   const [amount, setAmount] = useState();
   const [bidPrice, setPriceAmount] = useState(0);
-
   const [isWeb3Connected, setWeb3Status] = useState(false);
+
   // const statusRef = useRef("");
   // useEffect(() => {
   //   const date = new Date(location.state.endAuctionAt * 1000);
@@ -58,12 +71,11 @@ const Fixedswap = (props) => {
   //     ? (statusRef.current.innerText = "Closed")
   //     : (statusRef.current.innerText = "Live");
   // }, []);
-  const date = new Date(location.state.endAuctionAt * 1000);
-  const statusObj =
-    date < new Date()
-      ? { status: "Closed", isClosed: true }
-      : { status: "Live", isClosed: false };
-
+  // const date = new Date(location.state.endAuctionAt * 1000);
+  // const statusObj =
+  //   date < new Date()
+  //     ? { status: "Closed", isClosed: true }
+  //     : { status: "Live", isClosed: false };
   const getSymbol = async () => {
     if (web3?.eth) {
       const tokenContract = new web3.eth.Contract(
@@ -124,6 +136,14 @@ const Fixedswap = (props) => {
     getUserWalletAddress();
     getSymbol();
     getDecimals();
+    const date = new Date(location.state.endAuctionAt * 1000);
+    if (date < new Date()) {
+      setIsClosed(true);
+    }
+    const claimDate = new Date(location.state.claimAuctionFundsAt * 1000);
+    if (claimDate < new Date()) {
+      setIsExpired(true);
+    }
     getTokenBalance();
   }, [web3, address]);
 
@@ -172,27 +192,46 @@ const Fixedswap = (props) => {
       .catch(() => alert("Something went wrong"));
   };
 
-  const calculatePrice = async (amount) => {
+  const calculateAmount = async (price) => {
     const contract = new web3.eth.Contract(
       fixedSwapABI,
       fixedSwapContractAddress
     );
 
-    if (amount !== "") {
-      console.log(amount, location.state.swapRatio);
-      setAmount(amount);
-      const price = await contract.methods
-        .calculatePrice(amount, location.state.swapRatio)
+    if (price !== "") {
+      console.log(price, location.state.swapRatio);
+      const Calamount = await contract.methods
+        .calculateAmount(
+          web3.utils.toWei(price),
+          location.state.swapRatio,
+          tokenDecimals
+        )
         .call();
-      setPriceAmount(web3.utils.fromWei(price));
+      console.log(Calamount);
+      setAmount(Calamount / 10 ** tokenDecimals);
     }
   };
 
   const calculateAmountFromPrice = (price) => {
-    setAmount(location.state.swapRatio * price);
     setPriceAmount(price);
+    calculateAmount(price);
   };
 
+  const handleClaim = async (e) => {
+    e.preventDefault();
+    const contract = new web3.eth.Contract(
+      fixedSwapABI,
+      fixedSwapContractAddress
+    );
+    console.log("=====>", contract.methods);
+    await contract.methods
+      .userWithDrawFunction(location.state.index)
+      .send({
+        from: address,
+      })
+      .then(() => alert("Claim Successfully!!"))
+      .catch((e) => alert("Something went wrong", e));
+  };
   return (
     <Fragment>
       <Header />
@@ -216,12 +255,10 @@ const Fixedswap = (props) => {
                   <div className="card-head mb-4 d-flex flex-column">
                     <span>
                       <div
-                        className={`${
-                          statusObj.isClosed ? "dotClose" : "dotLive"
-                        } me-2`}
+                        className={`${isClosed ? "dotClose" : "dotLive"} me-2`}
                       />
-                      <div className={statusObj.isClosed && "closed"}>
-                        {statusObj.status}
+                      <div className={isClosed && "closed"}>
+                        {isClosed ? "Closed" : "Live"}
                       </div>
                     </span>
                     <p>
@@ -260,66 +297,101 @@ const Fixedswap = (props) => {
                   </div>
                 </div>
               </Col>
-              <Col
-                md={6}
-                lg={5}
-                className="offset-lg-2 mt-4 mt-md-0 p-4 p-md-5 bg-off"
-              >
-                <div className="form-heading text-center mb-4">
-                  Join The Pool
-                </div>
-                <div className="text-center fs-6">
-                  <Countdown
-                    date={new Date(location.state.endAuctionAt * 1000)}
-                    renderer={renderer}
-                  />
-                </div>
-                <div className="divder"></div>
-                <div className="d-flex justify-content-between">
-                  <span className="label">Amount</span>
-                  <span className="label">
-                    Balance: {currentBalance / 10 ** tokenDecimals} ETH
-                  </span>
-                </div>
-                <div className="d-flex">
-                  <input
-                    className="custom-input me-3"
-                    type="number"
-                    required
-                    type="number"
-                    name="amount"
-                    placeholder="Bid Price"
-                    onChange={(e) => calculateAmountFromPrice(e.target.value)}
-                  />
-                  <input
-                    className="custom-input ms-3"
-                    disabled
-                    type="number"
-                    required
-                    type="number"
-                    name="amount"
-                    placeholder="Bid Amount"
-                    value={amount}
-                  />
-                </div>
-                <Button
-                  onClick={handleClick}
-                  disabled={amount > 0 && isWeb3Connected ? false : true}
-                  className="sub-btn mt-3"
+              {!isClosed ? (
+                <Col
+                  md={6}
+                  lg={5}
+                  className="offset-lg-2 mt-4 mt-md-0 p-4 p-md-5 bg-off"
                 >
-                  GO
-                </Button>
-                <p
-                  style={{
-                    color: "red",
-                    marginTop: "5px",
-                    textAlign: "center",
-                    fontSize: "14px",
-                  }}
+                  <div className="form-heading text-center mb-4">
+                    Join The Pool
+                  </div>
+                  <div className="text-center fs-6">
+                    <Countdown
+                      key={0}
+                      date={new Date(location.state.endAuctionAt * 1000)}
+                      renderer={renderer}
+                      onComplete={() => {
+                        setIsClosed(true);
+                      }}
+                    />
+                  </div>
+                  <div className="divder"></div>
+                  <div className="d-flex justify-content-between">
+                    <span className="label">Amount</span>
+                    <span className="label">Balance: 0 ETH</span>
+                  </div>
+                  <div className="d-flex">
+                    <input
+                      className="custom-input me-3"
+                      type="number"
+                      required
+                      type="number"
+                      name="amount"
+                      placeholder="Bid Price"
+                      onChange={(e) => calculateAmountFromPrice(e.target.value)}
+                    />
+                    <input
+                      className="custom-input ms-3"
+                      disabled
+                      type="number"
+                      required
+                      type="number"
+                      name="amount"
+                      placeholder="Bid Amount"
+                      value={amount}
+                    />
+                  </div>
+                  <Button
+                    onClick={handleClick}
+                    disabled={amount > 0 && isWeb3Connected ? false : true}
+                    className="sub-btn mt-3"
+                  >
+                    GO
+                  </Button>
+                  <p
+                    style={{
+                      color: "red",
+                      marginTop: "5px",
+                      textAlign: "center",
+                      fontSize: "14px",
+                    }}
+                  >
+                    warning: SeedHub does not support deflationary tokens
+                  </p>
+                </Col>
+              ) : (
+                <Col
+                  md={6}
+                  lg={5}
+                  className="offset-lg-2 mt-4 mt-md-0 p-4 p-md-5 bg-off"
                 >
-                  warning: SeedHub does not support deflationary tokens
-                </p>
-              </Col>
+                  <>
+                    <div className="form-heading text-center mb-4">
+                      Claim For Pool
+                    </div>
+                    <div className="text-center fs-6">
+                      <Countdown
+                        key={1}
+                        date={
+                          new Date(location.state.claimAuctionFundsAt * 1000)
+                        }
+                        renderer={renderer}
+                        onComplete={() => {
+                          setIsExpired(true);
+                        }}
+                      />
+                      <Button
+                        disabled={!isExpired}
+                        className="sub-btn mt-3"
+                        onClick={handleClaim}
+                      >
+                        Claim Funds
+                      </Button>
+                    </div>
+                  </>
+                </Col>
+              )}
             </Row>
           </form>
         </div>
