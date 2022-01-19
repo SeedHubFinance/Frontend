@@ -117,7 +117,9 @@ const Fixedswap = (props) => {
 
   const getTokenBalance = () => {
     if (address) {
-      web3.eth.getBalance(address).then((e) => setCurrentBalance(e));
+      web3.eth
+        .getBalance(address)
+        .then((e) => setCurrentBalance(web3.utils.fromWei(e)));
       // let coinContract = new web3.eth.Contract(
       //   coinABI,
       //   location.state.sellToken
@@ -320,9 +322,7 @@ const Fixedswap = (props) => {
                   <div className="divder"></div>
                   <div className="d-flex justify-content-between">
                     <span className="label">Amount</span>
-                    <span className="label">
-                      Balance: {currentBalance / 10 ** tokenDecimals}
-                    </span>
+                    <span className="label">Balance: {currentBalance} ETH</span>
                   </div>
                   <div className="d-flex">
                     <input
