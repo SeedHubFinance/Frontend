@@ -371,6 +371,7 @@ const Fixedswap = (props) => {
                     <Select
                       options={poolOptions}
                       defaultValue={poolOptions[0]}
+                      isDisabled={!isWeb3Connected}
                       onChange={(e) => {
                         setSelectedCurreny(e);
                       }}
@@ -387,6 +388,8 @@ const Fixedswap = (props) => {
                     className="custom-input"
                     required
                     name="swapratio"
+                    type="number"
+                    min="0"
                     defaultValue=""
                     onChange={(e) => setSwapRatio(e.target.value)}
                     disabled={!isWeb3Connected}
@@ -431,7 +434,14 @@ const Fixedswap = (props) => {
                       Maximum Allocation per Wallet
                     </span>
                     <div className="d-flex">
-                      <label className="me-5">
+                      <label
+                        className="me-5"
+                        style={
+                          !isApproved
+                            ? { cursor: "default" }
+                            : { cursor: "pointer" }
+                        }
+                      >
                         <input
                           className="me-2"
                           required
@@ -439,11 +449,17 @@ const Fixedswap = (props) => {
                           name="mapw"
                           type="radio"
                           defaultValue="No limits"
-                          disabled={!isWeb3Connected}
+                          disabled={!isApproved}
                         />
                         No limits
                       </label>
-                      <label>
+                      <label
+                        style={
+                          !isApproved
+                            ? { cursor: "default" }
+                            : { cursor: "pointer" }
+                        }
+                      >
                         <input
                           className="me-2"
                           required
@@ -451,7 +467,7 @@ const Fixedswap = (props) => {
                           type="radio"
                           onClick={(e) => setlimitfield(true)}
                           defaultValue="No limits"
-                          disabled={!isWeb3Connected}
+                          disabled={!isApproved}
                         />
                         {currency.label}
                       </label>
@@ -471,8 +487,9 @@ const Fixedswap = (props) => {
                       required
                       name="allocation"
                       type="number"
+                      min="0"
                       onChange={(e) => setMaxAmountPerWallet(e.target.value)}
-                      disabled={!isWeb3Connected}
+                      disabled={!isApproved}
                     />
                   </div>
                   <h5>{currency.label}</h5>
@@ -482,7 +499,14 @@ const Fixedswap = (props) => {
                   <div className="me-2">
                     <span className="label mb-3">Participant</span>
                     <div className="d-flex flex-wrap">
-                      <label className="me-5">
+                      <label
+                        className="me-5"
+                        style={
+                          !isApproved
+                            ? { cursor: "default" }
+                            : { cursor: "pointer" }
+                        }
+                      >
                         <input
                           className="me-2"
                           required
@@ -491,11 +515,18 @@ const Fixedswap = (props) => {
                           }
                           name="participant"
                           type="checkbox"
-                          disabled={!isWeb3Connected}
+                          disabled={!isApproved}
                         />
                         Seed holders
                       </label>
-                      <label className="me-5">
+                      <label
+                        className="me-5"
+                        style={
+                          !isApproved
+                            ? { cursor: "default" }
+                            : { cursor: "pointer" }
+                        }
+                      >
                         <input
                           className="me-2"
                           required
@@ -506,11 +537,17 @@ const Fixedswap = (props) => {
                           name="participant"
                           type="radio"
                           value="public"
-                          disabled={!isWeb3Connected}
+                          disabled={!isApproved}
                         />
                         Public
                       </label>
-                      <label>
+                      <label
+                        style={
+                          !isApproved
+                            ? { cursor: "default" }
+                            : { cursor: "pointer" }
+                        }
+                      >
                         <input
                           className="me-2"
                           required
@@ -521,7 +558,7 @@ const Fixedswap = (props) => {
                           name="participant"
                           type="radio"
                           value="whitelist"
-                          disabled={!isWeb3Connected}
+                          disabled={!isApproved}
                         />
                         Whitelist
                       </label>
@@ -545,7 +582,7 @@ const Fixedswap = (props) => {
                           setWhitelist(e.target.value);
                         }}
                         value={whitelist}
-                        disabled={!isWeb3Connected}
+                        disabled={!isApproved}
                       ></textarea>
                       <Button
                         className="sub-btn mt-4"
@@ -567,22 +604,34 @@ const Fixedswap = (props) => {
                   name="poolname"
                   defaultValue=""
                   onChange={(e) => setPoolName(e.target.value)}
-                  disabled={!isWeb3Connected}
+                  disabled={!isApproved}
                 />
 
                 <span className="label my-4">Pool Start Time</span>
                 <div>
-                  <DateTimePicker onChange={setStartDate} value={startDate} />
+                  <DateTimePicker
+                    disabled={!isApproved}
+                    onChange={setStartDate}
+                    value={startDate}
+                  />
                   {/* <Calendar onChange={setStartDate} value={startDate} /> */}
                 </div>
                 <span className="label my-4">Pool Ending Time</span>
                 <div className="d-flex align-items-center justify-content-between">
-                  <DateTimePicker onChange={setEndDate} value={endDate} />
+                  <DateTimePicker
+                    disabled={!isApproved}
+                    onChange={setEndDate}
+                    value={endDate}
+                  />
                   {/* <Calendar onChange={setEndDate} value={endDate} /> */}
                 </div>
                 <span className="label my-4">Claim Funds At</span>
                 <div className="d-flex align-items-center justify-content-between">
-                  <DateTimePicker onChange={setClaimDate} value={claimDate} />
+                  <DateTimePicker
+                    disabled={!isApproved}
+                    onChange={setClaimDate}
+                    value={claimDate}
+                  />
                   {/* <Calendar onChange={setClaimDate} value={claimDate} /> */}
                 </div>
                 <div className="d-flex align-items-center">
@@ -599,7 +648,7 @@ const Fixedswap = (props) => {
                       alert("Please approve or wait for approval of funds");
                     }
                   }}
-                  disabled={isTransferNotApproved && !isWeb3Connected}
+                  disabled={!isApproved && isTransferNotApproved}
                 >
                   Launch
                 </Button>

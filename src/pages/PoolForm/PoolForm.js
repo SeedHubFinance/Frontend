@@ -58,10 +58,11 @@ const Fixedswap = (props) => {
   const [tokenDecimals, setTokenDecimals] = useState(0);
   const [isClosed, setIsClosed] = useState(false);
   const [isExpired, setIsExpired] = useState(false);
+  const [currentBalance, setCurrentBalance] = useState("");
+  const location = useLocation();
   const [amount, setAmount] = useState();
   const [bidPrice, setPriceAmount] = useState(0);
   const [isWeb3Connected, setWeb3Status] = useState(false);
-  const location = useLocation();
 
   // const statusRef = useRef("");
   // useEffect(() => {
@@ -114,9 +115,22 @@ const Fixedswap = (props) => {
     }
   };
 
-  // useEffect(() => {
-  //   setIsClosed(false);
-  // }, [isClosed]);
+  const getTokenBalance = () => {
+    if (address) {
+      let coinContract = new web3.eth.Contract(
+        coinABI,
+        location.state.sellToken
+      );
+      coinContract.methods
+        .balanceOf(address)
+        .call()
+        .then((e) => {
+          console.log("Hello");
+          setCurrentBalance(e);
+        })
+        .catch((e) => setError(e.message));
+    }
+  };
 
   useEffect(() => {
     getUserWalletAddress();
@@ -130,6 +144,7 @@ const Fixedswap = (props) => {
     if (claimDate < new Date()) {
       setIsExpired(true);
     }
+    getTokenBalance();
   }, [web3, address]);
 
   function toFixed(x) {
@@ -177,25 +192,25 @@ const Fixedswap = (props) => {
       .catch(() => alert("Something went wrong"));
   };
 
-  const calculatePrice = async (amount) => {
+  const calculateAmount = async (price) => {
     const contract = new web3.eth.Contract(
       fixedSwapABI,
       fixedSwapContractAddress
     );
 
-    if (amount !== "") {
-      console.log(amount, location.state.swapRatio);
-      setAmount(amount);
-      const price = await contract.methods
-        .calculatePrice(amount, location.state.swapRatio)
+    if (price !== "") {
+      console.log(price, location.state.swapRatio);
+      const Calamount = await contract.methods
+        .calculateAmount(web3.utils.toWei(price), location.state.swapRatio)
         .call();
-      setPriceAmount(web3.utils.fromWei(price));
+      console.log(Calamount);
+      setAmount(Calamount / 10 ** tokenDecimals);
     }
   };
 
   const calculateAmountFromPrice = (price) => {
-    setAmount(location.state.swapRatio * price);
     setPriceAmount(price);
+    calculateAmount(price);
   };
 
   const handleClaim = async (e) => {
@@ -204,7 +219,14 @@ const Fixedswap = (props) => {
       fixedSwapABI,
       fixedSwapContractAddress
     );
-    await contract.methods();
+    console.log("=====>", contract.methods);
+    await contract.methods
+      .userWithDrawFunction(location.state.index)
+      .send({
+        from: address,
+      })
+      .then(() => alert("Claim Successfully!!"))
+      .catch((e) => alert("Something went wrong", e));
   };
   return (
     <Fragment>
