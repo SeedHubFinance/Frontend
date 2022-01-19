@@ -172,25 +172,25 @@ const Fixedswap = (props) => {
       .catch(() => alert("Something went wrong"));
   };
 
-  const calculatePrice = async (amount) => {
+  const calculateAmount = async (price) => {
     const contract = new web3.eth.Contract(
       fixedSwapABI,
       fixedSwapContractAddress
     );
 
-    if (amount !== "") {
-      console.log(amount, location.state.swapRatio);
-      setAmount(amount);
-      const price = await contract.methods
-        .calculatePrice(amount, location.state.swapRatio)
+    if (price !== "") {
+      console.log(price, location.state.swapRatio);
+      const Calamount = await contract.methods
+        .calculateAmount(web3.utils.toWei(price), location.state.swapRatio)
         .call();
-      setPriceAmount(web3.utils.fromWei(price));
+      console.log(Calamount);
+      setAmount(Calamount / 10 ** tokenDecimals);
     }
   };
 
   const calculateAmountFromPrice = (price) => {
-    setAmount(location.state.swapRatio * price);
     setPriceAmount(price);
+    calculateAmount(price);
   };
 
   return (
