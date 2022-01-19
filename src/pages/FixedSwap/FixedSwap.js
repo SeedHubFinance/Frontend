@@ -284,7 +284,7 @@ const Fixedswap = (props) => {
         tokenAddress,
         swapRatio,
         web3.utils.toWei(maxAmountPerWallet),
-        toFixed(tokenAllocation).toString(),
+        toFixed(tokenAllocation * 10 ** decimals).toString(),
         getTimeStampsForDates(startDate),
         getTimeStampsForDates(endDate),
         getTimeStampsForDates(claimDate),

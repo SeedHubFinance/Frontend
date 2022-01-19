@@ -201,7 +201,11 @@ const Fixedswap = (props) => {
     if (price !== "") {
       console.log(price, location.state.swapRatio);
       const Calamount = await contract.methods
-        .calculateAmount(web3.utils.toWei(price), location.state.swapRatio)
+        .calculateAmount(
+          web3.utils.toWei(price),
+          location.state.swapRatio,
+          tokenDecimals
+        )
         .call();
       console.log(Calamount);
       setAmount(Calamount / 10 ** tokenDecimals);

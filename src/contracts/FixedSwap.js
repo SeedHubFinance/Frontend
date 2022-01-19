@@ -480,6 +480,11 @@ export const fixedSwapABI = [
         name: "swapRatio",
         type: "uint256",
       },
+      {
+        internalType: "uint256",
+        name: "decimals",
+        type: "uint256",
+      },
     ],
     name: "calculateAmount",
     outputs: [
@@ -965,4 +970,4 @@ export const fixedSwapABI = [
 ];
 
 export const fixedSwapContractAddress =
-  "0xb792A1cF3858A84aa4Ce95F83f470A1888Da7a4e";
+  "0xC54A63F77ABf8563Ff15d391E5D4caaDA64A790A";
