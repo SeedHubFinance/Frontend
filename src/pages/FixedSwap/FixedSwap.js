@@ -487,6 +487,7 @@ const Fixedswap = (props) => {
                       required
                       name="allocation"
                       type="number"
+                      min="0"
                       onChange={(e) => setMaxAmountPerWallet(e.target.value)}
                       disabled={!isApproved}
                     />
