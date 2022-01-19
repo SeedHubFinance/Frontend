@@ -117,18 +117,19 @@ const Fixedswap = (props) => {
 
   const getTokenBalance = () => {
     if (address) {
-      let coinContract = new web3.eth.Contract(
-        coinABI,
-        location.state.sellToken
-      );
-      coinContract.methods
-        .balanceOf(address)
-        .call()
-        .then((e) => {
-          console.log("Hello");
-          setCurrentBalance(e);
-        })
-        .catch((e) => setError(e.message));
+      web3.eth.getBalance(address).then((e) => setCurrentBalance(e));
+      // let coinContract = new web3.eth.Contract(
+      //   coinABI,
+      //   location.state.sellToken
+      // );
+      // coinContract.methods
+      //   .balanceOf(address)
+      //   .call()
+      //   .then((e) => {
+      //     console.log("Hello");
+      //     setCurrentBalance(e);
+      //   })
+      //   .catch((e) => setError(e.message));
     }
   };
 
@@ -319,7 +320,9 @@ const Fixedswap = (props) => {
                   <div className="divder"></div>
                   <div className="d-flex justify-content-between">
                     <span className="label">Amount</span>
-                    <span className="label">Balance: 0 ETH</span>
+                    <span className="label">
+                      Balance: {currentBalance / 10 ** tokenDecimals}
+                    </span>
                   </div>
                   <div className="d-flex">
                     <input
