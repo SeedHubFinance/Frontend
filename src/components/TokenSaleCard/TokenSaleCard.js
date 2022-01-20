@@ -30,6 +30,13 @@ const Tokensalecard = ({
       ? { status: "Closed", isClosed: true }
       : { status: "Live", isClosed: false };
 
+  const endAuctiondate = new Date(endAuctionAt * 1000);
+  const nowDate = new Date();
+  // console.log(nowDate.toString());
+  // console.log(endAuctiondate.toString());
+  const percent = Math.floor((nowDate * 100) / endAuctiondate);
+  // console.log(percent);
+
   return (
     <Fragment>
       <Card className="mb-3">
@@ -88,7 +95,7 @@ const Tokensalecard = ({
                 </p>
               </div>
             </div>
-            <ProgressBar now={60} />
+            <ProgressBar now={percent} />
           </div>
           <Link
             to="/poolform"

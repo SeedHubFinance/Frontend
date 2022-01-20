@@ -291,7 +291,7 @@ const Fixedswap = (props) => {
                       <div className="divder"></div>
                     </div>
                   </div>
-                  <div className="d-flex flex-column">
+                  <div className="d-none flex-column">
                     <div className="d-flex justify-content-center">
                       <p className="me-2">Auction progress: 0 ETH</p>
                       <p> / 303 ETH</p>

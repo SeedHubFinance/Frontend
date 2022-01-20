@@ -25,6 +25,8 @@ import {
   fixedSwapContractAddress,
 } from "../../contracts/FixedSwap";
 import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
 
 const poolOptions = [
   { value: "eth", label: "ETH" },
@@ -571,7 +573,9 @@ const Fixedswap = (props) => {
                   }`}
                 >
                   <div className="wka me-2">
-                    <span className="label">List</span>
+                    <span className="label">
+                      List (Please write each address on separate line)
+                    </span>
                     <div className="position-relative">
                       <textarea
                         className="custom-input border mt-3 p-3"
@@ -589,10 +593,20 @@ const Fixedswap = (props) => {
                         onClick={() => {
                           const array = whitelist.split("\n");
                           sanatizeArray(array);
+                          toast.success("Addresses Added!", {
+                            position: "top-right",
+                            autoClose: 2000,
+                            hideProgressBar: true,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                          });
                         }}
                       >
                         Confirm
                       </Button>
+                      <ToastContainer />
                     </div>
                   </div>
                 </div>
