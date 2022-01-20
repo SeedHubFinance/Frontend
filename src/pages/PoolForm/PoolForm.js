@@ -327,9 +327,17 @@ const Fixedswap = (props) => {
                   <div className="d-flex">
                     <input
                       className="custom-input me-3"
-                      type="number"
                       required
                       type="number"
+                      onKeyPress={(e) => {
+                        if (
+                          e.code === "Minus" ||
+                          e.code === "NumpadSubtract" ||
+                          e.code === "NumpadAdd"
+                        ) {
+                          e.preventDefault();
+                        }
+                      }}
                       name="amount"
                       placeholder="Bid Price"
                       onChange={(e) => calculateAmountFromPrice(e.target.value)}
@@ -337,9 +345,17 @@ const Fixedswap = (props) => {
                     <input
                       className="custom-input ms-3"
                       disabled
-                      type="number"
                       required
                       type="number"
+                      onKeyPress={(e) => {
+                        if (
+                          e.code === "Minus" ||
+                          e.code === "NumpadSubtract" ||
+                          e.code === "NumpadAdd"
+                        ) {
+                          e.preventDefault();
+                        }
+                      }}
                       name="amount"
                       placeholder="Bid Amount"
                       value={amount}
