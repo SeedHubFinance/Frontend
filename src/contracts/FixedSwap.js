@@ -21,6 +21,11 @@ export const fixedSwapABI = [
         name: "seedTokenAddress",
         type: "address",
       },
+      {
+        internalType: "address",
+        name: "seedHubWallet",
+        type: "address",
+      },
     ],
     stateMutability: "nonpayable",
     type: "constructor",
@@ -446,6 +451,11 @@ export const fixedSwapABI = [
         name: "seedTokenAddress",
         type: "address",
       },
+      {
+        internalType: "address",
+        name: "seedHubWallet",
+        type: "address",
+      },
     ],
     stateMutability: "view",
     type: "function",
@@ -669,31 +679,12 @@ export const fixedSwapABI = [
   {
     inputs: [
       {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    name: "fundsAllocated",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
         internalType: "address",
         name: "",
         type: "address",
       },
     ],
-    name: "fundsCollected",
+    name: "ethCollectedForPoolOwner",
     outputs: [
       {
         internalType: "uint256",
@@ -842,6 +833,45 @@ export const fixedSwapABI = [
   {
     inputs: [
       {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    name: "sellTokenCollected",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "index",
+        type: "uint256",
+      },
+    ],
+    name: "sendFundsToPoolCreator",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "testPool",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
         internalType: "address",
         name: "newOwner",
         type: "address",
@@ -941,33 +971,7 @@ export const fixedSwapABI = [
     stateMutability: "view",
     type: "function",
   },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "index",
-        type: "uint256",
-      },
-    ],
-    name: "withDrawFunds",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "index",
-        type: "uint256",
-      },
-    ],
-    name: "withdrawPoolCreator",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
 ];
 
 export const fixedSwapContractAddress =
-  "0xA24809005e5642e9d1e7c91A43A2F00a78E55881";
+  "0xa30CDAF2eB679102c694AFee28DE1625df5E3A53";
