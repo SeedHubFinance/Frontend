@@ -167,6 +167,7 @@ const Cardlist = ({
               isOnlyWhiteList={pool.enableWhiteList}
               claimAuctionFundsAt={pool["claimAuctionFundsAt"]}
               view={searchBy.view}
+              startAuctionAt={pool["startAuctionAt"]}
             />
           );
         })}

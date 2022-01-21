@@ -15,6 +15,7 @@ const Tokensalecard = ({
   isOnlyWhiteList,
   claimAuctionFundsAt,
   view,
+  startAuctionAt,
 }) => {
   // const statusRef = useRef("");
   // useEffect(() => {
@@ -109,6 +110,7 @@ const Tokensalecard = ({
               isOnlyWhiteList,
               isOnlySeed,
               claimAuctionFundsAt,
+              startAuctionAt,
             }}
           >
             <Button>Join Now</Button>
