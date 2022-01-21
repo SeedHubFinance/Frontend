@@ -335,6 +335,7 @@ const Fixedswap = (props) => {
                         if (
                           e.code === "Minus" ||
                           e.code === "NumpadSubtract" ||
+                          e.code === "Comma" ||
                           e.code === "NumpadAdd"
                         ) {
                           e.preventDefault();
@@ -353,6 +354,7 @@ const Fixedswap = (props) => {
                         if (
                           e.code === "Minus" ||
                           e.code === "NumpadSubtract" ||
+                          e.code === "Comma" ||
                           e.code === "NumpadAdd"
                         ) {
                           e.preventDefault();
