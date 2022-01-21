@@ -96,7 +96,7 @@ const Tokensalecard = ({
                 </p>
               </div>
             </div>
-            <ProgressBar now={percent} />
+            <ProgressBar now={percent < 100 ? 50 : percent} />
           </div>
           <Link
             to="/poolform"
