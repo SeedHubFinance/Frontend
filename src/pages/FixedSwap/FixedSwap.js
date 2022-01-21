@@ -393,6 +393,15 @@ const Fixedswap = (props) => {
                     type="number"
                     min="0"
                     defaultValue=""
+                    onKeyPress={(e) => {
+                      if (
+                        e.code === "Minus" ||
+                        e.code === "NumpadSubtract" ||
+                        e.code === "NumpadAdd"
+                      ) {
+                        e.preventDefault();
+                      }
+                    }}
                     onChange={(e) => setSwapRatio(e.target.value)}
                     disabled={!isWeb3Connected}
                   />
@@ -409,6 +418,15 @@ const Fixedswap = (props) => {
                     required
                     name="amount"
                     type="number"
+                    onKeyPress={(e) => {
+                      if (
+                        e.code === "Minus" ||
+                        e.code === "NumpadSubtract" ||
+                        e.code === "NumpadAdd"
+                      ) {
+                        e.preventDefault();
+                      }
+                    }}
                     defaultValue={""}
                     disabled={!isWeb3Connected}
                     max={currentBalance / 10 ** decimal}
@@ -490,6 +508,15 @@ const Fixedswap = (props) => {
                       name="allocation"
                       type="number"
                       min="0"
+                      onKeyPress={(e) => {
+                        if (
+                          e.code === "Minus" ||
+                          e.code === "NumpadSubtract" ||
+                          e.code === "NumpadAdd"
+                        ) {
+                          e.preventDefault();
+                        }
+                      }}
                       onChange={(e) => setMaxAmountPerWallet(e.target.value)}
                       disabled={!isApproved}
                     />
