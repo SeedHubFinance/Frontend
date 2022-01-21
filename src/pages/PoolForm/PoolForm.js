@@ -56,6 +56,7 @@ const Fixedswap = (props) => {
   const [error, setError] = useState(null);
   const [tokenSymbol, setTokenSymbol] = useState(null);
   const [tokenDecimals, setTokenDecimals] = useState(0);
+  const [isStarted, setIsStarted] = useState(false);
   const [isClosed, setIsClosed] = useState(false);
   const [isExpired, setIsExpired] = useState(false);
   const [currentBalance, setCurrentBalance] = useState("");
@@ -139,15 +140,25 @@ const Fixedswap = (props) => {
     getUserWalletAddress();
     getSymbol();
     getDecimals();
-    const date = new Date(location.state.endAuctionAt * 1000);
-    if (date < new Date()) {
+    getTokenBalance();
+    const endAuctionDate = new Date(location.state.endAuctionAt * 1000);
+    const claimDate = new Date(location.state.claimAuctionFundsAt * 1000);
+    const startDate = new Date(location.state.startAuctionAt * 1000);
+    console.log(endAuctionDate.toString());
+    console.log(claimDate.toString());
+    console.log(startDate.toString());
+    if (startDate < new Date()) {
+      console.log("start");
+      setIsStarted(true);
+    }
+    if (endAuctionDate < new Date()) {
+      console.log("end auction");
       setIsClosed(true);
     }
-    const claimDate = new Date(location.state.claimAuctionFundsAt * 1000);
     if (claimDate < new Date()) {
+      console.log("expired");
       setIsExpired(true);
     }
-    getTokenBalance();
   }, [web3, address]);
 
   function toFixed(x) {
@@ -300,119 +311,125 @@ const Fixedswap = (props) => {
                   </div>
                 </div>
               </Col>
-              {!isClosed ? (
-                <Col
-                  md={6}
-                  lg={5}
-                  className="offset-lg-2 mt-4 mt-md-0 p-4 p-md-5 bg-off"
-                >
-                  <div className="form-heading text-center mb-4">
-                    Join The Pool
-                  </div>
-                  <div className="text-center fs-6">
+              <Col
+                md={6}
+                lg={5}
+                className="offset-lg-2 mt-4 mt-md-0 p-4 p-md-5 bg-off"
+              >
+                <div className="form-heading text-center mb-4">
+                  {!isStarted
+                    ? "Time Until Pool Launch"
+                    : !isClosed
+                    ? "Join The Pool"
+                    : !isExpired
+                    ? "Wait For Claim Time"
+                    : "Claim Funds"}
+                </div>
+                <div className="text-center fs-6">
+                  {!isStarted ? (
                     <Countdown
+                      key={0}
+                      date={new Date(location.state.startAuctionAt * 1000)}
+                      renderer={renderer}
+                      onComplete={() => {
+                        setIsStarted(true);
+                      }}
+                    />
+                  ) : !isClosed ? (
+                    <Countdown
+                      key={1}
+                      renderer={renderer}
+                      date={new Date(location.state.endAuctionAt * 1000)}
+                      onComplete={() => {
+                        setIsClosed(true);
+                      }}
+                    />
+                  ) : !isExpired ? (
+                    <Countdown
+                      key={2}
+                      renderer={renderer}
+                      date={new Date(location.state.claimAuctionFundsAt * 1000)}
+                      onComplete={() => {
+                        setIsExpired(true);
+                      }}
+                    />
+                  ) : (
+                    <></>
+                  )}
+                  {/* <Countdown
                       key={0}
                       date={new Date(location.state.endAuctionAt * 1000)}
                       renderer={renderer}
                       onComplete={() => {
                         setIsClosed(true);
                       }}
-                    />
-                  </div>
-                  <div className="divder"></div>
-                  <div className="d-flex justify-content-between">
-                    <span className="label">Amount</span>
-                    <span className="label">
-                      Balance: {parseFloat(currentBalance).toFixed(4)} ETH
-                    </span>
-                  </div>
-                  <div className="d-flex">
-                    <input
-                      className="custom-input me-3"
-                      required
-                      type="number"
-                      onKeyPress={(e) => {
-                        if (
-                          e.code === "Minus" ||
-                          e.code === "NumpadSubtract" ||
-                          e.code === "NumpadAdd"
-                        ) {
-                          e.preventDefault();
-                        }
-                      }}
-                      name="amount"
-                      placeholder="Bid Price"
-                      onChange={(e) => calculateAmountFromPrice(e.target.value)}
-                    />
-                    <input
-                      className="custom-input ms-3"
-                      disabled
-                      required
-                      type="number"
-                      onKeyPress={(e) => {
-                        if (
-                          e.code === "Minus" ||
-                          e.code === "NumpadSubtract" ||
-                          e.code === "NumpadAdd"
-                        ) {
-                          e.preventDefault();
-                        }
-                      }}
-                      name="amount"
-                      placeholder="Bid Amount"
-                      value={amount}
-                    />
-                  </div>
-                  <Button
-                    onClick={handleClick}
-                    disabled={amount > 0 && isWeb3Connected ? false : true}
-                    className="sub-btn mt-3"
-                  >
-                    GO
-                  </Button>
-                  <p
-                    style={{
-                      color: "red",
-                      marginTop: "5px",
-                      textAlign: "center",
-                      fontSize: "14px",
-                    }}
-                  >
-                    warning: SeedHub does not support deflationary tokens
-                  </p>
-                </Col>
-              ) : (
-                <Col
-                  md={6}
-                  lg={5}
-                  className="offset-lg-2 mt-4 mt-md-0 p-4 p-md-5 bg-off"
-                >
+                    /> */}
+                </div>
+                {!isClosed ? (
                   <>
-                    <div className="form-heading text-center mb-4">
-                      Claim For Pool
+                    <div className="divder"></div>
+                    <div className="d-flex justify-content-between">
+                      <span className="label">Amount</span>
+                      <span className="label">
+                        Balance: {parseFloat(currentBalance).toFixed(4)} ETH
+                      </span>
                     </div>
-                    <div className="text-center fs-6">
-                      <Countdown
-                        key={1}
-                        date={
-                          new Date(location.state.claimAuctionFundsAt * 1000)
+                    <div className="d-flex">
+                      <input
+                        className="custom-input me-3"
+                        type="number"
+                        required
+                        name="amount"
+                        placeholder="Bid Price"
+                        disabled={!isStarted}
+                        onChange={(e) =>
+                          calculateAmountFromPrice(e.target.value)
                         }
-                        renderer={renderer}
-                        onComplete={() => {
-                          setIsExpired(true);
-                        }}
                       />
-                      <Button
-                        disabled={!isExpired}
-                        className="sub-btn mt-3"
-                        onClick={handleClaim}
-                      >
-                        Claim Funds
-                      </Button>
+                      <input
+                        className="custom-input ms-3"
+                        disabled
+                        type="number"
+                        required
+                        name="amount"
+                        placeholder="Bid Amount"
+                        value={amount}
+                      />
                     </div>
                   </>
-                </Col>
-              )}
+                ) : (
+                  <></>
+                )}
+                {!isClosed ? (
+                  <>
+                    <Button
+                      onClick={handleClick}
+                      disabled={amount > 0 && isWeb3Connected ? false : true}
+                      className="sub-btn mt-3"
+                    >
+                      GO
+                    </Button>
+                    <p
+                      style={{
+                        color: "red",
+                        marginTop: "5px",
+                        textAlign: "center",
+                        fontSize: "14px",
+                      }}
+                    >
+                      warning: SeedHub does not support deflationary tokens
+                    </p>
+                  </>
+                ) : (
+                  <Button
+                    onClick={handleClaim}
+                    disabled={isExpired > 0 && isWeb3Connected ? false : true}
+                    className="sub-btn mt-3"
+                  >
+                    Claim Funds
+                  </Button>
+                )}
+              </Col>
             </Row>
           </form>
         </div>
