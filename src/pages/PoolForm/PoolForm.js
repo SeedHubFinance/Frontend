@@ -322,7 +322,9 @@ const Fixedswap = (props) => {
                   <div className="divder"></div>
                   <div className="d-flex justify-content-between">
                     <span className="label">Amount</span>
-                    <span className="label">Balance: {currentBalance} ETH</span>
+                    <span className="label">
+                      Balance: {parseFloat(currentBalance).toFixed(4)} ETH
+                    </span>
                   </div>
                   <div className="d-flex">
                     <input
