@@ -13,7 +13,7 @@ import "./Home.scss";
 
 const statusOptions = [
   { value: "all", label: "All" },
-  { value: "live", label: "Live & Filled" },
+  { value: "live", label: "Live" },
   { value: "closed", label: "Closed" },
 ];
 

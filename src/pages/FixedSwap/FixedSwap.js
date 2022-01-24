@@ -646,8 +646,9 @@ const Fixedswap = (props) => {
                   className="custom-input"
                   required
                   name="poolname"
+                  value={poolName}
                   defaultValue=""
-                  onChange={(e) => setPoolName(e.target.value)}
+                  onChange={(e) => setPoolName(e.target.value.trimStart())}
                   disabled={!isApproved}
                 />
 
