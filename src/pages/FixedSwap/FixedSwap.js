@@ -401,7 +401,8 @@ const Fixedswap = (props) => {
                         e.code === "Minus" ||
                         e.code === "NumpadSubtract" ||
                         e.code === "Comma" ||
-                        e.code === "NumpadAdd"
+                        e.code === "NumpadAdd" ||
+                        e.code === "Period"
                       ) {
                         e.preventDefault();
                       }
