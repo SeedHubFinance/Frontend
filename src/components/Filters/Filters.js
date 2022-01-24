@@ -125,7 +125,7 @@ const Filters = ({
         </div>
         <div className="action-btn my-lg-0 my-3">
           <Link to="/fixed-swap">
-            <Button>Create Sell</Button>
+            <Button>Create Sale</Button>
           </Link>
         </div>
       </div>
