@@ -25,7 +25,7 @@ import "./Filters.scss";
 import { useEffect } from "react/cjs/react.development";
 
 const poolOptions = [
-  { value: "swap", label: "Fixed Swap Auction" },
+  { value: "swap", label: "Fixed Price Sale" },
   // { value: "sealed", label: "Sealed-Bid Auction" },
   // { value: "dutch", label: "Dutch Auction" },
 ];
