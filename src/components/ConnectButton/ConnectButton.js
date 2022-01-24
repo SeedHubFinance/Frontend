@@ -13,7 +13,7 @@ const ConnectedButton = () => {
   const [modalShow, setModalShow] = useState(false);
 
   useEffect(() => {
-    if (!web3) return setAddress("");
+    if (!web3) return setConnected(false);
     setConnected(window.ethereum.isConnected());
     web3?.eth.getAccounts().then((results) => setAddress(results[0]));
     setAddress(web3?.eth.getAccounts()[0]);
