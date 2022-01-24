@@ -59,7 +59,7 @@ const Home = () => {
       <div className="home-container">
         <div className="mb-4 me-2 text-end search-btn">
           <Link to="/fixed-swap" className="me-2">
-            <Button className="ca">Create auction</Button>
+            <Button className="ca">Create Sale</Button>
           </Link>
           <Button className="filbtn" onClick={() => filterbtnClick(!filterbtn)}>
             <svg
