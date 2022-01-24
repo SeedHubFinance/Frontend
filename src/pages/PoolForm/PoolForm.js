@@ -117,22 +117,24 @@ const Fixedswap = (props) => {
   };
 
   const getTokenBalance = () => {
-    if (address) {
-      web3.eth
-        .getBalance(address)
-        .then((e) => setCurrentBalance(web3.utils.fromWei(e)));
-      // let coinContract = new web3.eth.Contract(
-      //   coinABI,
-      //   location.state.sellToken
-      // );
-      // coinContract.methods
-      //   .balanceOf(address)
-      //   .call()
-      //   .then((e) => {
-      //     console.log("Hello");
-      //     setCurrentBalance(e);
-      //   })
-      //   .catch((e) => setError(e.message));
+    if (web3) {
+      if (address) {
+        web3.eth
+          .getBalance(address)
+          .then((e) => setCurrentBalance(web3.utils.fromWei(e)));
+        // let coinContract = new web3.eth.Contract(
+        //   coinABI,
+        //   location.state.sellToken
+        // );
+        // coinContract.methods
+        //   .balanceOf(address)
+        //   .call()
+        //   .then((e) => {
+        //     console.log("Hello");
+        //     setCurrentBalance(e);
+        //   })
+        //   .catch((e) => setError(e.message));
+      }
     }
   };
 
