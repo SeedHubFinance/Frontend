@@ -6,7 +6,7 @@ import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
 import Cardlist from "../../components/Cardlist/Cardlist";
 import CardPagination from "../../components/CardPagination/CardPagination";
-import { ToastContainer } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import { Web3Context } from "../../context/web3Context";
 
 import "./Home.scss";
@@ -44,7 +44,7 @@ const Home = () => {
 
   const checkWalletConnection = async () => {
     if (!web3) {
-      alert("Please Connect Wallet To View Pools");
+      toast.warning("Please Connect Wallet To View Pools");
     }
   };
 
