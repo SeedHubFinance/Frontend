@@ -145,15 +145,15 @@ const Cardlist = ({
     setFilteredPools(data);
   }, [pools, filter]);
 
-  useEffect(() => {
-    console.log(filteredPools);
-  }, [filteredData]);
+  // useEffect(() => {
+  //   console.log(filteredPools);
+  // }, [filteredData]);
 
   return (
     <>
       <div className={searchBy.view ? "cardlist" : "grid-view"}>
         {currentItems.map((pool) => {
-          console.log(pool);
+          console.log(pool.index, pool.tokenSymbol);
           return (
             <TokenSaleCard
               key={pool.index}
