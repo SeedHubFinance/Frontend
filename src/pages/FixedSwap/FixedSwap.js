@@ -432,7 +432,7 @@ const Fixedswap = (props) => {
                     defaultValue={""}
                     disabled={!isWeb3Connected}
                     max={currentBalance / 10 ** decimal}
-                    min={0}
+                    min="0"
                     onChange={(e) =>
                       setTokenAllocation(
                         parseInt(e.target.value) * 10 ** decimal

@@ -378,6 +378,7 @@ const Fixedswap = (props) => {
                       <input
                         className="custom-input me-3"
                         type="number"
+                        min="0"
                         required
                         name="amount"
                         onKeyPress={(e) => {
@@ -400,6 +401,7 @@ const Fixedswap = (props) => {
                         className="custom-input ms-3"
                         disabled
                         type="number"
+                        min="0"
                         onKeyPress={(e) => {
                           if (
                             e.code === "Minus" ||
