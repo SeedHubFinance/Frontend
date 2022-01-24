@@ -182,6 +182,16 @@ const Filters = ({
                   <input
                     type="number"
                     placeholder="Enter Pool ID "
+                    onKeyPress={(e) => {
+                      if (
+                        e.code === "Minus" ||
+                        e.code === "NumpadSubtract" ||
+                        e.code === "Comma" ||
+                        e.code === "NumpadAdd"
+                      ) {
+                        e.preventDefault();
+                      }
+                    }}
                     value={searchBy.id}
                     min={0}
                     onChange={(e) => {
