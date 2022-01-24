@@ -16,6 +16,7 @@ const Tokensalecard = ({
   claimAuctionFundsAt,
   view,
   startAuctionAt,
+  tokenSymbol,
 }) => {
   // const statusRef = useRef("");
   // useEffect(() => {
@@ -82,7 +83,7 @@ const Tokensalecard = ({
               </div>
               <div>
                 <span>Pair</span>
-                <p>LINK /AVAX</p>
+                <p>ETH / {tokenSymbol}</p>
               </div>
               <div>
                 <span>Swap Ratio</span>

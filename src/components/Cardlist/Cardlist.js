@@ -168,6 +168,7 @@ const Cardlist = ({
               claimAuctionFundsAt={pool["claimAuctionFundsAt"]}
               view={searchBy.view}
               startAuctionAt={pool["startAuctionAt"]}
+              tokenSymbol={pool["tokenSymbol"]}
             />
           );
         })}
