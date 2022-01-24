@@ -87,7 +87,7 @@ const Tokensalecard = ({
               </div>
               <div>
                 <span>Swap Ratio</span>
-                <p>{swapRatio} : 1</p>
+                <p>1: {swapRatio}</p>
               </div>
               <div>
                 <span className="me-3">Participants</span>
