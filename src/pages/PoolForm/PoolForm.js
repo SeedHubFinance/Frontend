@@ -17,6 +17,7 @@ import { Web3Context } from "../../context/web3Context";
 import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
 import Countdown from "react-countdown";
+import { toast, ToastContainer } from "react-toastify";
 import { ReactComponent as MaxIcon } from "../../Assets/Images/max.svg";
 import "./PoolForm.scss";
 
@@ -106,14 +107,15 @@ const Fixedswap = (props) => {
   };
 
   const getUserWalletAddress = async () => {
-    if (web3) {
-      let addressArray = await web3?.eth.getAccounts();
-      setAddress(addressArray[0]);
-      setWeb3Status(true);
-    } else {
-      alert("Please Connect Wallet");
+    if (!web3) {
+      // alert("Hello");
+      toast.warning("Please Connect Wallet");
       setWeb3Status(false);
+      return;
     }
+    let addressArray = await web3?.eth.getAccounts();
+    setAddress(addressArray[0]);
+    setWeb3Status(true);
   };
 
   const getTokenBalance = () => {
@@ -251,6 +253,7 @@ const Fixedswap = (props) => {
   return (
     <Fragment>
       <Header />
+      <ToastContainer />
       <div className="pool-form">
         <div className="pool-form-container">
           <form>

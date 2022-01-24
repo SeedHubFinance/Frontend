@@ -90,7 +90,7 @@ const Fixedswap = (props) => {
       setWeb3Status(true);
       getTransactionFee();
     } else {
-      alert("Please Connect Wallet");
+      toast.warning("Please Connect Wallet");
       setWeb3Status(false);
     }
   };
@@ -321,6 +321,7 @@ const Fixedswap = (props) => {
   return (
     <Fragment>
       <Header />
+      <ToastContainer />
       <div className="fixed-swap-pool">
         <div className="fixed-swap-form-container">
           <form>
