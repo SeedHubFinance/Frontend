@@ -9,6 +9,7 @@ import "react-toastify/dist/ReactToastify.css";
 // import { ETHicon } from "../../Assets/Images/Images";
 import { Images } from "../../Assets/Images/Images";
 import "./WalletModal.scss";
+import { useEffect } from "react/cjs/react.development";
 
 const WalletModal = (props) => {
   const [web3, setWeb3] = useContext(Web3Context);
@@ -58,6 +59,15 @@ const WalletModal = (props) => {
       setWeb3(new Web3(window.ethereum));
     });
   }
+
+  useEffect(() => {
+    if (!web3) return;
+    web3.eth.net
+      .getNetworkType()
+      .then(
+        (e) => e !== "rinkeby" && toast.error("Wrong network") && setWeb3(null)
+      );
+  }, [web3]);
 
   return (
     <Fragment>
