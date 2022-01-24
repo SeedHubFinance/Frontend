@@ -329,7 +329,7 @@ const Fixedswap = (props) => {
                 <div className="form-header">
                   Initial Token Offering
                   <div className="title">
-                    Create a Fixed-swap Pool
+                    Create a Fixed Price Pool
                     <Button href="">How to Create a pool</Button>
                   </div>
                 </div>
