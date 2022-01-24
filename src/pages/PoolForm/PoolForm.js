@@ -393,7 +393,7 @@ const Fixedswap = (props) => {
                             e.preventDefault();
                           }
                         }}
-                        placeholder="Bid Price"
+                        placeholder="Bid Amount"
                         disabled={!isStarted}
                         onChange={(e) =>
                           calculateAmountFromPrice(e.target.value)
@@ -416,7 +416,7 @@ const Fixedswap = (props) => {
                         }}
                         required
                         name="amount"
-                        placeholder="Bid Amount"
+                        placeholder="Token Amount"
                         value={amount}
                       />
                     </div>
