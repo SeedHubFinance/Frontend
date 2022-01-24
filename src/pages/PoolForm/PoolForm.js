@@ -380,6 +380,16 @@ const Fixedswap = (props) => {
                         type="number"
                         required
                         name="amount"
+                        onKeyPress={(e) => {
+                          if (
+                            e.code === "Minus" ||
+                            e.code === "NumpadSubtract" ||
+                            e.code === "Comma" ||
+                            e.code === "NumpadAdd"
+                          ) {
+                            e.preventDefault();
+                          }
+                        }}
                         placeholder="Bid Price"
                         disabled={!isStarted}
                         onChange={(e) =>
@@ -390,6 +400,16 @@ const Fixedswap = (props) => {
                         className="custom-input ms-3"
                         disabled
                         type="number"
+                        onKeyPress={(e) => {
+                          if (
+                            e.code === "Minus" ||
+                            e.code === "NumpadSubtract" ||
+                            e.code === "Comma" ||
+                            e.code === "NumpadAdd"
+                          ) {
+                            e.preventDefault();
+                          }
+                        }}
                         required
                         name="amount"
                         placeholder="Bid Amount"
