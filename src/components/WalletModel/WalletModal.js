@@ -65,7 +65,10 @@ const WalletModal = (props) => {
     web3.eth.net
       .getNetworkType()
       .then(
-        (e) => e !== "rinkeby" && toast.error("Wrong network") && setWeb3(null)
+        (e) =>
+          e !== "rinkeby" &&
+          toast.error("Please connect to Avalanche Mainnet") &&
+          setWeb3(null)
       );
   }, [web3]);
 
