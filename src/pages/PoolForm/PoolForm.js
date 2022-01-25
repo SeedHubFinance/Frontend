@@ -301,7 +301,7 @@ const Fixedswap = (props) => {
                   <div className="row">
                     <div className="col">
                       <p className="mb-3">Maximum Allocation per wallet</p>
-                      <h3>
+                      <h3 className="text-break">
                         {web3?.utils.fromWei(location.state.maxAmountPerWallet)}{" "}
                         ETH
                       </h3>
