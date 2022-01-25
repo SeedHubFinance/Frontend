@@ -263,6 +263,7 @@ const Fixedswap = (props) => {
                   SeedHub
                   <div className="title">{location.state.name}</div>
                   <div className="token-code text-break">
+                    <span style={{ color: "red" }}>Contract Address: </span>
                     {location?.state?.sellToken}
                   </div>
                 </div>
