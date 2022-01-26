@@ -3,14 +3,12 @@ import coinABI from "../contracts/ERC20ABI";
 import { useContext } from "react";
 
 export async function getPoolById(index, web3) {
-  if (web3?.eth) {
-    let fixedSwapContract = new web3.eth.Contract(
-      fixedSwapABI,
-      fixedSwapContractAddress
-    );
-    const data = await fixedSwapContract.methods.getPoolByIndex(index).call();
-    return data;
-  }
+  let fixedSwapContract = new web3.eth.Contract(
+    fixedSwapABI,
+    fixedSwapContractAddress
+  );
+  const data = await fixedSwapContract.methods.getPoolByIndex(index).call();
+  return data;
 }
 
 export const approveTokenTransafer = async (

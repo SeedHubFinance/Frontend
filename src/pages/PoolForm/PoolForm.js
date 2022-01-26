@@ -63,11 +63,11 @@ const Fixedswap = (props) => {
   const [isClosed, setIsClosed] = useState(false);
   const [isExpired, setIsExpired] = useState(false);
   const [currentBalance, setCurrentBalance] = useState("");
-  const location = useLocation();
   const [amount, setAmount] = useState();
   const [bidPrice, setPriceAmount] = useState(0);
   const [isWeb3Connected, setWeb3Status] = useState(false);
   const [pool, setPool] = useState();
+  const isFirstRun = useRef(true);
 
   // const statusRef = useRef("");
   // useEffect(() => {
@@ -104,12 +104,6 @@ const Fixedswap = (props) => {
   };
 
   const getUserWalletAddress = async () => {
-    if (!web3) {
-      // alert("Hello");
-      toast.warning("Please Connect Wallet");
-      setWeb3Status(false);
-      return;
-    }
     let addressArray = await web3?.eth.getAccounts();
     setAddress(addressArray[0]);
     setWeb3Status(true);
@@ -157,12 +151,16 @@ const Fixedswap = (props) => {
   }, [pool]);
 
   useEffect(() => {
-    if (!web3) return;
+    if (!web3) {
+      toast.warning("Please Connect Wallet");
+      setWeb3Status(false);
+      return;
+    }
     getUserWalletAddress();
     getPoolById(params.id, web3)
       .then((e) => setPool(e))
-      .catch(toast.error(`No pool with ${params.id} id`));
-  }, [web3, address]);
+      .catch(console.log);
+  }, [web3]);
 
   function toFixed(x) {
     if (Math.abs(x) < 1.0) {
@@ -256,7 +254,7 @@ const Fixedswap = (props) => {
                   <div className="title">{pool?.name}</div>
                   <div className="token-code text-break">
                     <span>Contract Address: </span>
-                    {location?.state?.sellToken}
+                    {pool?.sellToken}
                   </div>
                 </div>
               </Col>
