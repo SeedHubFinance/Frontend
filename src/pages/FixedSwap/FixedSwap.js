@@ -269,6 +269,7 @@ const Fixedswap = (props) => {
       claimDate: getTimeStampsForDates(claimDate),
       isOnlySeeHolder,
       enableWhiteList,
+      // currency.value,
       listdata,
     };
     console.log(poolReq);
@@ -287,11 +288,14 @@ const Fixedswap = (props) => {
         swapRatio,
         web3.utils.toWei(maxAmountPerWallet),
         toFixed(tokenAllocation).toString(),
-        getTimeStampsForDates(startDate),
-        getTimeStampsForDates(endDate),
-        getTimeStampsForDates(claimDate),
+        [
+          getTimeStampsForDates(startDate),
+          getTimeStampsForDates(endDate),
+          getTimeStampsForDates(claimDate),
+        ],
         isOnlySeeHolder,
         enableWhiteList,
+        currency.value == "usdt" ? true : false,
         listdata
       )
       .send({ from: address })
@@ -379,6 +383,7 @@ const Fixedswap = (props) => {
                       isDisabled={!isWeb3Connected}
                       onChange={(e) => {
                         setSelectedCurreny(e);
+                        console.log(e);
                       }}
                     />
                   </div>
