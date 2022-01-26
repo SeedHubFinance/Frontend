@@ -14,7 +14,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/fixed-swap" element={<FixedSwap />} />
-          <Route path="/poolform" element={<PoolForm />} />
+          <Route path="/poolform/:id" element={<PoolForm />} />
         </Routes>
       </div>
     </Web3Provider>
