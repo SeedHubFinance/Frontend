@@ -153,7 +153,6 @@ const Cardlist = ({
     <>
       <div className={searchBy.view ? "cardlist" : "grid-view"}>
         {currentItems.map((pool) => {
-          console.log(pool.index, pool.tokenSymbol);
           return (
             <TokenSaleCard
               key={pool.index}
@@ -169,6 +168,7 @@ const Cardlist = ({
               view={searchBy.view}
               startAuctionAt={pool["startAuctionAt"]}
               tokenSymbol={pool["tokenSymbol"]}
+              isUSDT={pool["isUSDT"]}
             />
           );
         })}

@@ -6,13 +6,14 @@ import React, {
   useRef,
 } from "react";
 import { Row, Col, Button } from "react-bootstrap";
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { ProgressBar } from "react-bootstrap";
 import {
   fixedSwapABI,
   fixedSwapContractAddress,
 } from "../../contracts/FixedSwap";
 import coinABI from "../../contracts/ERC20ABI";
+import { getPoolById } from "../../utils/callContract";
 import { Web3Context } from "../../context/web3Context";
 import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
@@ -52,6 +53,7 @@ const renderer = ({ days, hours, minutes, seconds, completed }) => {
 // };
 
 const Fixedswap = (props) => {
+  const params = useParams();
   const [web3, setWeb3] = useContext(Web3Context);
   const [address, setAddress] = useState("");
   const [error, setError] = useState(null);
@@ -65,25 +67,23 @@ const Fixedswap = (props) => {
   const [amount, setAmount] = useState();
   const [bidPrice, setPriceAmount] = useState(0);
   const [isWeb3Connected, setWeb3Status] = useState(false);
+  const [pool, setPool] = useState();
 
   // const statusRef = useRef("");
   // useEffect(() => {
-  //   const date = new Date(location.state.endAuctionAt * 1000);
+  //   const date = new Date(pool.endAuctionAt * 1000);
   //   date < new Date()
   //     ? (statusRef.current.innerText = "Closed")
   //     : (statusRef.current.innerText = "Live");
   // }, []);
-  // const date = new Date(location.state.endAuctionAt * 1000);
+  // const date = new Date(pool.endAuctionAt * 1000);
   // const statusObj =
   //   date < new Date()
   //     ? { status: "Closed", isClosed: true }
   //     : { status: "Live", isClosed: false };
   const getSymbol = async () => {
     if (web3?.eth) {
-      const tokenContract = new web3.eth.Contract(
-        coinABI,
-        location.state.sellToken
-      );
+      const tokenContract = new web3.eth.Contract(coinABI, pool.sellToken);
       await tokenContract.methods
         .symbol()
         .call()
@@ -94,10 +94,7 @@ const Fixedswap = (props) => {
 
   const getDecimals = async () => {
     if (web3?.eth) {
-      const tokenContract = new web3.eth.Contract(
-        coinABI,
-        location.state.sellToken
-      );
+      const tokenContract = new web3.eth.Contract(coinABI, pool.sellToken);
       await tokenContract.methods
         .decimals()
         .call()
@@ -126,7 +123,7 @@ const Fixedswap = (props) => {
           .then((e) => setCurrentBalance(web3.utils.fromWei(e)));
         // let coinContract = new web3.eth.Contract(
         //   coinABI,
-        //   location.state.sellToken
+        //   pool.sellToken
         // );
         // coinContract.methods
         //   .balanceOf(address)
@@ -141,13 +138,11 @@ const Fixedswap = (props) => {
   };
 
   useEffect(() => {
-    getUserWalletAddress();
-    getSymbol();
-    getDecimals();
-    getTokenBalance();
-    const endAuctionDate = new Date(location.state.endAuctionAt * 1000);
-    const claimDate = new Date(location.state.claimAuctionFundsAt * 1000);
-    const startDate = new Date(location.state.startAuctionAt * 1000);
+    console.log("Pool", pool);
+    if (!pool) return;
+    const endAuctionDate = new Date(pool.endAuctionAt * 1000);
+    const claimDate = new Date(pool.claimAuctionFundsAt * 1000);
+    const startDate = new Date(pool.startAuctionAt * 1000);
     console.log(endAuctionDate.toString());
     console.log(claimDate.toString());
     console.log(startDate.toString());
@@ -163,6 +158,16 @@ const Fixedswap = (props) => {
       console.log("expired");
       setIsExpired(true);
     }
+    getSymbol();
+    getDecimals();
+    getTokenBalance();
+  }, [pool]);
+
+  useEffect(() => {
+    getUserWalletAddress();
+    getPoolById(params.id, web3)
+      .then((e) => setPool(e))
+      .catch(console.log("No id"));
   }, [web3, address]);
 
   function toFixed(x) {
@@ -201,7 +206,7 @@ const Fixedswap = (props) => {
     }
 
     await contract.methods
-      .addBid(location.state.index, amountString)
+      .addBid(params.id, amountString)
       .send({
         from: address,
         value: web3.utils.toWei(bidPrice),
@@ -217,13 +222,9 @@ const Fixedswap = (props) => {
     );
 
     if (price !== "") {
-      console.log(price, location.state.swapRatio);
+      console.log(price, pool.swapRatio);
       const Calamount = await contract.methods
-        .calculateAmount(
-          web3.utils.toWei(price),
-          location.state.swapRatio,
-          tokenDecimals
-        )
+        .calculateAmount(web3.utils.toWei(price), pool.swapRatio, tokenDecimals)
         .call();
       console.log(Calamount);
       setAmount(Calamount / 10 ** tokenDecimals);
@@ -243,7 +244,7 @@ const Fixedswap = (props) => {
     );
     console.log("=====>", contract.methods);
     await contract.methods
-      .userWithDrawFunction(location.state.index)
+      .userWithDrawFunction(params.index)
       .send({
         from: address,
       })
@@ -261,7 +262,7 @@ const Fixedswap = (props) => {
               <Col>
                 <div className="form-header">
                   SeedHub
-                  <div className="title">{location.state.name}</div>
+                  <div className="title">{pool?.name}</div>
                   <div className="token-code text-break">
                     <span>Contract Address: </span>
                     {location?.state?.sellToken}
@@ -284,25 +285,21 @@ const Fixedswap = (props) => {
                     <p>
                       <span>Participants</span>
                       <p>
-                        {location.state.isOnlyWhiteList
-                          ? "WhiteList "
-                          : "Public "}
-                        {location.state.isOnlySeed
-                          ? "and for seed Holders"
-                          : "Only"}
+                        {pool?.isOnlyWhiteList ? "WhiteList " : "Public "}
+                        {pool?.isOnlySeed ? "and for seed Holders" : "Only"}
                       </p>
                     </p>
                   </div>
                   <p>Fixed Swap Ratio</p>
                   <h3>
-                    1 ETH = {location.state.swapRatio} {tokenSymbol}
+                    1 ETH = {pool?.swapRatio} {tokenSymbol}
                   </h3>
                   <div className="divder"></div>
                   <div className="row">
                     <div className="col">
                       <p className="mb-3">Maximum Allocation per wallet</p>
                       <h3 className="text-break">
-                        {web3?.utils.fromWei(location.state.maxAmountPerWallet)}{" "}
+                        {pool && web3?.utils.fromWei(pool.maxAmountPerWallet)}{" "}
                         ETH
                       </h3>
                       <div className="divder"></div>
@@ -335,7 +332,7 @@ const Fixedswap = (props) => {
                   {!isStarted ? (
                     <Countdown
                       key={0}
-                      date={new Date(location.state.startAuctionAt * 1000)}
+                      date={new Date(pool?.startAuctionAt * 1000)}
                       renderer={renderer}
                       onComplete={() => {
                         setIsStarted(true);
@@ -345,7 +342,7 @@ const Fixedswap = (props) => {
                     <Countdown
                       key={1}
                       renderer={renderer}
-                      date={new Date(location.state.endAuctionAt * 1000)}
+                      date={new Date(pool?.endAuctionAt * 1000)}
                       onComplete={() => {
                         setIsClosed(true);
                       }}
@@ -354,7 +351,7 @@ const Fixedswap = (props) => {
                     <Countdown
                       key={2}
                       renderer={renderer}
-                      date={new Date(location.state.claimAuctionFundsAt * 1000)}
+                      date={new Date(pool?.claimAuctionFundsAt * 1000)}
                       onComplete={() => {
                         setIsExpired(true);
                       }}
@@ -364,7 +361,7 @@ const Fixedswap = (props) => {
                   )}
                   {/* <Countdown
                       key={0}
-                      date={new Date(location.state.endAuctionAt * 1000)}
+                      date={new Date(pool.endAuctionAt * 1000)}
                       renderer={renderer}
                       onComplete={() => {
                         setIsClosed(true);
