@@ -138,24 +138,17 @@ const Fixedswap = (props) => {
   };
 
   useEffect(() => {
-    console.log("Pool", pool);
     if (!pool) return;
     const endAuctionDate = new Date(pool.endAuctionAt * 1000);
     const claimDate = new Date(pool.claimAuctionFundsAt * 1000);
     const startDate = new Date(pool.startAuctionAt * 1000);
-    console.log(endAuctionDate.toString());
-    console.log(claimDate.toString());
-    console.log(startDate.toString());
     if (startDate < new Date()) {
-      console.log("start");
       setIsStarted(true);
     }
     if (endAuctionDate < new Date()) {
-      console.log("end auction");
       setIsClosed(true);
     }
     if (claimDate < new Date()) {
-      console.log("expired");
       setIsExpired(true);
     }
     getSymbol();
@@ -164,10 +157,11 @@ const Fixedswap = (props) => {
   }, [pool]);
 
   useEffect(() => {
+    if (!web3) return;
     getUserWalletAddress();
     getPoolById(params.id, web3)
       .then((e) => setPool(e))
-      .catch(console.log("No id"));
+      .catch(toast.error(`No pool with ${params.id} id`));
   }, [web3, address]);
 
   function toFixed(x) {
@@ -222,11 +216,9 @@ const Fixedswap = (props) => {
     );
 
     if (price !== "") {
-      console.log(price, pool.swapRatio);
       const Calamount = await contract.methods
         .calculateAmount(web3.utils.toWei(price), pool.swapRatio, tokenDecimals)
         .call();
-      console.log(Calamount);
       setAmount(Calamount / 10 ** tokenDecimals);
     }
   };
@@ -242,7 +234,6 @@ const Fixedswap = (props) => {
       fixedSwapABI,
       fixedSwapContractAddress
     );
-    console.log("=====>", contract.methods);
     await contract.methods
       .userWithDrawFunction(params.index)
       .send({
