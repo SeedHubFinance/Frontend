@@ -592,6 +592,11 @@ export const fixedSwapABI = [
         name: "txFee",
         type: "uint256",
       },
+      {
+        internalType: "uint256",
+        name: "div",
+        type: "uint256",
+      },
     ],
     name: "calculateFee",
     outputs: [
@@ -1024,24 +1029,6 @@ export const fixedSwapABI = [
   {
     inputs: [
       {
-        internalType: "uint256",
-        name: "index",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "amount",
-        type: "uint256",
-      },
-    ],
-    name: "swapToken",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
         internalType: "address",
         name: "newOwner",
         type: "address",
@@ -1144,4 +1131,4 @@ export const fixedSwapABI = [
 ];
 
 export const fixedSwapContractAddress =
-  "0x4D51D2249067E4F74f21956bfF52625007c8cf08";
+  "0xC95284b0e020289f60feA43E3a53893Ac85DA7E0";
