@@ -9,7 +9,7 @@ import ReactPaginate from "react-paginate";
 import {
   fixedSwapABI,
   fixedSwapContractAddress,
-  fujiSwapAddress
+  fujiSwapAddress,
 } from "../../contracts/FixedSwap";
 
 const Cardlist = ({
@@ -22,6 +22,7 @@ const Cardlist = ({
   const [web3, setWeb3] = useContext(Web3Context);
   const [pools, setPools] = useState([]);
   const [filteredPools, setFilteredPools] = useState([]);
+  const [network, setNetwork] = useState(0);
   // const [searchByFilter, setSearchByFilter] = useState([]);
 
   //-------- Pagination--------
@@ -31,6 +32,11 @@ const Cardlist = ({
   const [itemOffset, setItemOffset] = useState(0);
 
   const itemsPerPage = 8;
+
+  const getNetwork = async () => {
+    const response = await web3.eth.net.getId();
+    setNetwork(response);
+  };
 
   useEffect(() => {
     // Fetch items from another resources.
@@ -81,6 +87,7 @@ const Cardlist = ({
       setCurrentItems([]);
       setPageCount(0);
       setItemOffset(0);
+      getNetwork();
     }
     console.log("Web3");
   }, [web3]);
@@ -185,6 +192,7 @@ const Cardlist = ({
           previousLabel="Prev"
           previousLabel="Prev"
           renderOnZeroPageCount={null}
+          networkID={network}
         />
       </div>
     </>
