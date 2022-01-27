@@ -1132,4 +1132,4 @@ export const fixedSwapABI = [
 
 export const fixedSwapContractAddress =
   "0xea1886bB1DEC9E6A01CBD11CFcc609d9837fCf4c";
-export const fujiSwapAddress = "0xED785cce69EdBB1dA50A921c3961A791800ca065";
+export const fujiSwapAddress = "0xF93fF9E19cC2283b33152d1897b24A415B122c24";
