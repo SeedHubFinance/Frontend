@@ -532,6 +532,29 @@ export const fixedSwapABI = [
     inputs: [
       {
         internalType: "uint256",
+        name: "index",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "amount",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "price",
+        type: "uint256",
+      },
+    ],
+    name: "addBidInUSDT",
+    outputs: [],
+    stateMutability: "payable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
         name: "price",
         type: "uint256",
       },
@@ -567,6 +590,11 @@ export const fixedSwapABI = [
       {
         internalType: "uint256",
         name: "txFee",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "div",
         type: "uint256",
       },
     ],
@@ -1001,24 +1029,6 @@ export const fixedSwapABI = [
   {
     inputs: [
       {
-        internalType: "uint256",
-        name: "index",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "amount",
-        type: "uint256",
-      },
-    ],
-    name: "swapToken",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
         internalType: "address",
         name: "newOwner",
         type: "address",
@@ -1121,4 +1131,4 @@ export const fixedSwapABI = [
 ];
 
 export const fixedSwapContractAddress =
-  "0xc60aBD8203Fd740f9454AaF1c3Ddc8f47aEfb5f4";
+  "0xea1886bB1DEC9E6A01CBD11CFcc609d9837fCf4c";
