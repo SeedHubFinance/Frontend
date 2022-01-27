@@ -1,6 +1,11 @@
-import { fixedSwapABI, fixedSwapContractAddress } from "../contracts/FixedSwap";
+import {
+  fixedSwapABI,
+  fixedSwapContractAddress,
+  fujiSwapAddress,
+} from "../contracts/FixedSwap";
 import coinABI from "../contracts/ERC20ABI";
 import { useContext } from "react";
+import { toast } from "react-toastify";
 
 export async function getPoolById(index, web3) {
   const fixedSwapContract = new web3.eth.Contract(
@@ -43,4 +48,18 @@ export const getUsdtBalance = async (address, web3) => {
     "0xd92e713d051c37ebb2561803a3b5fbabc4962431"
   );
   return await contract.methods.balanceOf(address).call();
+};
+
+export const determineContractAddress = async (web3) => {
+  const response = await web3.eth.net.getId();
+  switch (response) {
+    case 4:
+      return { address: fixedSwapContractAddress, net: response };
+    case 43114:
+      return false;
+    case 43113:
+      return { address: fujiSwapAddress, net: response };
+    default:
+      return false;
+  }
 };
