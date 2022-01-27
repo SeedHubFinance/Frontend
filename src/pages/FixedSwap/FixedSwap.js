@@ -6,7 +6,7 @@ import React, {
   Fragment,
 } from "react";
 import { useNavigate } from "react-router-dom";
-import { Row, Col, Button } from "react-bootstrap";
+import { Row, Col, Button, Carousel } from "react-bootstrap";
 import Header from "../../components/Header/Header";
 import Select from "react-select";
 import Footer from "../../components/Footer/Footer";
@@ -110,11 +110,18 @@ const Fixedswap = (props) => {
         console.log(e);
         if (!e) return toast.error("Connect to correct network");
         setTokenContractAddress(e["address"]);
-        e["net"] === 4
-          ? setNetwork(4) && setSelectedCurreny({ value: "eth", label: "ETH" })
-          : setNetwork(43113) &&
-            setSelectedCurreny({ value: "avax", label: "AVAX" }) &&
-            console.log("Hello");
+        setNetwork(e["net"]);
+
+        switch (e["net"]) {
+          case 4: {
+            setSelectedCurreny({ value: "eth", label: "ETH" });
+          }
+          case 43113: {
+            setSelectedCurreny({ value: "avax", label: "AVAX" });
+          }
+          default:
+            return;
+        }
       });
     }
     getUserWalletAddress();
