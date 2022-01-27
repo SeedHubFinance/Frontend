@@ -6,7 +6,7 @@ import React, {
   Fragment,
 } from "react";
 import { useNavigate } from "react-router-dom";
-import { Row, Col, Button } from "react-bootstrap";
+import { Row, Col, Button, Carousel } from "react-bootstrap";
 import Header from "../../components/Header/Header";
 import Select from "react-select";
 import Footer from "../../components/Footer/Footer";
@@ -110,11 +110,18 @@ const Fixedswap = (props) => {
         console.log(e);
         if (!e) return toast.error("Connect to correct network");
         setTokenContractAddress(e["address"]);
-        e["net"] === 4
-          ? setNetwork(4) && setSelectedCurreny({ value: "eth", label: "ETH" })
-          : setNetwork(43113) &&
-            setSelectedCurreny({ value: "avax", label: "AVAX" }) &&
-            console.log("Hello");
+        setNetwork(e["net"]);
+
+        switch (e["net"]) {
+          case 4: {
+            setSelectedCurreny({ value: "eth", label: "ETH" });
+          }
+          case 43113: {
+            setSelectedCurreny({ value: "avax", label: "AVAX" });
+          }
+          default:
+            return;
+        }
       });
     }
     getUserWalletAddress();
@@ -385,16 +392,6 @@ const Fixedswap = (props) => {
               </Col>
               <Col md={6} lg={5}>
                 <div className="d-flex align-items-center justify-content-between">
-                  <div className="w-50 me-3">
-                    <span className="label">From</span>
-                    <input
-                      className="custom-input"
-                      required
-                      name="from"
-                      defaultValue={tokenName}
-                      disabled={!isWeb3Connected}
-                    />
-                  </div>
                   <div className="w-50 to-select">
                     <span className="label">To</span>
                     <Select
@@ -407,6 +404,16 @@ const Fixedswap = (props) => {
                         setSelectedCurreny(e);
                         console.log(e);
                       }}
+                    />
+                  </div>
+                  <div className="w-50 me-3">
+                    <span className="label">From</span>
+                    <input
+                      className="custom-input"
+                      required
+                      name="from"
+                      defaultValue={tokenName}
+                      disabled={!isWeb3Connected}
                     />
                   </div>
                 </div>
