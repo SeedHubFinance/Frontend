@@ -11,6 +11,7 @@ import { ProgressBar } from "react-bootstrap";
 import {
   fixedSwapABI,
   fixedSwapContractAddress,
+  fujiSwapAddress,
 } from "../../contracts/FixedSwap";
 import coinABI from "../../contracts/ERC20ABI";
 import { approveTokenTransafer, getPoolById } from "../../utils/callContract";
@@ -216,10 +217,7 @@ const Fixedswap = (props) => {
       return;
     }
     console.log("Hello");
-    const contract = new web3.eth.Contract(
-      fixedSwapABI,
-      fixedSwapContractAddress
-    );
+    const contract = new web3.eth.Contract(fixedSwapABI, fujiSwapAddress);
     console.log(amount * 10 ** tokenDecimals + "");
 
     let amountString = toFixed(amount * 10 ** tokenDecimals).toString();
@@ -242,10 +240,7 @@ const Fixedswap = (props) => {
   };
 
   const calculateAmount = async (price) => {
-    const contract = new web3.eth.Contract(
-      fixedSwapABI,
-      fixedSwapContractAddress
-    );
+    const contract = new web3.eth.Contract(fixedSwapABI, fujiSwapAddress);
 
     if (price !== "") {
       const priceContract = pool?.isUSDT
@@ -267,10 +262,7 @@ const Fixedswap = (props) => {
 
   const handleClaim = async (e) => {
     e.preventDefault();
-    const contract = new web3.eth.Contract(
-      fixedSwapABI,
-      fixedSwapContractAddress
-    );
+    const contract = new web3.eth.Contract(fixedSwapABI, fujiSwapAddress);
     await contract.methods
       .userWithDrawFunction(params.id)
       .send({

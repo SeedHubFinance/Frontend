@@ -62,14 +62,23 @@ const WalletModal = (props) => {
 
   useEffect(() => {
     if (!web3) return;
-    web3.eth.net
-      .getNetworkType()
-      .then(
-        (e) =>
-          e !== "rinkeby" &&
-          toast.error("Please connect to Avalanche Mainnet") &&
-          setWeb3(null)
-      );
+    web3.eth.net.getId().then(
+      (e) => {
+        switch (e) {
+          case 4:
+            return;
+          case 43114:
+            return;
+          case 43113:
+            return;
+          default:
+            setWeb3(null);
+        }
+      }
+      // (e != "4" || e != "43114") &&
+      // toast.error("Please connect to Avalanche Mainnet") &&
+      // setWeb3(null)
+    );
   }, [web3]);
 
   return (
