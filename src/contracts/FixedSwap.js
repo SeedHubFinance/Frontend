@@ -532,6 +532,29 @@ export const fixedSwapABI = [
     inputs: [
       {
         internalType: "uint256",
+        name: "index",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "amount",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "price",
+        type: "uint256",
+      },
+    ],
+    name: "addBidInUSDT",
+    outputs: [],
+    stateMutability: "payable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
         name: "price",
         type: "uint256",
       },
@@ -1121,4 +1144,4 @@ export const fixedSwapABI = [
 ];
 
 export const fixedSwapContractAddress =
-  "0xc60aBD8203Fd740f9454AaF1c3Ddc8f47aEfb5f4";
+  "0x4D51D2249067E4F74f21956bfF52625007c8cf08";
