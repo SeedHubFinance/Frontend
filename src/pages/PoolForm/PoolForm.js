@@ -14,7 +14,11 @@ import {
   fujiSwapAddress,
 } from "../../contracts/FixedSwap";
 import coinABI from "../../contracts/ERC20ABI";
-import { approveTokenTransafer, getPoolById } from "../../utils/callContract";
+import {
+  approveTokenTransafer,
+  getPoolById,
+  determineContractAddress,
+} from "../../utils/callContract";
 import { Web3Context } from "../../context/web3Context";
 import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
@@ -71,6 +75,8 @@ const Fixedswap = (props) => {
   const [isWeb3Connected, setWeb3Status] = useState(false);
   const [pool, setPool] = useState();
   const [isApproved, setIsApproved] = useState(false);
+
+  const [fixedSwapContractAddress, setFixedSwapContractAddress] = useState("");
 
   // const statusRef = useRef("");
   // useEffect(() => {
@@ -134,6 +140,16 @@ const Fixedswap = (props) => {
     }
   };
 
+  const getContractAddress = async () => {
+    if (web3) {
+      determineContractAddress(web3).then((e) => {
+        console.log(e);
+        if (!e) return toast.error("Connect to correct network");
+        setFixedSwapContractAddress(e["address"]);
+      });
+    }
+  };
+
   useEffect(() => {
     if (!pool) return;
     const endAuctionDate = new Date(pool.endAuctionAt * 1000);
@@ -148,6 +164,7 @@ const Fixedswap = (props) => {
     if (claimDate < new Date()) {
       setIsExpired(true);
     }
+    getContractAddress();
     getSymbol();
     getDecimals();
     getTokenBalance();
@@ -217,7 +234,10 @@ const Fixedswap = (props) => {
       return;
     }
     console.log("Hello");
-    const contract = new web3.eth.Contract(fixedSwapABI, fujiSwapAddress);
+    const contract = new web3.eth.Contract(
+      fixedSwapABI,
+      fixedSwapContractAddress
+    );
     console.log(amount * 10 ** tokenDecimals + "");
 
     let amountString = toFixed(amount * 10 ** tokenDecimals).toString();

@@ -8,12 +8,15 @@ import { useContext } from "react";
 import { toast } from "react-toastify";
 
 export async function getPoolById(index, web3) {
-  const fixedSwapContract = new web3.eth.Contract(
-    fixedSwapABI,
-    fixedSwapContractAddress
-  );
-  const data = await fixedSwapContract.methods.getPoolByIndex(index).call();
-  return data;
+  let response = await determineContractAddress(web3);
+  if (!!response) {
+    const fixedSwapContract = new web3.eth.Contract(
+      fixedSwapABI,
+      response.address
+    );
+    const data = await fixedSwapContract.methods.getPoolByIndex(index).call();
+    return data;
+  }
 }
 
 export const approveTokenTransafer = async (
@@ -33,13 +36,13 @@ export const approveTokenTransafer = async (
 };
 
 export const usdtAddBid = async (web3, index, amount, price, address) => {
-  const contract = new web3.eth.Contract(
-    fixedSwapABI,
-    fixedSwapContractAddress
-  );
-  return await contract.methods
-    .addBidInUSDT(index, amount, price)
-    .send({ from: address });
+  let response = await determineContractAddress(web3);
+  if (!!response) {
+    const contract = new web3.eth.Contract(fixedSwapABI, response.address);
+    return await contract.methods
+      .addBidInUSDT(index, amount, price)
+      .send({ from: address });
+  }
 };
 
 export const getUsdtBalance = async (address, web3) => {
