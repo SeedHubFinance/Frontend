@@ -22,27 +22,22 @@ import { ReactComponent as CoinGecko } from "../../Assets/Images/coingecko-1.svg
 
 // Sass file
 import "./Filters.scss";
+import { useEffect } from "react/cjs/react.development";
 
 const poolOptions = [
   { value: "swap", label: "Fixed Swap Auction" },
-  { value: "sealed", label: "Sealed-Bid Auction" },
-  { value: "dutch", label: "Dutch Auction" },
+  // { value: "sealed", label: "Sealed-Bid Auction" },
+  // { value: "dutch", label: "Dutch Auction" },
 ];
 
-const tokenOptions = [
-  {
-    value: "all",
-    label: <AllToken />,
-  },
-  { value: "coinmark", label: <CoinMark /> },
-  { value: "coingecko", label: <CoinGecko /> },
-];
-
-const statusOptions = [
-  { value: "all", label: "All" },
-  { value: "live", label: "Live & Filled" },
-  { value: "closed", label: "Closed" },
-];
+// const tokenOptions = [
+//   {
+//     value: "all",
+//     label: <AllToken />,
+//   },
+//   { value: "coinmark", label: <CoinMark /> },
+//   { value: "coingecko", label: <CoinGecko /> },
+// ];
 
 const customStyles = {
   option: (provided, state) => ({
@@ -59,17 +54,49 @@ const customStyles = {
   },
 };
 
-const Filters = () => {
+const Filters = ({
+  showResult,
+  setShowResult,
+  filter,
+  setFilter,
+  searchBy,
+  setSearchBy,
+  statusOptions,
+}) => {
   const [searchbtn, searchBtnClick] = useState(false);
   const [poolid_checkbox, setcheckbox_poolid] = useState(false);
   const [pn_checkbox, setcheckbox_pn] = useState(false);
   const [tca_checkbox, setcheckbox_tca] = useState(false);
   const [ts_checkbox, setcheckbox_ts] = useState(false);
-  const [acwa_checkbox, setcheckbox_acwa] = useState(false);
+  // const [acwa_checkbox, setcheckbox_acwa] = useState(false);
+
+  const handleClick = () => {
+    !(poolid_checkbox || pn_checkbox || tca_checkbox || ts_checkbox)
+      ? setShowResult(false)
+      : setShowResult(true);
+  };
+
+  useEffect(() => {
+    let data = searchBy;
+    if (!poolid_checkbox) {
+      data.id = "";
+    }
+    if (!pn_checkbox) {
+      data.name = "";
+    }
+    if (!tca_checkbox) {
+      data.sellToken = "";
+    }
+    if (!ts_checkbox) {
+      data.tokenSymbol = "";
+    }
+    setShowResult(false);
+    setSearchBy({ ...searchBy, ...data });
+  }, [poolid_checkbox, pn_checkbox, tca_checkbox, ts_checkbox]);
 
   return (
     <div className="filters-container">
-      <div className="d-none d-sm-flex filter-tabs flex-lg-row flex-column align-items-lg-center align-items-start">
+      <div className="d-none d-lg-flex filter-tabs flex-lg-row flex-column align-items-lg-center align-items-start">
         <div className="d-none filter-btns flex-lg-row flex-column align-items-lg-center align-items-start">
           <Button>
             <TokenSale className="f-icon me-2" />
@@ -102,7 +129,7 @@ const Filters = () => {
           </Link>
         </div>
       </div>
-      <div className="search-filter d-none">
+      <div className="search-filter">
         <div className="d-flex align-items-center f-div my-lg-0 my-3">
           <p>Pool Type:</p>
           <Select
@@ -112,7 +139,7 @@ const Filters = () => {
             isSearchable={false}
           />
         </div>
-        <span className="vr me-3 ms-3" />
+        {/* <span className="vr me-3 ms-3" />
         <div className="d-flex align-items-center f-div my-lg-0 my-3">
           <p>Token Filter:</p>
           <Select
@@ -121,15 +148,16 @@ const Filters = () => {
             styles={customStyles}
             isSearchable={false}
           />
-        </div>
+        </div> */}
         <span className="vr me-3 ms-3" />
         <div className="d-flex align-items-center f-div my-lg-0 my-3">
           <p>Status:</p>
           <Select
             options={statusOptions}
-            defaultValue={statusOptions[0]}
+            defaultValue={statusOptions[0].value}
             styles={customStyles}
             isSearchable={false}
+            onChange={(e) => setFilter({ ...filter, status: e.value })}
           />
         </div>
         <span className="vr me-3 ms-3" />
@@ -151,7 +179,16 @@ const Filters = () => {
                 ></label>
                 <p>Pool ID</p>
                 <div className={`implicit ${poolid_checkbox ? "" : "hidden"}`}>
-                  <input type="text" placeholder="Enter Pool ID " value="" />
+                  <input
+                    type="number"
+                    placeholder="Enter Pool ID "
+                    value={searchBy.id}
+                    min={0}
+                    onChange={(e) => {
+                      setSearchBy({ ...searchBy, id: e.target.value });
+                      setShowResult(false);
+                    }}
+                  />
                 </div>
               </div>
               <div className="search-option">
@@ -162,7 +199,15 @@ const Filters = () => {
                 ></label>
                 <p>Pool Name</p>
                 <div className={`implicit ${pn_checkbox ? "" : "hidden"}`}>
-                  <input type="text" placeholder="Enter Pool Name " value="" />
+                  <input
+                    type="text"
+                    placeholder="Enter Pool Name "
+                    value={searchBy.name}
+                    onChange={(e) => {
+                      setSearchBy({ ...searchBy, name: e.target.value });
+                      setShowResult(false);
+                    }}
+                  />
                 </div>
               </div>
               <div className="search-option">
@@ -176,7 +221,11 @@ const Filters = () => {
                   <input
                     type="text"
                     placeholder="Enter Token Contract Address"
-                    value=""
+                    value={searchBy.address}
+                    onChange={(e) => {
+                      setSearchBy({ ...searchBy, sellToken: e.target.value });
+                      setShowResult(false);
+                    }}
                   />
                 </div>
               </div>
@@ -188,10 +237,18 @@ const Filters = () => {
                 ></label>
                 <p>Token Symbol</p>
                 <div className={`implicit ${ts_checkbox ? "" : "hidden"}`}>
-                  <input type="text" placeholder="Token Symbol" value="" />
+                  <input
+                    type="text"
+                    placeholder="Token Symbol"
+                    value={searchBy.tokenSymbol}
+                    onChange={(e) => {
+                      setSearchBy({ ...searchBy, tokenSymbol: e.target.value });
+                      setShowResult(false);
+                    }}
+                  />
                 </div>
               </div>
-              <div className="search-option">
+              {/* <div className="search-option">
                 <label
                   onClick={() => setcheckbox_acwa(!acwa_checkbox)}
                   for="Auction creator wallet address"
@@ -205,10 +262,30 @@ const Filters = () => {
                     value=""
                   />
                 </div>
-              </div>
+              </div> */}
               <div className="search-box-btn">
-                <button className="white">Сlear all</button>
-                <button className="black">Show Results</button>
+                <button
+                  className="white"
+                  onClick={() => {
+                    setcheckbox_poolid(false);
+                    setcheckbox_pn(false);
+                    setcheckbox_tca(false);
+                    setcheckbox_ts(false);
+                    setSearchBy({
+                      ...searchBy,
+                      name: "",
+                      address: "",
+                      id: -1,
+                      tokenSymbol: "",
+                    });
+                    setShowResult(false);
+                  }}
+                >
+                  Сlear all
+                </button>
+                <button className="black" onClick={handleClick}>
+                  Show Results
+                </button>
               </div>
             </div>
           ) : (
@@ -216,11 +293,19 @@ const Filters = () => {
           )}
         </div>
         <span className="vr me-3 ms-3" />
-        <div className="search-filter-view f-div my-lg-0 my-3">
-          <Button>
+        <div className="search-filter-view d-md-flex d-none f-div my-lg-0 my-3">
+          <Button
+            onClick={() => {
+              setSearchBy({ ...searchBy, view: false });
+            }}
+          >
             <GridView />
           </Button>
-          <Button>
+          <Button
+            onClick={() => {
+              setSearchBy({ ...searchBy, view: true });
+            }}
+          >
             <ListView />
           </Button>
         </div>

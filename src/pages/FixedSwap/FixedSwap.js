@@ -5,6 +5,7 @@ import React, {
   useRef,
   Fragment,
 } from "react";
+import { useNavigate } from "react-router-dom";
 import { Row, Col, Button } from "react-bootstrap";
 import Header from "../../components/Header/Header";
 import Select from "react-select";
@@ -23,6 +24,9 @@ import {
   fixedSwapABI,
   fixedSwapContractAddress,
 } from "../../contracts/FixedSwap";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
 
 const poolOptions = [
   { value: "eth", label: "ETH" },
@@ -31,6 +35,7 @@ const poolOptions = [
 ];
 
 const Fixedswap = (props) => {
+  const navigate = useNavigate();
   const [tokenAddress, setTokenAddress] = useState("");
   const [tokenName, setTokenName] = useState("");
   const [tokenAllocation, setTokenAllocation] = useState(0);
@@ -67,6 +72,8 @@ const Fixedswap = (props) => {
   const [address, setAddress] = useState(Web3Context);
 
   const [isTransferNotApproved, setTransferApproval] = useState(true);
+
+  const [isApproved, setApproval] = useState(false);
 
   const [isWeb3Connected, setWeb3Status] = useState(false);
 
@@ -196,8 +203,8 @@ const Fixedswap = (props) => {
     return await coinContract.methods
       .approve(fixedSwapContractAddress, toFixed(tokenAllocation).toString())
       .send({ from: address })
-      .then(() => setTransferApproval(false))
-      .catch((e) => setTransferApproval(true));
+      .then(() => setApproval(true))
+      .catch((e) => setApproval(false));
   };
 
   const validateDate = (startDate, endDate, claimDate) => {
@@ -262,6 +269,7 @@ const Fixedswap = (props) => {
       claimDate: getTimeStampsForDates(claimDate),
       isOnlySeeHolder,
       enableWhiteList,
+      // currency.value,
       listdata,
     };
     console.log(poolReq);
@@ -279,17 +287,21 @@ const Fixedswap = (props) => {
         tokenAddress,
         swapRatio,
         web3.utils.toWei(maxAmountPerWallet),
-        tokenAllocation,
-        getTimeStampsForDates(startDate),
-        getTimeStampsForDates(endDate),
-        getTimeStampsForDates(claimDate),
+        toFixed(tokenAllocation).toString(),
+        [
+          getTimeStampsForDates(startDate),
+          getTimeStampsForDates(endDate),
+          getTimeStampsForDates(claimDate),
+        ],
         isOnlySeeHolder,
         enableWhiteList,
+        currency.value == "usdt" ? true : false,
         listdata
       )
       .send({ from: address })
       .then(() => {
-        alert("Pool made and deployed");
+        toast.success("Pool successfully created");
+        navigate("/");
       })
       .catch(() => alert("Something went wrong"));
   };
@@ -365,8 +377,10 @@ const Fixedswap = (props) => {
                     <Select
                       options={poolOptions}
                       defaultValue={poolOptions[0]}
+                      isDisabled={!isWeb3Connected}
                       onChange={(e) => {
                         setSelectedCurreny(e);
+                        console.log(e);
                       }}
                     />
                   </div>
@@ -381,6 +395,8 @@ const Fixedswap = (props) => {
                     className="custom-input"
                     required
                     name="swapratio"
+                    type="number"
+                    min="0"
                     defaultValue=""
                     onChange={(e) => setSwapRatio(e.target.value)}
                     disabled={!isWeb3Connected}
@@ -388,7 +404,9 @@ const Fixedswap = (props) => {
                 </div>
                 <div className="d-flex justify-content-between">
                   <span className="label">Amount</span>
-                  <span className="label">Balance --</span>
+                  <span className="label">
+                    Balance {currentBalance / 10 ** decimal}
+                  </span>
                 </div>
                 <div className="position-relative">
                   <input
@@ -398,7 +416,8 @@ const Fixedswap = (props) => {
                     type="number"
                     defaultValue={""}
                     disabled={!isWeb3Connected}
-                    max={currentBalance}
+                    max={currentBalance / 10 ** decimal}
+                    min={0}
                     onChange={(e) =>
                       setTokenAllocation(
                         parseInt(e.target.value) * 10 ** decimal
@@ -422,7 +441,14 @@ const Fixedswap = (props) => {
                       Maximum Allocation per Wallet
                     </span>
                     <div className="d-flex">
-                      <label className="me-5">
+                      <label
+                        className="me-5"
+                        style={
+                          !isApproved
+                            ? { cursor: "default" }
+                            : { cursor: "pointer" }
+                        }
+                      >
                         <input
                           className="me-2"
                           required
@@ -430,11 +456,17 @@ const Fixedswap = (props) => {
                           name="mapw"
                           type="radio"
                           defaultValue="No limits"
-                          disabled={!isWeb3Connected}
+                          disabled={!isApproved}
                         />
                         No limits
                       </label>
-                      <label>
+                      <label
+                        style={
+                          !isApproved
+                            ? { cursor: "default" }
+                            : { cursor: "pointer" }
+                        }
+                      >
                         <input
                           className="me-2"
                           required
@@ -442,7 +474,7 @@ const Fixedswap = (props) => {
                           type="radio"
                           onClick={(e) => setlimitfield(true)}
                           defaultValue="No limits"
-                          disabled={!isWeb3Connected}
+                          disabled={!isApproved}
                         />
                         {currency.label}
                       </label>
@@ -462,8 +494,9 @@ const Fixedswap = (props) => {
                       required
                       name="allocation"
                       type="number"
+                      min="0"
                       onChange={(e) => setMaxAmountPerWallet(e.target.value)}
-                      disabled={!isWeb3Connected}
+                      disabled={!isApproved}
                     />
                   </div>
                   <h5>{currency.label}</h5>
@@ -473,7 +506,14 @@ const Fixedswap = (props) => {
                   <div className="me-2">
                     <span className="label mb-3">Participant</span>
                     <div className="d-flex flex-wrap">
-                      <label className="me-5">
+                      <label
+                        className="me-5"
+                        style={
+                          !isApproved
+                            ? { cursor: "default" }
+                            : { cursor: "pointer" }
+                        }
+                      >
                         <input
                           className="me-2"
                           required
@@ -482,11 +522,18 @@ const Fixedswap = (props) => {
                           }
                           name="participant"
                           type="checkbox"
-                          disabled={!isWeb3Connected}
+                          disabled={!isApproved}
                         />
                         Seed holders
                       </label>
-                      <label className="me-5">
+                      <label
+                        className="me-5"
+                        style={
+                          !isApproved
+                            ? { cursor: "default" }
+                            : { cursor: "pointer" }
+                        }
+                      >
                         <input
                           className="me-2"
                           required
@@ -497,11 +544,17 @@ const Fixedswap = (props) => {
                           name="participant"
                           type="radio"
                           value="public"
-                          disabled={!isWeb3Connected}
+                          disabled={!isApproved}
                         />
                         Public
                       </label>
-                      <label>
+                      <label
+                        style={
+                          !isApproved
+                            ? { cursor: "default" }
+                            : { cursor: "pointer" }
+                        }
+                      >
                         <input
                           className="me-2"
                           required
@@ -512,7 +565,7 @@ const Fixedswap = (props) => {
                           name="participant"
                           type="radio"
                           value="whitelist"
-                          disabled={!isWeb3Connected}
+                          disabled={!isApproved}
                         />
                         Whitelist
                       </label>
@@ -525,7 +578,9 @@ const Fixedswap = (props) => {
                   }`}
                 >
                   <div className="wka me-2">
-                    <span className="label">List</span>
+                    <span className="label">
+                      List (Please write each address on separate line)
+                    </span>
                     <div className="position-relative">
                       <textarea
                         className="custom-input border mt-3 p-3"
@@ -536,17 +591,27 @@ const Fixedswap = (props) => {
                           setWhitelist(e.target.value);
                         }}
                         value={whitelist}
-                        disabled={!isWeb3Connected}
+                        disabled={!isApproved}
                       ></textarea>
                       <Button
                         className="sub-btn mt-4"
                         onClick={() => {
                           const array = whitelist.split("\n");
                           sanatizeArray(array);
+                          toast.success("Addresses Added!", {
+                            position: "top-right",
+                            autoClose: 2000,
+                            hideProgressBar: true,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                          });
                         }}
                       >
                         Confirm
                       </Button>
+                      <ToastContainer />
                     </div>
                   </div>
                 </div>
@@ -558,22 +623,34 @@ const Fixedswap = (props) => {
                   name="poolname"
                   defaultValue=""
                   onChange={(e) => setPoolName(e.target.value)}
-                  disabled={!isWeb3Connected}
+                  disabled={!isApproved}
                 />
 
                 <span className="label my-4">Pool Start Time</span>
                 <div>
-                  <DateTimePicker onChange={setStartDate} value={startDate} />
+                  <DateTimePicker
+                    disabled={!isApproved}
+                    onChange={setStartDate}
+                    value={startDate}
+                  />
                   {/* <Calendar onChange={setStartDate} value={startDate} /> */}
                 </div>
                 <span className="label my-4">Pool Ending Time</span>
                 <div className="d-flex align-items-center justify-content-between">
-                  <DateTimePicker onChange={setEndDate} value={endDate} />
+                  <DateTimePicker
+                    disabled={!isApproved}
+                    onChange={setEndDate}
+                    value={endDate}
+                  />
                   {/* <Calendar onChange={setEndDate} value={endDate} /> */}
                 </div>
                 <span className="label my-4">Claim Funds At</span>
                 <div className="d-flex align-items-center justify-content-between">
-                  <DateTimePicker onChange={setClaimDate} value={claimDate} />
+                  <DateTimePicker
+                    disabled={!isApproved}
+                    onChange={setClaimDate}
+                    value={claimDate}
+                  />
                   {/* <Calendar onChange={setClaimDate} value={claimDate} /> */}
                 </div>
                 <div className="d-flex align-items-center">
@@ -584,9 +661,13 @@ const Fixedswap = (props) => {
                 <Button
                   className="sub-btn"
                   onClick={() => {
-                    makePool();
+                    if (isApproved) {
+                      makePool();
+                    } else {
+                      alert("Please approve or wait for approval of funds");
+                    }
                   }}
-                  disabled={isTransferNotApproved}
+                  disabled={!isApproved && isTransferNotApproved}
                 >
                   Launch
                 </Button>

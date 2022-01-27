@@ -5,6 +5,9 @@
   border-radius: 10px;
   box-shadow: 0 0 3px #ff937350;
 
+  .closed {
+    color: $dark-clr;
+  }
   .card-head {
     flex: 1 1 20%;
     span {
@@ -18,7 +21,7 @@
       font-size: 14px;
       color: $dark-clr;
     }
-    .dot {
+    .dotLive {
       display: inline-block;
       height: 10px;
       width: 10px;
@@ -26,6 +29,16 @@
       border-radius: 50%;
       display: inline-block;
     }
+
+    .dotClose {
+      display: inline-block;
+      height: 10px;
+      width: 10px;
+      background-color: $dark-clr;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
     .card-title {
       line-height: normal;
 
@@ -86,19 +99,7 @@
     height: 100%;
   }
 }
-// @media only screen and (max-width: 1200px) {
-//   .card {
-//     flex: 1 1 23.9%;
-//     max-width: 23.9%;
-//   }
-// }
 
-// @media only screen and (max-width: 991px) {
-//   .card {
-//     flex: 1 1 23.9%;
-//     max-width: 23.9%;
-//   }
-// }
 @media only screen and (max-width: 767px) {
   .card {
     flex: 1 1 49%;
@@ -150,5 +151,56 @@
   .card {
     flex: 1 1 100%;
     max-width: 100%;
+  }
+}
+
+.grid-view {
+  .card {
+    width: 24%;
+    max-height: 360px;
+
+    @media only screen and (max-width: 992px) {
+      width: 32%;
+    }
+    @media only screen and (max-width: 768px) {
+      width: 45%;
+    }
+
+    .card-head {
+      flex: 1 1 100%;
+      .card-title {
+        border-bottom: 3px solid $dark-clr;
+        padding-bottom: 20px;
+        @media only screen and (min-width: 768px) {
+          margin-bottom: 20px;
+        }
+      }
+    }
+    .content-wapper {
+      .card-content {
+        flex-direction: column;
+        div {
+          flex-direction: row;
+          span {
+            margin-bottom: 0;
+          }
+        }
+      }
+      .progress {
+        height: 3px;
+        margin: 10px 0 40px 0;
+      }
+    }
+    .btn {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      left: 0;
+      height: 45px;
+      right: 0;
+      padding: 10px;
+      border-top-left-radius: 0;
+      border-top-right-radius: 0;
+    }
   }
 }
