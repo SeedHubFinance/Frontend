@@ -13,14 +13,16 @@ import {
   fixedSwapContractAddress,
 } from "../../contracts/FixedSwap";
 import coinABI from "../../contracts/ERC20ABI";
-import { getPoolById } from "../../utils/callContract";
+import { approveTokenTransafer, getPoolById } from "../../utils/callContract";
 import { Web3Context } from "../../context/web3Context";
 import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
 import Countdown from "react-countdown";
 import { toast, ToastContainer } from "react-toastify";
+import { usdtAddBid } from "../../utils/callContract";
 import { ReactComponent as MaxIcon } from "../../Assets/Images/max.svg";
 import "./PoolForm.scss";
+import { poll } from "@usedapp/core/node_modules/ethers/lib/utils";
 
 // Countdown Timer
 // const Completionist = () => <span>0 d : 0 h : 0 m : 0 s</span>;
@@ -67,7 +69,7 @@ const Fixedswap = (props) => {
   const [bidPrice, setPriceAmount] = useState(0);
   const [isWeb3Connected, setWeb3Status] = useState(false);
   const [pool, setPool] = useState();
-  const isFirstRun = useRef(true);
+  const [isApproved, setIsApproved] = useState(false);
 
   // const statusRef = useRef("");
   // useEffect(() => {
@@ -181,7 +183,39 @@ const Fixedswap = (props) => {
   }
 
   const handleClick = async (e) => {
+    console.log("usdt", pool?.isUSDT);
     e.preventDefault();
+    console.log(!isApproved, !pool.isUSDT);
+    if (pool?.isUSDT) {
+      let bidString = toFixed(bidPrice * 10 ** tokenDecimals).toString();
+      if (bidString.indexOf(".") !== -1) {
+        let index = bidString.indexOf(".");
+        bidString = Math.ceil(
+          toFixed(bidPrice * 10 ** tokenDecimals)
+        ).toString();
+      }
+      console.log("bid string", bidString);
+      toast.info("Wait for approval success");
+      await approveTokenTransafer(bidString, address, web3, toFixed)
+        .then((e) => {
+          toast.success("Approved");
+          setIsApproved(true);
+        })
+        .catch(setIsApproved(false));
+      let amountString = toFixed(amount * 10 ** tokenDecimals).toString();
+
+      if (amountString.indexOf(".") !== -1) {
+        let index = amountString.indexOf(".");
+        amountString = Math.ceil(
+          toFixed(amount * 10 ** tokenDecimals)
+        ).toString();
+      }
+      await usdtAddBid(web3, params.id, amountString, bidString, address).then(
+        toast.success("Successfully added bid")
+      );
+      return;
+    }
+    console.log("Hello");
     const contract = new web3.eth.Contract(
       fixedSwapABI,
       fixedSwapContractAddress
@@ -214,8 +248,13 @@ const Fixedswap = (props) => {
     );
 
     if (price !== "") {
+      const priceContract = pool?.isUSDT
+        ? price * 10 ** 6
+        : web3.utils.toWei(price);
+      console.log(price);
+      console.log(priceContract, pool.swapRatio, tokenDecimals);
       const Calamount = await contract.methods
-        .calculateAmount(web3.utils.toWei(price), pool.swapRatio, tokenDecimals)
+        .calculateAmount(priceContract, pool.swapRatio, tokenDecimals)
         .call();
       setAmount(Calamount / 10 ** tokenDecimals);
     }
@@ -233,7 +272,7 @@ const Fixedswap = (props) => {
       fixedSwapContractAddress
     );
     await contract.methods
-      .userWithDrawFunction(params.index)
+      .userWithDrawFunction(params.id)
       .send({
         from: address,
       })
@@ -281,7 +320,8 @@ const Fixedswap = (props) => {
                   </div>
                   <p>Fixed Swap Ratio</p>
                   <h3>
-                    1 ETH = {pool?.swapRatio} {tokenSymbol}
+                    1 {pool?.isUSDT ? "USDT" : "ETH"} = {pool?.swapRatio}{" "}
+                    {tokenSymbol}
                   </h3>
                   <div className="divder"></div>
                   <div className="row">
@@ -292,7 +332,7 @@ const Fixedswap = (props) => {
                           web3?.utils.fromWei(pool.maxAmountPerWallet) ===
                             "100000000000000000000000000" &&
                           "No Limit"}{" "}
-                        ETH
+                        {pool?.isUSDT ? "USDT" : "ETH"}
                       </h3>
                       <div className="divder"></div>
                     </div>
@@ -366,7 +406,8 @@ const Fixedswap = (props) => {
                     <div className="d-flex justify-content-between">
                       <span className="label">Amount</span>
                       <span className="label">
-                        Balance: {parseFloat(currentBalance).toFixed(4)} ETH
+                        Balance: {parseFloat(currentBalance).toFixed(4)}{" "}
+                        {pool?.isUSDT ? "USDT" : "ETH"}
                       </span>
                     </div>
                     <div className="d-flex">

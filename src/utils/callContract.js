@@ -3,7 +3,7 @@ import coinABI from "../contracts/ERC20ABI";
 import { useContext } from "react";
 
 export async function getPoolById(index, web3) {
-  let fixedSwapContract = new web3.eth.Contract(
+  const fixedSwapContract = new web3.eth.Contract(
     fixedSwapABI,
     fixedSwapContractAddress
   );
@@ -17,12 +17,30 @@ export const approveTokenTransafer = async (
   web3,
   toFixed
 ) => {
-  let coinContract = new web3.eth.Contract(
+  const coinContract = new web3.eth.Contract(
     coinABI,
-    "0x3b00ef435fa4fcff5c209a37d1f3dcff37c705ad"
+    "0xd92e713d051c37ebb2561803a3b5fbabc4962431"
   );
 
   return await coinContract.methods
     .approve(fixedSwapContractAddress, toFixed(tokenAllocation).toString())
     .send({ from: address });
+};
+
+export const usdtAddBid = async (web3, index, amount, price, address) => {
+  const contract = new web3.eth.Contract(
+    fixedSwapABI,
+    fixedSwapContractAddress
+  );
+  return await contract.methods
+    .addBidInUSDT(index, amount, price)
+    .send({ from: address });
+};
+
+export const getUsdtBalance = async (address, web3) => {
+  const contract = new web3.eth.Contract(
+    coinABI,
+    "0xd92e713d051c37ebb2561803a3b5fbabc4962431"
+  );
+  return await contract.methods.balanceOf(address).call();
 };
