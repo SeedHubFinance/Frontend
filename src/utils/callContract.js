@@ -27,7 +27,7 @@ export const approveTokenTransafer = async (
 ) => {
   const coinContract = new web3.eth.Contract(
     coinABI,
-    "0xd92e713d051c37ebb2561803a3b5fbabc4962431"
+    "0x3d1df20a1f4f147d5597c59161a34cbf9b2b5023"
   );
 
   return await coinContract.methods

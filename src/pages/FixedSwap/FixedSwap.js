@@ -392,16 +392,6 @@ const Fixedswap = (props) => {
               </Col>
               <Col md={6} lg={5}>
                 <div className="d-flex align-items-center justify-content-between">
-                  <div className="w-50 me-3">
-                    <span className="label">From</span>
-                    <input
-                      className="custom-input"
-                      required
-                      name="from"
-                      defaultValue={tokenName}
-                      disabled={!isWeb3Connected}
-                    />
-                  </div>
                   <div className="w-50 to-select">
                     <span className="label">To</span>
                     <Select
@@ -414,6 +404,16 @@ const Fixedswap = (props) => {
                         setSelectedCurreny(e);
                         console.log(e);
                       }}
+                    />
+                  </div>
+                  <div className="w-50 me-3">
+                    <span className="label">From</span>
+                    <input
+                      className="custom-input"
+                      required
+                      name="from"
+                      defaultValue={tokenName}
+                      disabled={!isWeb3Connected}
                     />
                   </div>
                 </div>
