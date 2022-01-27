@@ -9,6 +9,7 @@ import ReactPaginate from "react-paginate";
 import {
   fixedSwapABI,
   fixedSwapContractAddress,
+  fujiSwapAddress
 } from "../../contracts/FixedSwap";
 
 const Cardlist = ({
@@ -54,7 +55,7 @@ const Cardlist = ({
     if (web3) {
       let fixedSwapContract = new web3.eth.Contract(
         fixedSwapABI,
-        fixedSwapContractAddress
+        fujiSwapAddress
       );
 
       let addresses = await web3?.eth.getAccounts();
