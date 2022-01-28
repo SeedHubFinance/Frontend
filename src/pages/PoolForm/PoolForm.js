@@ -376,6 +376,26 @@ const Fixedswap = (props) => {
                         ) : (
                           <></>
                         )}
+                        {pool?.maxAmountPerWallet ? (
+                          web3?.utils.fromWei(
+                            pool.maxAmountPerWallet.toString()
+                          ) === "100000000000000000000000000" ? (
+                            <></>
+                          ) : network === 4 ? (
+                            pool?.isUSDT ? (
+                              " USDT"
+                            ) : (
+                              " ETH"
+                            )
+                          ) : pool?.isUSDT ? (
+                            " USDT"
+                          ) : (
+                            " AVAX"
+                          )
+                        ) : (
+                          <></>
+                        )}
+
                         {/* {console.log(pool?.maxAmountPerWallet)} */}
                         {/* {pool &&
                         web3?.utils.fromWei(
