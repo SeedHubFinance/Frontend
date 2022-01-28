@@ -437,7 +437,9 @@ const Fixedswap = (props) => {
                         e.code === "NumpadSubtract" ||
                         e.code === "Comma" ||
                         e.code === "NumpadAdd" ||
-                        e.code === "Period"
+                        e.code === "Period" ||
+                        e.key === "e" ||
+                        e.key === "E"
                       ) {
                         e.preventDefault();
                       }
