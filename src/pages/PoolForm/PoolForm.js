@@ -215,7 +215,7 @@ const Fixedswap = (props) => {
     e.preventDefault();
     console.log(pool?.isUSDT);
     if (pool?.isUSDT) {
-      let bidString = toFixed(bidPrice * 10 ** tokenDecimals).toString();
+      let bidString = toFixed(bidPrice * 10 ** 6).toString();
       if (bidString.indexOf(".") !== -1) {
         let index = bidString.indexOf(".");
         bidString = Math.ceil(
@@ -230,7 +230,7 @@ const Fixedswap = (props) => {
           setIsApproved(true);
         })
         .catch(setIsApproved(false));
-      let amountString = toFixed(amount * 10 ** tokenDecimals).toString();
+      let amountString = toFixed(amount * 10 ** 6).toString();
 
       if (amountString.indexOf(".") !== -1) {
         let index = amountString.indexOf(".");
@@ -284,7 +284,9 @@ const Fixedswap = (props) => {
       const Calamount = await contract.methods
         .calculateAmount(priceContract, pool.swapRatio, tokenDecimals)
         .call();
-      setAmount(Calamount / 10 ** tokenDecimals);
+      pool?.isUSDT
+        ? setAmount(Calamount / 10 ** 6)
+        : setAmount(web3.utils.fromWei(Calamount));
     }
   };
 
