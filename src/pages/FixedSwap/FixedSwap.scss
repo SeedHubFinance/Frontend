@@ -75,6 +75,9 @@
 
     .to-select {
       width: 48%;
+      label {
+        margin-bottom: -1px;
+      }
       .css-1s2u09g-control {
         border: none;
         border-bottom: 1px solid $dark-clr;

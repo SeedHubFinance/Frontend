@@ -392,13 +392,14 @@ const Fixedswap = (props) => {
               </Col>
               <Col md={6} lg={5}>
                 <div className="d-flex align-items-center justify-content-between">
-                  <div className="w-50 to-select">
+                  <div className="w-50 to-select me-3">
                     <span className="label">To</span>
                     <Select
                       options={network == 4 ? poolOptions : poolOptionsAvax}
                       defaultValue={
                         network == 4 ? poolOptions[0] : poolOptionsAvax[0]
                       }
+                      isSearchable={false}
                       isDisabled={!isWeb3Connected}
                       onChange={(e) => {
                         setSelectedCurreny(e);
@@ -406,7 +407,7 @@ const Fixedswap = (props) => {
                       }}
                     />
                   </div>
-                  <div className="w-50 me-3">
+                  <div className="w-50 ">
                     <span className="label">From</span>
                     <input
                       className="custom-input"
