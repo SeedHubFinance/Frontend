@@ -18,6 +18,7 @@ import {
   approveTokenTransafer,
   getPoolById,
   determineContractAddress,
+  getUsdtBalance,
 } from "../../utils/callContract";
 import { Web3Context } from "../../context/web3Context";
 import Header from "../../components/Header/Header";
@@ -75,6 +76,7 @@ const Fixedswap = (props) => {
   const [isWeb3Connected, setWeb3Status] = useState(false);
   const [pool, setPool] = useState();
   const [isApproved, setIsApproved] = useState(false);
+  const [network, setNetwork] = useState();
 
   const [fixedSwapContractAddress, setFixedSwapContractAddress] = useState("");
 
@@ -118,12 +120,21 @@ const Fixedswap = (props) => {
     setWeb3Status(true);
   };
 
-  const getTokenBalance = () => {
+  const getTokenBalance = async () => {
     if (web3) {
       if (address) {
-        web3.eth
-          .getBalance(address)
-          .then((e) => setCurrentBalance(web3.utils.fromWei(e)));
+        if (!pool.isUSDT) {
+          await web3.eth
+            .getBalance(address)
+            .then((e) => setCurrentBalance(web3.utils.fromWei(e)));
+          return;
+        }
+        await getUsdtBalance(address, web3).then((e) =>
+          setCurrentBalance(e / 10 ** 6)
+        );
+        const response = await determineContractAddress(web3);
+        setNetwork(response.net);
+
         // let coinContract = new web3.eth.Contract(
         //   coinABI,
         //   pool.sellToken
@@ -334,8 +345,15 @@ const Fixedswap = (props) => {
                   </div>
                   <p>Fixed Swap Ratio</p>
                   <h3>
-                    1 {pool?.isUSDT ? "USDT" : "ETH"} = {pool?.swapRatio}{" "}
-                    {tokenSymbol}
+                    1{" "}
+                    {network === 4
+                      ? pool?.isUSDT
+                        ? "USDT"
+                        : "ETH"
+                      : pool?.isUSDT
+                      ? "USDT"
+                      : "AVAX"}{" "}
+                    = {pool?.swapRatio} {tokenSymbol}
                   </h3>
                   <div className="divder"></div>
                   <div className="row">
@@ -346,7 +364,13 @@ const Fixedswap = (props) => {
                           web3?.utils.fromWei(pool.maxAmountPerWallet) ===
                             "100000000000000000000000000" &&
                           "No Limit"}{" "}
-                        {pool?.isUSDT ? "USDT" : "ETH"}
+                        {network === 4
+                          ? pool?.isUSDT
+                            ? "USDT"
+                            : "ETH"
+                          : pool?.isUSDT
+                          ? "USDT"
+                          : "AVAX"}
                       </h3>
                       <div className="divder"></div>
                     </div>
@@ -421,7 +445,13 @@ const Fixedswap = (props) => {
                       <span className="label">Amount</span>
                       <span className="label">
                         Balance: {parseFloat(currentBalance).toFixed(4)}{" "}
-                        {pool?.isUSDT ? "USDT" : "ETH"}
+                        {network === 4
+                          ? pool?.isUSDT
+                            ? "USDT"
+                            : "ETH"
+                          : pool?.isUSDT
+                          ? "USDT"
+                          : "AVAX"}
                       </span>
                     </div>
                     <div className="d-flex">
