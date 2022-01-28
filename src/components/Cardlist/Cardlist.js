@@ -37,7 +37,8 @@ const Cardlist = ({
   const getNetwork = async () => {
     if (!web3) return;
     const response = await determineContractAddress(web3);
-    setNetwork(response);
+    console.log("Network", response.net);
+    setNetwork(response.net);
   };
 
   useEffect(() => {
@@ -62,7 +63,6 @@ const Cardlist = ({
   const getAllPools = async () => {
     if (web3) {
       const getAddress = await determineContractAddress(web3);
-      console.log(getAddress);
       let fixedSwapContract = new web3.eth.Contract(
         fixedSwapABI,
         getAddress.address
@@ -89,8 +89,8 @@ const Cardlist = ({
       setCurrentItems([]);
       setPageCount(0);
       setItemOffset(0);
-      getNetwork();
     }
+    getNetwork();
   }, [web3]);
 
   const symbolFilter = async (pool) => {
@@ -178,6 +178,7 @@ const Cardlist = ({
               startAuctionAt={pool["startAuctionAt"]}
               tokenSymbol={pool["tokenSymbol"]}
               isUSDT={pool["isUSDT"]}
+              network={network}
             />
           );
         })}
