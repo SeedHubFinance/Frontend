@@ -35,7 +35,8 @@ const Cardlist = ({
   const itemsPerPage = 8;
 
   const getNetwork = async () => {
-    const response = await web3.eth.net.getId();
+    if (!web3) return;
+    const response = await determineContractAddress(web3);
     setNetwork(response);
   };
 
@@ -90,7 +91,6 @@ const Cardlist = ({
       setItemOffset(0);
       getNetwork();
     }
-    console.log("Web3");
   }, [web3]);
 
   const symbolFilter = async (pool) => {
