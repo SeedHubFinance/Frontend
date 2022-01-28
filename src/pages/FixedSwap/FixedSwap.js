@@ -290,7 +290,7 @@ const Fixedswap = (props) => {
       tokenAddress,
       swapRatio: parseInt(swapRatio),
       maxAmountPerWallet: parseInt(maxAmountPerWallet),
-      tokenAllocation: parseInt(tokenAllocation),
+      tokenAllocation: parseFloat(tokenAllocation),
       startDate: getTimeStampsForDates(startDate),
       endDate: getTimeStampsForDates(endDate),
       claimDate: getTimeStampsForDates(claimDate),
@@ -473,7 +473,7 @@ const Fixedswap = (props) => {
                     min="0"
                     onChange={(e) =>
                       setTokenAllocation(
-                        parseInt(e.target.value) * 10 ** decimal
+                        parseFloat(e.target.value) * 10 ** decimal
                       )
                     }
                   />
