@@ -8,11 +8,7 @@ import React, {
 import { Row, Col, Button } from "react-bootstrap";
 import { useLocation, useParams } from "react-router-dom";
 import { ProgressBar } from "react-bootstrap";
-import {
-  fixedSwapABI,
-  fixedSwapContractAddress,
-  fujiSwapAddress,
-} from "../../contracts/FixedSwap";
+import { fixedSwapABI } from "../../contracts/FixedSwap";
 import coinABI from "../../contracts/ERC20ABI";
 import {
   approveTokenTransafer,
@@ -275,8 +271,11 @@ const Fixedswap = (props) => {
   };
 
   const calculateAmount = async (price) => {
-    const contract = new web3.eth.Contract(fixedSwapABI, fujiSwapAddress);
-
+    const contract_address = await determineContractAddress(web3);
+    const contract = new web3.eth.Contract(
+      fixedSwapABI,
+      contract_address.address
+    );
     if (price !== "") {
       const priceContract = pool?.isUSDT
         ? price * 10 ** 6
@@ -299,7 +298,11 @@ const Fixedswap = (props) => {
 
   const handleClaim = async (e) => {
     e.preventDefault();
-    const contract = new web3.eth.Contract(fixedSwapABI, fujiSwapAddress);
+    const contract_address = await determineContractAddress(web3);
+    const contract = new web3.eth.Contract(
+      fixedSwapABI,
+      contract_address.address
+    );
     await contract.methods
       .userWithDrawFunction(params.id)
       .send({
