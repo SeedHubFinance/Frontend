@@ -18,7 +18,7 @@ const Tokensalecard = ({
   startAuctionAt,
   tokenSymbol,
   isUSDT,
-  networkID,
+  network,
 }) => {
   // const statusRef = useRef("");
   // useEffect(() => {
@@ -86,7 +86,7 @@ const Tokensalecard = ({
               <div>
                 <span>Pair</span>
                 <p>
-                  {networkID === 4
+                  {network === 4
                     ? isUSDT
                       ? "USDT"
                       : "ETH"
