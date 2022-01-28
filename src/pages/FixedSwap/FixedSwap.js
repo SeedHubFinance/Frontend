@@ -473,7 +473,7 @@ const Fixedswap = (props) => {
                     min="0"
                     onChange={(e) =>
                       setTokenAllocation(
-                        parseInt(e.target.value) * 10 ** decimal
+                        parseFloat(e.target.value) * 10 ** decimal
                       )
                     }
                   />
