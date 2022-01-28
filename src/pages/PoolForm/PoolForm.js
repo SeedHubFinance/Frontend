@@ -127,12 +127,15 @@ const Fixedswap = (props) => {
           await web3.eth
             .getBalance(address)
             .then((e) => setCurrentBalance(web3.utils.fromWei(e)));
+          const response = await determineContractAddress(web3);
+          setNetwork(response.net);
           return;
         }
         await getUsdtBalance(address, web3).then((e) =>
           setCurrentBalance(e / 10 ** 6)
         );
         const response = await determineContractAddress(web3);
+        console.log(response.net);
         setNetwork(response.net);
 
         // let coinContract = new web3.eth.Contract(
@@ -154,7 +157,6 @@ const Fixedswap = (props) => {
   const getContractAddress = async () => {
     if (web3) {
       determineContractAddress(web3).then((e) => {
-        console.log(e);
         if (!e) return toast.error("Connect to correct network");
         setFixedSwapContractAddress(e["address"]);
       });
@@ -348,7 +350,7 @@ const Fixedswap = (props) => {
                   </div>
                   <p>Fixed Swap Ratio</p>
                   <h3>
-                    1{" "}
+                    {console.log("nettwoeawjed", network)}1{" "}
                     {network === 4
                       ? pool?.isUSDT
                         ? "USDT"
@@ -523,7 +525,7 @@ const Fixedswap = (props) => {
                             e.code === "Minus" ||
                             e.code === "NumpadSubtract" ||
                             e.code === "Comma" ||
-                            e.code === "NumpadAdd" 
+                            e.code === "NumpadAdd"
                           ) {
                             e.preventDefault();
                           }
