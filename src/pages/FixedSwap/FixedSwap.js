@@ -463,7 +463,9 @@ const Fixedswap = (props) => {
                         e.code === "Minus" ||
                         e.code === "NumpadSubtract" ||
                         e.code === "Comma" ||
-                        e.code === "NumpadAdd"
+                        e.code === "NumpadAdd" ||
+                        e.key === "e" ||
+                        e.key === "E"
                       ) {
                         e.preventDefault();
                       }
@@ -554,7 +556,9 @@ const Fixedswap = (props) => {
                           e.code === "Minus" ||
                           e.code === "NumpadSubtract" ||
                           e.code === "Comma" ||
-                          e.code === "NumpadAdd"
+                          e.code === "NumpadAdd" ||
+                          e.key === "e" ||
+                          e.key === "E"
                         ) {
                           e.preventDefault();
                         }
