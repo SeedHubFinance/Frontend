@@ -227,9 +227,12 @@ const Fixedswap = (props) => {
           toFixed(amount * 10 ** tokenDecimals)
         ).toString();
       }
-      await usdtAddBid(web3, params.id, amountString, bidString, address).then(
-        toast.success("Successfully added bid")
-      );
+      try {
+        await usdtAddBid(web3, params.id, amountString, bidString, address);
+        toast.success("Added bid");
+      } catch (e) {
+        console.log(e.message);
+      }
       return;
     }
     console.log("Hello");
