@@ -340,8 +340,9 @@ const Fixedswap = (props) => {
                     <p>
                       <span>Participants</span>
                       <p>
-                        {pool?.isOnlyWhiteList ? "WhiteList " : "Public "}
-                        {pool?.isOnlySeed ? "and for seed Holders" : "Only"}
+                        {console.log(pool)}
+                        {pool?.enableWhiteList ? "WhiteList " : "Public "}
+                        {pool?.onlySeedHolders ? "and for seed Holders" : ""}
                       </p>
                     </p>
                   </div>
