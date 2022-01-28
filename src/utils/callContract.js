@@ -25,18 +25,22 @@ export const approveTokenTransafer = async (
   web3,
   toFixed
 ) => {
-  const coinContract = new web3.eth.Contract(
-    coinABI,
-    "0x3d1df20a1f4f147d5597c59161a34cbf9b2b5023"
-  );
+  let response = await determineContractAddress(web3);
+  if (!!response) {
+    const coinContract = new web3.eth.Contract(
+      coinABI,
+      "0x3d1df20a1f4f147d5597c59161a34cbf9b2b5023"
+    );
 
-  return await coinContract.methods
-    .approve(fixedSwapContractAddress, toFixed(tokenAllocation).toString())
-    .send({ from: address });
+    return await coinContract.methods
+      .approve(response.address, toFixed(tokenAllocation).toString())
+      .send({ from: address });
+  }
 };
 
 export const usdtAddBid = async (web3, index, amount, price, address) => {
   let response = await determineContractAddress(web3);
+  console.log(response);
   if (!!response) {
     const contract = new web3.eth.Contract(fixedSwapABI, response.address);
     return await contract.methods

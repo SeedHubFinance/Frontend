@@ -201,9 +201,8 @@ const Fixedswap = (props) => {
   }
 
   const handleClick = async (e) => {
-    console.log("usdt", pool?.isUSDT);
     e.preventDefault();
-    console.log(!isApproved, !pool.isUSDT);
+    console.log(pool?.isUSDT);
     if (pool?.isUSDT) {
       let bidString = toFixed(bidPrice * 10 ** tokenDecimals).toString();
       if (bidString.indexOf(".") !== -1) {
