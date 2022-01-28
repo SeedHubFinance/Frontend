@@ -11,6 +11,7 @@ import {
   fixedSwapContractAddress,
   fujiSwapAddress,
 } from "../../contracts/FixedSwap";
+import { determineContractAddress } from "../../utils/callContract";
 
 const Cardlist = ({
   filter,
@@ -59,13 +60,13 @@ const Cardlist = ({
 
   const getAllPools = async () => {
     if (web3) {
+      const getAddress = await determineContractAddress(web3);
+      console.log(getAddress);
       let fixedSwapContract = new web3.eth.Contract(
         fixedSwapABI,
-        fujiSwapAddress
+        getAddress.address
       );
-
       let addresses = await web3?.eth.getAccounts();
-
       const data = await fixedSwapContract.methods
         .getAllPools()
         .call({ from: addresses[0] });
