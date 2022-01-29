@@ -362,7 +362,7 @@ const Fixedswap = (props) => {
                   Initial Token Offering
                   <div className="title">
                     Create a Fixed Price Pool
-                    <Button href="https://docs.seedhub.network/products/seed-hub-decentralized/fixed-price-sales/how-to-create-a-pool">
+                    <Button  href="https://docs.seedhub.network/products/seed-hub-decentralized/fixed-price-sales/how-to-create-a-pool" target="_blank">
                       How to Create a pool
                     </Button>
                   </div>
