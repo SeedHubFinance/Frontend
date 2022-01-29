@@ -393,7 +393,7 @@ const Fixedswap = (props) => {
               <Col md={6} lg={5}>
                 <div className="d-flex align-items-center justify-content-between">
                   <div className="w-50 to-select me-3">
-                    <span className="label">To</span>
+                    <span className="label">From</span>
                     <Select
                       options={network == 4 ? poolOptions : poolOptionsAvax}
                       defaultValue={
@@ -408,7 +408,7 @@ const Fixedswap = (props) => {
                     />
                   </div>
                   <div className="w-50 ">
-                    <span className="label">From</span>
+                    <span className="label">To</span>
                     <input
                       className="custom-input"
                       required

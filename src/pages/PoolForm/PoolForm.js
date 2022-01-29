@@ -26,6 +26,8 @@ import { ReactComponent as MaxIcon } from "../../Assets/Images/max.svg";
 import "./PoolForm.scss";
 import { poll } from "@usedapp/core/node_modules/ethers/lib/utils";
 
+
+
 // Countdown Timer
 // const Completionist = () => <span>0 d : 0 h : 0 m : 0 s</span>;
 const renderer = ({ days, hours, minutes, seconds, completed }) => {
@@ -351,7 +353,7 @@ const Fixedswap = (props) => {
                       </p>
                     </p>
                   </div>
-                  <p>Fixed Swap Ratio</p>
+                  <p>Token Price</p>
                   <h3>
                     {console.log("nettwoeawjed", network)}1{" "}
                     {network === 4
@@ -550,7 +552,7 @@ const Fixedswap = (props) => {
                       disabled={amount > 0 && isWeb3Connected ? false : true}
                       className="sub-btn mt-3"
                     >
-                      GO
+                      BUY
                     </Button>
                     <p
                       style={{
@@ -560,7 +562,7 @@ const Fixedswap = (props) => {
                         fontSize: "14px",
                       }}
                     >
-                      warning: SeedHub does not support deflationary tokens
+                      Warning: SeedHub does not support deflationary tokens
                     </p>
                   </>
                 ) : (
