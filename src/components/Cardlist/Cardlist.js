@@ -9,7 +9,9 @@ import ReactPaginate from "react-paginate";
 import {
   fixedSwapABI,
   fixedSwapContractAddress,
+  fujiSwapAddress,
 } from "../../contracts/FixedSwap";
+import { determineContractAddress } from "../../utils/callContract";
 
 const Cardlist = ({
   filter,
@@ -21,6 +23,7 @@ const Cardlist = ({
   const [web3, setWeb3] = useContext(Web3Context);
   const [pools, setPools] = useState([]);
   const [filteredPools, setFilteredPools] = useState([]);
+  const [network, setNetwork] = useState(0);
   // const [searchByFilter, setSearchByFilter] = useState([]);
 
   //-------- Pagination--------
@@ -30,6 +33,13 @@ const Cardlist = ({
   const [itemOffset, setItemOffset] = useState(0);
 
   const itemsPerPage = 8;
+
+  const getNetwork = async () => {
+    if (!web3) return;
+    const response = await determineContractAddress(web3);
+    console.log("Network", response.net);
+    setNetwork(response.net);
+  };
 
   useEffect(() => {
     // Fetch items from another resources.
@@ -52,13 +62,12 @@ const Cardlist = ({
 
   const getAllPools = async () => {
     if (web3) {
+      const getAddress = await determineContractAddress(web3);
       let fixedSwapContract = new web3.eth.Contract(
         fixedSwapABI,
-        fixedSwapContractAddress
+        getAddress.address
       );
-
       let addresses = await web3?.eth.getAccounts();
-
       const data = await fixedSwapContract.methods
         .getAllPools()
         .call({ from: addresses[0] });
@@ -81,7 +90,7 @@ const Cardlist = ({
       setPageCount(0);
       setItemOffset(0);
     }
-    console.log("Web3");
+    getNetwork();
   }, [web3]);
 
   const symbolFilter = async (pool) => {
@@ -145,15 +154,14 @@ const Cardlist = ({
     setFilteredPools(data);
   }, [pools, filter]);
 
-  useEffect(() => {
-    console.log(filteredPools);
-  }, [filteredData]);
+  // useEffect(() => {
+  //   console.log(filteredPools);
+  // }, [filteredData]);
 
   return (
     <>
       <div className={searchBy.view ? "cardlist" : "grid-view"}>
         {currentItems.map((pool) => {
-          console.log(pool);
           return (
             <TokenSaleCard
               key={pool.index}
@@ -167,6 +175,10 @@ const Cardlist = ({
               isOnlyWhiteList={pool.enableWhiteList}
               claimAuctionFundsAt={pool["claimAuctionFundsAt"]}
               view={searchBy.view}
+              startAuctionAt={pool["startAuctionAt"]}
+              tokenSymbol={pool["tokenSymbol"]}
+              isUSDT={pool["isUSDT"]}
+              network={network}
             />
           );
         })}
@@ -182,6 +194,7 @@ const Cardlist = ({
           previousLabel="Prev"
           previousLabel="Prev"
           renderOnZeroPageCount={null}
+          networkID={network}
         />
       </div>
     </>

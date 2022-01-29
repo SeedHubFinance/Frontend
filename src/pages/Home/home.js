@@ -6,14 +6,14 @@ import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
 import Cardlist from "../../components/Cardlist/Cardlist";
 import CardPagination from "../../components/CardPagination/CardPagination";
-import { ToastContainer } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import { Web3Context } from "../../context/web3Context";
 
 import "./Home.scss";
 
 const statusOptions = [
   { value: "all", label: "All" },
-  { value: "live", label: "Live & Filled" },
+  { value: "live", label: "Live" },
   { value: "closed", label: "Closed" },
 ];
 
@@ -44,7 +44,7 @@ const Home = () => {
 
   const checkWalletConnection = async () => {
     if (!web3) {
-      alert("Please Connect Wallet To View Pools");
+      toast.warning("Please Connect Wallet To View Pools");
     }
   };
 
@@ -59,7 +59,7 @@ const Home = () => {
       <div className="home-container">
         <div className="mb-4 me-2 text-end search-btn">
           <Link to="/fixed-swap" className="me-2">
-            <Button className="ca">Create auction</Button>
+            <Button className="ca">Create Sale</Button>
           </Link>
           <Button className="filbtn" onClick={() => filterbtnClick(!filterbtn)}>
             <svg

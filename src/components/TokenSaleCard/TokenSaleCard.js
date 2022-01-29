@@ -15,6 +15,10 @@ const Tokensalecard = ({
   isOnlyWhiteList,
   claimAuctionFundsAt,
   view,
+  startAuctionAt,
+  tokenSymbol,
+  isUSDT,
+  network,
 }) => {
   // const statusRef = useRef("");
   // useEffect(() => {
@@ -81,11 +85,20 @@ const Tokensalecard = ({
               </div>
               <div>
                 <span>Pair</span>
-                <p>LINK /AVAX</p>
+                <p>
+                  {network === 4
+                    ? isUSDT
+                      ? "USDT"
+                      : "ETH"
+                    : isUSDT
+                    ? "USDT"
+                    : "AVAX"}
+                  {} / {tokenSymbol}
+                </p>
               </div>
               <div>
                 <span>Swap Ratio</span>
-                <p>{swapRatio} : 1</p>
+                <p>1: {swapRatio}</p>
               </div>
               <div>
                 <span className="me-3">Participants</span>
@@ -95,22 +108,9 @@ const Tokensalecard = ({
                 </p>
               </div>
             </div>
-            <ProgressBar now={percent} />
+            <ProgressBar now={percent < 100 ? 50 : percent} />
           </div>
-          <Link
-            to="/poolform"
-            state={{
-              index,
-              name,
-              sellToken,
-              swapRatio,
-              maxAmountPerWallet,
-              endAuctionAt,
-              isOnlyWhiteList,
-              isOnlySeed,
-              claimAuctionFundsAt,
-            }}
-          >
+          <Link to={`/poolform/${index}`}>
             <Button>Join Now</Button>
           </Link>
         </Card.Body>

@@ -9,6 +9,7 @@ import "react-toastify/dist/ReactToastify.css";
 // import { ETHicon } from "../../Assets/Images/Images";
 import { Images } from "../../Assets/Images/Images";
 import "./WalletModal.scss";
+import { useEffect } from "react/cjs/react.development";
 
 const WalletModal = (props) => {
   const [web3, setWeb3] = useContext(Web3Context);
@@ -58,6 +59,27 @@ const WalletModal = (props) => {
       setWeb3(new Web3(window.ethereum));
     });
   }
+
+  useEffect(() => {
+    if (!web3) return;
+    web3.eth.net.getId().then(
+      (e) => {
+        switch (e) {
+          case 4:
+            return;
+          case 43114:
+            return;
+          case 43113:
+            return;
+          default:
+            setWeb3(null);
+        }
+      }
+      // (e != "4" || e != "43114") &&
+      // toast.error("Please connect to Avalanche Mainnet") &&
+      // setWeb3(null)
+    );
+  }, [web3]);
 
   return (
     <Fragment>

@@ -25,7 +25,7 @@ import "./Filters.scss";
 import { useEffect } from "react/cjs/react.development";
 
 const poolOptions = [
-  { value: "swap", label: "Fixed Swap Auction" },
+  { value: "swap", label: "Fixed Price Sale" },
   // { value: "sealed", label: "Sealed-Bid Auction" },
   // { value: "dutch", label: "Dutch Auction" },
 ];
@@ -125,7 +125,7 @@ const Filters = ({
         </div>
         <div className="action-btn my-lg-0 my-3">
           <Link to="/fixed-swap">
-            <Button>Create auction</Button>
+            <Button>Create Sale</Button>
           </Link>
         </div>
       </div>
@@ -182,6 +182,16 @@ const Filters = ({
                   <input
                     type="number"
                     placeholder="Enter Pool ID "
+                    onKeyPress={(e) => {
+                      if (
+                        e.code === "Minus" ||
+                        e.code === "NumpadSubtract" ||
+                        e.code === "Comma" ||
+                        e.code === "NumpadAdd"
+                      ) {
+                        e.preventDefault();
+                      }
+                    }}
                     value={searchBy.id}
                     min={0}
                     onChange={(e) => {

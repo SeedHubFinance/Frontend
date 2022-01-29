@@ -19,6 +19,7 @@ jobs:
         port: ${{ secrets.PORT }}
         script: |
           cd ~/fixed-in
+          source ~/.bashrc
           git reset --hard
           git pull origin staging
           npm install

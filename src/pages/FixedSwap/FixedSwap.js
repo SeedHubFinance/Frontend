@@ -6,7 +6,7 @@ import React, {
   Fragment,
 } from "react";
 import { useNavigate } from "react-router-dom";
-import { Row, Col, Button } from "react-bootstrap";
+import { Row, Col, Button, Carousel } from "react-bootstrap";
 import Header from "../../components/Header/Header";
 import Select from "react-select";
 import Footer from "../../components/Footer/Footer";
@@ -23,15 +23,21 @@ import coinABI from "../../contracts/ERC20ABI";
 import {
   fixedSwapABI,
   fixedSwapContractAddress,
+  fujiSwapAddress,
 } from "../../contracts/FixedSwap";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
+import { determineContractAddress } from "../../utils/callContract";
 
 const poolOptions = [
   { value: "eth", label: "ETH" },
   { value: "usdt", label: "USDT" },
   { value: "avax", label: "AVAX" },
+];
+const poolOptionsAvax = [
+  { value: "avax", label: "AVAX" },
+  { value: "usdt", label: "USDT" },
 ];
 
 const Fixedswap = (props) => {
@@ -43,6 +49,7 @@ const Fixedswap = (props) => {
   const [maxAmountPerWallet, setMaxAmountPerWallet] = useState(
     "100000000000000000000000000"
   );
+  const [network, setNetwork] = useState();
   const [isOnlySeeHolder, setIsOnlySeedHolder] = useState(false);
   const [enableWhiteList, setEnableWhitelist] = useState(false);
 
@@ -67,7 +74,6 @@ const Fixedswap = (props) => {
   const [limitfield, setlimitfield] = useState(false);
 
   const [currentBalance, setCurrentBalance] = useState("");
-
   const [web3, setWeb3] = useContext(Web3Context);
   const [address, setAddress] = useState(Web3Context);
 
@@ -82,22 +88,44 @@ const Fixedswap = (props) => {
   const [listdata, setListData] = useState([]);
 
   const [transactionFee, setTransactionFee] = useState(0);
+  const [tokenContractAddress, setTokenContractAddress] = useState();
 
   const getUserWalletAddress = async () => {
     if (web3) {
       let addressArray = await web3?.eth.getAccounts();
       setAddress(addressArray[0]);
       setWeb3Status(true);
-      getTransactionFee();
+      // getTransactionFee();
     } else {
-      alert("Please Connect Wallet");
+      toast.warning("Please Connect Wallet");
       setWeb3Status(false);
     }
   };
 
+  // const getContractAddress = asy()
+
   useEffect(() => {
+    if (web3) {
+      determineContractAddress(web3).then((e) => {
+        console.log(e);
+        if (!e) return toast.error("Connect to correct network");
+        setTokenContractAddress(e["address"]);
+        setNetwork(e["net"]);
+
+        switch (e["net"]) {
+          case 4: {
+            setSelectedCurreny({ value: "eth", label: "ETH" });
+          }
+          case 43113: {
+            setSelectedCurreny({ value: "avax", label: "AVAX" });
+          }
+          default:
+            return;
+        }
+      });
+    }
     getUserWalletAddress();
-  }, [web3, address]);
+  }, [web3, address, tokenContractAddress]);
 
   useEffect(() => {
     if (isFirstRun.current) {
@@ -164,9 +192,9 @@ const Fixedswap = (props) => {
   };
 
   const getTransactionFee = async () => {
-    let fixedSwapContract = new web3.eth.Contract(
+    const fixedSwapContract = new web3.eth.Contract(
       fixedSwapABI,
-      fixedSwapContractAddress
+      tokenContractAddress
     );
 
     let transFee = await fixedSwapContract.methods.getTransactionFee().call();
@@ -199,9 +227,8 @@ const Fixedswap = (props) => {
     let coinContract = new web3.eth.Contract(coinABI, tokenAddress);
 
     console.log(tokenAllocation);
-
     return await coinContract.methods
-      .approve(fixedSwapContractAddress, toFixed(tokenAllocation).toString())
+      .approve(tokenContractAddress, toFixed(tokenAllocation).toString())
       .send({ from: address })
       .then(() => setApproval(true))
       .catch((e) => setApproval(false));
@@ -255,7 +282,7 @@ const Fixedswap = (props) => {
   const makePool = async () => {
     let fixedSwapContract = new web3.eth.Contract(
       fixedSwapABI,
-      fixedSwapContractAddress
+      tokenContractAddress
     );
 
     const poolReq = {
@@ -263,7 +290,7 @@ const Fixedswap = (props) => {
       tokenAddress,
       swapRatio: parseInt(swapRatio),
       maxAmountPerWallet: parseInt(maxAmountPerWallet),
-      tokenAllocation: parseInt(tokenAllocation),
+      tokenAllocation: parseFloat(tokenAllocation),
       startDate: getTimeStampsForDates(startDate),
       endDate: getTimeStampsForDates(endDate),
       claimDate: getTimeStampsForDates(claimDate),
@@ -325,6 +352,7 @@ const Fixedswap = (props) => {
   return (
     <Fragment>
       <Header />
+      <ToastContainer />
       <div className="fixed-swap-pool">
         <div className="fixed-swap-form-container">
           <form>
@@ -333,8 +361,10 @@ const Fixedswap = (props) => {
                 <div className="form-header">
                   Initial Token Offering
                   <div className="title">
-                    Create a Fixed-swap Pool
-                    <Button href="">How to Create a pool</Button>
+                    Create a Fixed Price Pool
+                    <Button href="https://docs.seedhub.network/products/seed-hub-decentralized/fixed-price-sales/how-to-create-a-pool">
+                      How to Create a pool
+                    </Button>
                   </div>
                 </div>
               </Col>
@@ -362,7 +392,22 @@ const Fixedswap = (props) => {
               </Col>
               <Col md={6} lg={5}>
                 <div className="d-flex align-items-center justify-content-between">
-                  <div className="w-50 me-3">
+                  <div className="w-50 to-select me-3">
+                    <span className="label">To</span>
+                    <Select
+                      options={network == 4 ? poolOptions : poolOptionsAvax}
+                      defaultValue={
+                        network == 4 ? poolOptions[0] : poolOptionsAvax[0]
+                      }
+                      isSearchable={false}
+                      isDisabled={!isWeb3Connected}
+                      onChange={(e) => {
+                        setSelectedCurreny(e);
+                        console.log(e);
+                      }}
+                    />
+                  </div>
+                  <div className="w-50 ">
                     <span className="label">From</span>
                     <input
                       className="custom-input"
@@ -370,18 +415,6 @@ const Fixedswap = (props) => {
                       name="from"
                       defaultValue={tokenName}
                       disabled={!isWeb3Connected}
-                    />
-                  </div>
-                  <div className="w-50 to-select">
-                    <span className="label">To</span>
-                    <Select
-                      options={poolOptions}
-                      defaultValue={poolOptions[0]}
-                      isDisabled={!isWeb3Connected}
-                      onChange={(e) => {
-                        setSelectedCurreny(e);
-                        console.log(e);
-                      }}
                     />
                   </div>
                 </div>
@@ -398,6 +431,19 @@ const Fixedswap = (props) => {
                     type="number"
                     min="0"
                     defaultValue=""
+                    onKeyPress={(e) => {
+                      if (
+                        e.code === "Minus" ||
+                        e.code === "NumpadSubtract" ||
+                        e.code === "Comma" ||
+                        e.code === "NumpadAdd" ||
+                        e.code === "Period" ||
+                        e.key === "e" ||
+                        e.key === "E"
+                      ) {
+                        e.preventDefault();
+                      }
+                    }}
                     onChange={(e) => setSwapRatio(e.target.value)}
                     disabled={!isWeb3Connected}
                   />
@@ -414,13 +460,25 @@ const Fixedswap = (props) => {
                     required
                     name="amount"
                     type="number"
+                    onKeyPress={(e) => {
+                      if (
+                        e.code === "Minus" ||
+                        e.code === "NumpadSubtract" ||
+                        e.code === "Comma" ||
+                        e.code === "NumpadAdd" ||
+                        e.key === "e" ||
+                        e.key === "E"
+                      ) {
+                        e.preventDefault();
+                      }
+                    }}
                     defaultValue={""}
                     disabled={!isWeb3Connected}
                     max={currentBalance / 10 ** decimal}
-                    min={0}
+                    min="0"
                     onChange={(e) =>
                       setTokenAllocation(
-                        parseInt(e.target.value) * 10 ** decimal
+                        parseFloat(e.target.value) * 10 ** decimal
                       )
                     }
                   />
@@ -495,6 +553,18 @@ const Fixedswap = (props) => {
                       name="allocation"
                       type="number"
                       min="0"
+                      onKeyPress={(e) => {
+                        if (
+                          e.code === "Minus" ||
+                          e.code === "NumpadSubtract" ||
+                          e.code === "Comma" ||
+                          e.code === "NumpadAdd" ||
+                          e.key === "e" ||
+                          e.key === "E"
+                        ) {
+                          e.preventDefault();
+                        }
+                      }}
                       onChange={(e) => setMaxAmountPerWallet(e.target.value)}
                       disabled={!isApproved}
                     />
@@ -621,8 +691,9 @@ const Fixedswap = (props) => {
                   className="custom-input"
                   required
                   name="poolname"
+                  value={poolName}
                   defaultValue=""
-                  onChange={(e) => setPoolName(e.target.value)}
+                  onChange={(e) => setPoolName(e.target.value.trimStart())}
                   disabled={!isApproved}
                 />
 

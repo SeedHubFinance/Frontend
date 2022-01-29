@@ -6,19 +6,25 @@ import React, {
   useRef,
 } from "react";
 import { Row, Col, Button } from "react-bootstrap";
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { ProgressBar } from "react-bootstrap";
-import {
-  fixedSwapABI,
-  fixedSwapContractAddress,
-} from "../../contracts/FixedSwap";
+import { fixedSwapABI } from "../../contracts/FixedSwap";
 import coinABI from "../../contracts/ERC20ABI";
+import {
+  approveTokenTransafer,
+  getPoolById,
+  determineContractAddress,
+  getUsdtBalance,
+} from "../../utils/callContract";
 import { Web3Context } from "../../context/web3Context";
 import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
 import Countdown from "react-countdown";
+import { toast, ToastContainer } from "react-toastify";
+import { usdtAddBid } from "../../utils/callContract";
 import { ReactComponent as MaxIcon } from "../../Assets/Images/max.svg";
 import "./PoolForm.scss";
+import { poll } from "@usedapp/core/node_modules/ethers/lib/utils";
 
 // Countdown Timer
 // const Completionist = () => <span>0 d : 0 h : 0 m : 0 s</span>;
@@ -51,37 +57,40 @@ const renderer = ({ days, hours, minutes, seconds, completed }) => {
 // };
 
 const Fixedswap = (props) => {
+  const params = useParams();
   const [web3, setWeb3] = useContext(Web3Context);
   const [address, setAddress] = useState("");
   const [error, setError] = useState(null);
   const [tokenSymbol, setTokenSymbol] = useState(null);
   const [tokenDecimals, setTokenDecimals] = useState(0);
+  const [isStarted, setIsStarted] = useState(false);
   const [isClosed, setIsClosed] = useState(false);
   const [isExpired, setIsExpired] = useState(false);
   const [currentBalance, setCurrentBalance] = useState("");
-  const location = useLocation();
   const [amount, setAmount] = useState();
   const [bidPrice, setPriceAmount] = useState(0);
   const [isWeb3Connected, setWeb3Status] = useState(false);
+  const [pool, setPool] = useState();
+  const [isApproved, setIsApproved] = useState(false);
+  const [network, setNetwork] = useState();
+
+  const [fixedSwapContractAddress, setFixedSwapContractAddress] = useState("");
 
   // const statusRef = useRef("");
   // useEffect(() => {
-  //   const date = new Date(location.state.endAuctionAt * 1000);
+  //   const date = new Date(pool.endAuctionAt * 1000);
   //   date < new Date()
   //     ? (statusRef.current.innerText = "Closed")
   //     : (statusRef.current.innerText = "Live");
   // }, []);
-  // const date = new Date(location.state.endAuctionAt * 1000);
+  // const date = new Date(pool.endAuctionAt * 1000);
   // const statusObj =
   //   date < new Date()
   //     ? { status: "Closed", isClosed: true }
   //     : { status: "Live", isClosed: false };
   const getSymbol = async () => {
     if (web3?.eth) {
-      const tokenContract = new web3.eth.Contract(
-        coinABI,
-        location.state.sellToken
-      );
+      const tokenContract = new web3.eth.Contract(coinABI, pool.sellToken);
       await tokenContract.methods
         .symbol()
         .call()
@@ -92,10 +101,7 @@ const Fixedswap = (props) => {
 
   const getDecimals = async () => {
     if (web3?.eth) {
-      const tokenContract = new web3.eth.Contract(
-        coinABI,
-        location.state.sellToken
-      );
+      const tokenContract = new web3.eth.Contract(coinABI, pool.sellToken);
       await tokenContract.methods
         .decimals()
         .call()
@@ -105,50 +111,85 @@ const Fixedswap = (props) => {
   };
 
   const getUserWalletAddress = async () => {
+    let addressArray = await web3?.eth.getAccounts();
+    setAddress(addressArray[0]);
+    setWeb3Status(true);
+  };
+
+  const getTokenBalance = async () => {
     if (web3) {
-      let addressArray = await web3?.eth.getAccounts();
-      setAddress(addressArray[0]);
-      setWeb3Status(true);
-    } else {
-      alert("Please Connect Wallet");
-      setWeb3Status(false);
+      if (address) {
+        if (!pool.isUSDT) {
+          await web3.eth
+            .getBalance(address)
+            .then((e) => setCurrentBalance(web3.utils.fromWei(e)));
+          const response = await determineContractAddress(web3);
+          setNetwork(response.net);
+          return;
+        }
+        await getUsdtBalance(address, web3).then((e) =>
+          setCurrentBalance(e / 10 ** 6)
+        );
+        const response = await determineContractAddress(web3);
+        console.log(response.net);
+        setNetwork(response.net);
+
+        // let coinContract = new web3.eth.Contract(
+        //   coinABI,
+        //   pool.sellToken
+        // );
+        // coinContract.methods
+        //   .balanceOf(address)
+        //   .call()
+        //   .then((e) => {
+        //     console.log("Hello");
+        //     setCurrentBalance(e);
+        //   })
+        //   .catch((e) => setError(e.message));
+      }
     }
   };
 
-  const getTokenBalance = () => {
-    if (address) {
-      web3.eth
-        .getBalance(address)
-        .then((e) => setCurrentBalance(web3.utils.fromWei(e)));
-      // let coinContract = new web3.eth.Contract(
-      //   coinABI,
-      //   location.state.sellToken
-      // );
-      // coinContract.methods
-      //   .balanceOf(address)
-      //   .call()
-      //   .then((e) => {
-      //     console.log("Hello");
-      //     setCurrentBalance(e);
-      //   })
-      //   .catch((e) => setError(e.message));
+  const getContractAddress = async () => {
+    if (web3) {
+      determineContractAddress(web3).then((e) => {
+        if (!e) return toast.error("Connect to correct network");
+        setFixedSwapContractAddress(e["address"]);
+      });
     }
   };
 
   useEffect(() => {
-    getUserWalletAddress();
-    getSymbol();
-    getDecimals();
-    const date = new Date(location.state.endAuctionAt * 1000);
-    if (date < new Date()) {
+    if (!pool) return;
+    const endAuctionDate = new Date(pool.endAuctionAt * 1000);
+    const claimDate = new Date(pool.claimAuctionFundsAt * 1000);
+    const startDate = new Date(pool.startAuctionAt * 1000);
+    if (startDate < new Date()) {
+      setIsStarted(true);
+    }
+    if (endAuctionDate < new Date()) {
       setIsClosed(true);
     }
-    const claimDate = new Date(location.state.claimAuctionFundsAt * 1000);
     if (claimDate < new Date()) {
       setIsExpired(true);
     }
+    getContractAddress();
+    getSymbol();
+    getDecimals();
     getTokenBalance();
-  }, [web3, address]);
+  }, [pool]);
+
+  useEffect(() => {
+    if (!web3) {
+      toast.warning("Please Connect Wallet");
+      setWeb3Status(false);
+      return;
+    }
+    getUserWalletAddress();
+    getPoolById(params.id, web3)
+      .then((e) => setPool(e))
+      .catch(console.log);
+  }, [web3]);
 
   function toFixed(x) {
     if (Math.abs(x) < 1.0) {
@@ -170,6 +211,40 @@ const Fixedswap = (props) => {
 
   const handleClick = async (e) => {
     e.preventDefault();
+    console.log(pool?.isUSDT);
+    if (pool?.isUSDT) {
+      let bidString = toFixed(bidPrice * 10 ** 6).toString();
+      if (bidString.indexOf(".") !== -1) {
+        let index = bidString.indexOf(".");
+        bidString = Math.ceil(
+          toFixed(bidPrice * 10 ** tokenDecimals)
+        ).toString();
+      }
+      console.log("bid string", bidString);
+      toast.info("Wait for approval success");
+      await approveTokenTransafer(bidString, address, web3, toFixed)
+        .then((e) => {
+          toast.success("Approved");
+          setIsApproved(true);
+        })
+        .catch(setIsApproved(false));
+      let amountString = toFixed(amount * 10 ** 6).toString();
+
+      if (amountString.indexOf(".") !== -1) {
+        let index = amountString.indexOf(".");
+        amountString = Math.ceil(
+          toFixed(amount * 10 ** tokenDecimals)
+        ).toString();
+      }
+      try {
+        await usdtAddBid(web3, params.id, amountString, bidString, address);
+        toast.success("Added bid");
+      } catch (e) {
+        console.log(e.message);
+      }
+      return;
+    }
+    console.log("Hello");
     const contract = new web3.eth.Contract(
       fixedSwapABI,
       fixedSwapContractAddress
@@ -186,7 +261,7 @@ const Fixedswap = (props) => {
     }
 
     await contract.methods
-      .addBid(location.state.index, amountString)
+      .addBid(params.id, amountString)
       .send({
         from: address,
         value: web3.utils.toWei(bidPrice),
@@ -196,22 +271,23 @@ const Fixedswap = (props) => {
   };
 
   const calculateAmount = async (price) => {
+    const contract_address = await determineContractAddress(web3);
     const contract = new web3.eth.Contract(
       fixedSwapABI,
-      fixedSwapContractAddress
+      contract_address.address
     );
-
     if (price !== "") {
-      console.log(price, location.state.swapRatio);
+      const priceContract = pool?.isUSDT
+        ? price * 10 ** 6
+        : web3.utils.toWei(price);
+      console.log(price);
+      console.log(priceContract, pool.swapRatio, tokenDecimals);
       const Calamount = await contract.methods
-        .calculateAmount(
-          web3.utils.toWei(price),
-          location.state.swapRatio,
-          tokenDecimals
-        )
+        .calculateAmount(priceContract, pool.swapRatio, tokenDecimals)
         .call();
-      console.log(Calamount);
-      setAmount(Calamount / 10 ** tokenDecimals);
+      pool?.isUSDT
+        ? setAmount(Calamount / 10 ** 6)
+        : setAmount(web3.utils.fromWei(Calamount));
     }
   };
 
@@ -222,13 +298,13 @@ const Fixedswap = (props) => {
 
   const handleClaim = async (e) => {
     e.preventDefault();
+    const contract_address = await determineContractAddress(web3);
     const contract = new web3.eth.Contract(
       fixedSwapABI,
-      fixedSwapContractAddress
+      contract_address.address
     );
-    console.log("=====>", contract.methods);
     await contract.methods
-      .userWithDrawFunction(location.state.index)
+      .userWithDrawFunction(params.id)
       .send({
         from: address,
       })
@@ -238,6 +314,7 @@ const Fixedswap = (props) => {
   return (
     <Fragment>
       <Header />
+      <ToastContainer />
       <div className="pool-form">
         <div className="pool-form-container">
           <form>
@@ -245,9 +322,10 @@ const Fixedswap = (props) => {
               <Col>
                 <div className="form-header">
                   SeedHub
-                  <div className="title">{location.state.name}</div>
+                  <div className="title">{pool?.name}</div>
                   <div className="token-code text-break">
-                    {location?.state?.sellToken}
+                    <span>Contract Address: </span>
+                    {pool?.sellToken}
                   </div>
                 </div>
               </Col>
@@ -267,26 +345,71 @@ const Fixedswap = (props) => {
                     <p>
                       <span>Participants</span>
                       <p>
-                        {location.state.isOnlyWhiteList
-                          ? "WhiteList "
-                          : "Public "}
-                        {location.state.isOnlySeed
-                          ? "and for seed Holders"
-                          : "Only"}
+                        {console.log(pool)}
+                        {pool?.enableWhiteList ? "WhiteList " : "Public "}
+                        {pool?.onlySeedHolders ? "and for seed Holders" : ""}
                       </p>
                     </p>
                   </div>
                   <p>Fixed Swap Ratio</p>
                   <h3>
-                    1 ETH = {location.state.swapRatio} {tokenSymbol}
+                    {console.log("nettwoeawjed", network)}1{" "}
+                    {network === 4
+                      ? pool?.isUSDT
+                        ? "USDT"
+                        : "ETH"
+                      : pool?.isUSDT
+                      ? "USDT"
+                      : "AVAX"}{" "}
+                    = {pool?.swapRatio} {tokenSymbol}
                   </h3>
                   <div className="divder"></div>
                   <div className="row">
                     <div className="col">
                       <p className="mb-3">Maximum Allocation per wallet</p>
-                      <h3>
-                        {web3.utils.fromWei(location.state.maxAmountPerWallet)}{" "}
-                        ETH
+                      <h3 className="text-break">
+                        {pool?.maxAmountPerWallet ? (
+                          web3?.utils.fromWei(
+                            pool.maxAmountPerWallet.toString()
+                          ) === "100000000000000000000000000" ? (
+                            "No Limit"
+                          ) : (
+                            web3?.utils.fromWei(
+                              pool.maxAmountPerWallet.toString()
+                            )
+                          )
+                        ) : (
+                          <></>
+                        )}
+                        {pool?.maxAmountPerWallet ? (
+                          web3?.utils.fromWei(
+                            pool.maxAmountPerWallet.toString()
+                          ) === "100000000000000000000000000" ? (
+                            <></>
+                          ) : network === 4 ? (
+                            pool?.isUSDT ? (
+                              " USDT"
+                            ) : (
+                              " ETH"
+                            )
+                          ) : pool?.isUSDT ? (
+                            " USDT"
+                          ) : (
+                            " AVAX"
+                          )
+                        ) : (
+                          <></>
+                        )}
+
+                        {/* {console.log(pool?.maxAmountPerWallet)} */}
+                        {/* {pool &&
+                        web3?.utils.fromWei(
+                          pool?.maxAmountPerWallet.toString()
+                        ) === "100000000000000000000000000"
+                          ? "No Limit"
+                          : web3?.utils.toWei(
+                              pool?.maxAmountPerWallet.toString()
+                            )} */}
                       </h3>
                       <div className="divder"></div>
                     </div>
@@ -300,101 +423,156 @@ const Fixedswap = (props) => {
                   </div>
                 </div>
               </Col>
-              {!isClosed ? (
-                <Col
-                  md={6}
-                  lg={5}
-                  className="offset-lg-2 mt-4 mt-md-0 p-4 p-md-5 bg-off"
-                >
-                  <div className="form-heading text-center mb-4">
-                    Join The Pool
-                  </div>
-                  <div className="text-center fs-6">
+              <Col
+                md={6}
+                lg={5}
+                className="offset-lg-2 mt-4 mt-md-0 p-4 p-md-5 bg-off"
+              >
+                <div className="form-heading text-center mb-4">
+                  {!isStarted
+                    ? "Time Until Pool Launch"
+                    : !isClosed
+                    ? "Join The Pool"
+                    : !isExpired
+                    ? "Wait For Claim Time"
+                    : "Claim Funds"}
+                </div>
+                <div className="text-center fs-6">
+                  {!isStarted ? (
                     <Countdown
                       key={0}
-                      date={new Date(location.state.endAuctionAt * 1000)}
+                      date={new Date(pool?.startAuctionAt * 1000)}
                       renderer={renderer}
+                      onComplete={() => {
+                        setIsStarted(true);
+                      }}
+                    />
+                  ) : !isClosed ? (
+                    <Countdown
+                      key={1}
+                      renderer={renderer}
+                      date={new Date(pool?.endAuctionAt * 1000)}
                       onComplete={() => {
                         setIsClosed(true);
                       }}
                     />
-                  </div>
-                  <div className="divder"></div>
-                  <div className="d-flex justify-content-between">
-                    <span className="label">Amount</span>
-                    <span className="label">Balance: {currentBalance} ETH</span>
-                  </div>
-                  <div className="d-flex">
-                    <input
-                      className="custom-input me-3"
-                      type="number"
-                      required
-                      type="number"
-                      name="amount"
-                      placeholder="Bid Price"
-                      onChange={(e) => calculateAmountFromPrice(e.target.value)}
+                  ) : !isExpired ? (
+                    <Countdown
+                      key={2}
+                      renderer={renderer}
+                      date={new Date(pool?.claimAuctionFundsAt * 1000)}
+                      onComplete={() => {
+                        setIsExpired(true);
+                      }}
                     />
-                    <input
-                      className="custom-input ms-3"
-                      disabled
-                      type="number"
-                      required
-                      type="number"
-                      name="amount"
-                      placeholder="Bid Amount"
-                      value={amount}
-                    />
-                  </div>
-                  <Button
-                    onClick={handleClick}
-                    disabled={amount > 0 && isWeb3Connected ? false : true}
-                    className="sub-btn mt-3"
-                  >
-                    GO
-                  </Button>
-                  <p
-                    style={{
-                      color: "red",
-                      marginTop: "5px",
-                      textAlign: "center",
-                      fontSize: "14px",
-                    }}
-                  >
-                    warning: SeedHub does not support deflationary tokens
-                  </p>
-                </Col>
-              ) : (
-                <Col
-                  md={6}
-                  lg={5}
-                  className="offset-lg-2 mt-4 mt-md-0 p-4 p-md-5 bg-off"
-                >
+                  ) : (
+                    <></>
+                  )}
+                  {/* <Countdown
+                      key={0}
+                      date={new Date(pool.endAuctionAt * 1000)}
+                      renderer={renderer}
+                      onComplete={() => {
+                        setIsClosed(true);
+                      }}
+                    /> */}
+                </div>
+                {!isClosed ? (
                   <>
-                    <div className="form-heading text-center mb-4">
-                      Claim For Pool
+                    <div className="divder"></div>
+                    <div className="d-flex justify-content-between">
+                      <span className="label">Amount</span>
+                      <span className="label">
+                        Balance: {parseFloat(currentBalance).toFixed(4)}{" "}
+                        {network === 4
+                          ? pool?.isUSDT
+                            ? "USDT"
+                            : "ETH"
+                          : pool?.isUSDT
+                          ? "USDT"
+                          : "AVAX"}
+                      </span>
                     </div>
-                    <div className="text-center fs-6">
-                      <Countdown
-                        key={1}
-                        date={
-                          new Date(location.state.claimAuctionFundsAt * 1000)
-                        }
-                        renderer={renderer}
-                        onComplete={() => {
-                          setIsExpired(true);
+                    <div className="d-flex">
+                      <input
+                        className="custom-input me-3"
+                        type="number"
+                        min="0"
+                        required
+                        name="amount"
+                        onKeyPress={(e) => {
+                          if (
+                            e.code === "Minus" ||
+                            e.code === "NumpadSubtract" ||
+                            e.code === "Comma" ||
+                            e.code === "NumpadAdd" ||
+                            e.key === "e" ||
+                            e.key === "E"
+                          ) {
+                            e.preventDefault();
+                          }
                         }}
+                        placeholder="Bid Amount"
+                        disabled={!isStarted}
+                        onChange={(e) =>
+                          calculateAmountFromPrice(e.target.value)
+                        }
                       />
-                      <Button
-                        disabled={!isExpired}
-                        className="sub-btn mt-3"
-                        onClick={handleClaim}
-                      >
-                        Claim Funds
-                      </Button>
+                      <input
+                        className="custom-input ms-3"
+                        disabled
+                        type="number"
+                        min="0"
+                        onKeyPress={(e) => {
+                          if (
+                            e.code === "Minus" ||
+                            e.code === "NumpadSubtract" ||
+                            e.code === "Comma" ||
+                            e.code === "NumpadAdd"
+                          ) {
+                            e.preventDefault();
+                          }
+                        }}
+                        required
+                        name="amount"
+                        placeholder="Token Amount"
+                        value={amount}
+                      />
                     </div>
                   </>
-                </Col>
-              )}
+                ) : (
+                  <></>
+                )}
+                {!isClosed ? (
+                  <>
+                    <Button
+                      onClick={handleClick}
+                      disabled={amount > 0 && isWeb3Connected ? false : true}
+                      className="sub-btn mt-3"
+                    >
+                      GO
+                    </Button>
+                    <p
+                      style={{
+                        color: "red",
+                        marginTop: "5px",
+                        textAlign: "center",
+                        fontSize: "14px",
+                      }}
+                    >
+                      warning: SeedHub does not support deflationary tokens
+                    </p>
+                  </>
+                ) : (
+                  <Button
+                    onClick={handleClaim}
+                    disabled={isExpired > 0 && isWeb3Connected ? false : true}
+                    className="sub-btn mt-3"
+                  >
+                    Claim Funds
+                  </Button>
+                )}
+              </Col>
             </Row>
           </form>
         </div>
