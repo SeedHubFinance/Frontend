@@ -357,7 +357,7 @@ const Fixedswap = (props) => {
                       </p>
                     </p>
                   </div>
-                  <p>Fixed Swap Ratio</p>
+                  <p>Price</p>
                   <h3>
                     {console.log("nettwoeawjed", network)}1{" "}
                     {network === 4
