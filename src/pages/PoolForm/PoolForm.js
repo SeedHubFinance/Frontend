@@ -17,6 +17,7 @@ import {
   getUsdtBalance,
 } from "../../utils/callContract";
 import { Web3Context } from "../../context/web3Context";
+import { Link } from "react-router-dom";
 import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
 import Countdown from "react-countdown";
@@ -319,7 +320,10 @@ const Fixedswap = (props) => {
       <ToastContainer />
       <div className="pool-form">
         <div className="pool-form-container">
-          <form>
+        <Link to="/" className="me-2">
+            <Button className="ca">Back</Button>
+          </Link>
+           <form>
             <Row className="g-0 mb-5">
               <Col>
                 <div className="form-header">
@@ -353,7 +357,7 @@ const Fixedswap = (props) => {
                       </p>
                     </p>
                   </div>
-                  <p>Token Price</p>
+                  <p>Fixed Swap Ratio</p>
                   <h3>
                     {console.log("nettwoeawjed", network)}1{" "}
                     {network === 4
@@ -552,7 +556,7 @@ const Fixedswap = (props) => {
                       disabled={amount > 0 && isWeb3Connected ? false : true}
                       className="sub-btn mt-3"
                     >
-                      BUY
+                      Buy
                     </Button>
                     <p
                       style={{
@@ -562,7 +566,7 @@ const Fixedswap = (props) => {
                         fontSize: "14px",
                       }}
                     >
-                      Warning: SeedHub does not support deflationary tokens
+                      warning: SeedHub does not support deflationary tokens
                     </p>
                   </>
                 ) : (
