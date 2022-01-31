@@ -10,6 +10,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { Images } from "../../Assets/Images/Images";
 import "./WalletModal.scss";
 import { useEffect } from "react";
+import { determineContractAddress } from "../../utils/callContract";
 
 const WalletModal = (props) => {
   const [web3, setWeb3] = useContext(Web3Context);
@@ -36,7 +37,10 @@ const WalletModal = (props) => {
       try {
         // props.connectButton.current.disabled = true;
         await window.ethereum.enable();
-        setWeb3(new Web3(window.ethereum));
+        const web3Response = new Web3(window.ethereum);
+        const response = await determineContractAddress(web3Response);
+        if (!response) return toast.error("Select correct network");
+        setWeb3(web3Response);
       } catch (e) {
         if (e.message.includes("wallet_requestPermissions")) {
           e.message =
@@ -59,28 +63,6 @@ const WalletModal = (props) => {
       setWeb3(new Web3(window.ethereum));
     });
   }
-
-  useEffect(() => {
-    if (!web3) return;
-    web3.eth.net.getId().then(
-      (e) => {
-        switch (e) {
-          case 4:
-            return;
-          case 43114:
-            return;
-          case 43113:
-            return;
-          default:
-            toast.error("Not supported network");
-            setWeb3(null);
-        }
-      }
-      // (e != "4" || e != "43114") &&
-      // toast.error("Please connect to Avalanche Mainnet") &&
-      // setWeb3(null)
-    );
-  }, [web3]);
 
   return (
     <Fragment>
