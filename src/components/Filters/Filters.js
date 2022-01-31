@@ -22,7 +22,7 @@ import { ReactComponent as CoinGecko } from "../../Assets/Images/coingecko-1.svg
 
 // Sass file
 import "./Filters.scss";
-import { useEffect } from "react/cjs/react.development";
+import { useEffect } from "react";
 
 const poolOptions = [
   { value: "swap", label: "Fixed Price Sale" },

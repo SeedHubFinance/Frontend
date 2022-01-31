@@ -9,7 +9,7 @@ import "react-toastify/dist/ReactToastify.css";
 // import { ETHicon } from "../../Assets/Images/Images";
 import { Images } from "../../Assets/Images/Images";
 import "./WalletModal.scss";
-import { useEffect } from "react/cjs/react.development";
+import { useEffect } from "react";
 
 const WalletModal = (props) => {
   const [web3, setWeb3] = useContext(Web3Context);
