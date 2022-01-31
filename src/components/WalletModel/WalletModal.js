@@ -72,6 +72,7 @@ const WalletModal = (props) => {
           case 43113:
             return;
           default:
+            toast.error("Not supported network");
             setWeb3(null);
         }
       }
