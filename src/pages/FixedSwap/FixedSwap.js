@@ -308,23 +308,38 @@ const Fixedswap = (props) => {
       return;
     }
 
+    // pool name
+    //  address poolCreator;
+    //  uint256 startAuctionAt;
+    //  uint256 endAuctionAt;
+    //  uint256 claimAuctionFundsAt;
+    //  bool enableWhiteList;
+    //  uint256 maxAmountPerWallet;
+    //  bool onlySeedHolders;
+    //  address sellToken;
+    //  uint256 amountOfSellToken;
+    //  uint256 swapRatio;
+    //  bool isUSDT;
+
+    let pool = [
+      poolName,
+      address,
+      getTimeStampsForDates(startDate),
+      getTimeStampsForDates(endDate),
+      getTimeStampsForDates(claimDate),
+      enableWhiteList,
+      web3.utils.toWei(maxAmountPerWallet),
+      isOnlySeeHolder,
+      tokenAddress,
+      toFixed(tokenAllocation).toString(),
+      swapRatio,
+      currency.value == "usdt" ? true : false,
+    ];
+
+    console.log(pool);
+
     await fixedSwapContract.methods
-      .createLiquidityPool(
-        poolName,
-        tokenAddress,
-        swapRatio,
-        web3.utils.toWei(maxAmountPerWallet),
-        toFixed(tokenAllocation).toString(),
-        [
-          getTimeStampsForDates(startDate),
-          getTimeStampsForDates(endDate),
-          getTimeStampsForDates(claimDate),
-        ],
-        isOnlySeeHolder,
-        enableWhiteList,
-        currency.value == "usdt" ? true : false,
-        listdata
-      )
+      .createLiquidityPool(pool, listdata)
       .send({ from: address })
       .then(() => {
         toast.success("Pool successfully created");
@@ -362,7 +377,10 @@ const Fixedswap = (props) => {
                   Initial Token Offering
                   <div className="title">
                     Create a Fixed Price Pool
-                    <Button  href="https://docs.seedhub.network/products/seed-hub-decentralized/fixed-price-sales/how-to-create-a-pool" target="_blank">
+                    <Button
+                      href="https://docs.seedhub.network/products/seed-hub-decentralized/fixed-price-sales/how-to-create-a-pool"
+                      target="_blank"
+                    >
                       How to Create a pool
                     </Button>
                   </div>
