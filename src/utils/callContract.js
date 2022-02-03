@@ -78,8 +78,6 @@ export const withDrawUnSoldTokens = async (poolId, web3, address) => {
     await contract.methods.withdrawUnSoldTokens(poolId).send({ from: address });
     toast.success("Withdraw successfully");
   } catch (e) {
-    toast.error(
-      "You are not a pool creator or maybe your funds already Withdrew"
-    );
+    toast.error("You already Withdrew funds");
   }
 };

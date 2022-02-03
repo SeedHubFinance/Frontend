@@ -583,13 +583,17 @@ const Fixedswap = (props) => {
                     >
                       Claim Funds
                     </Button>
-                    <Button
-                      onClick={handleWithdrawl}
-                      disabled={isExpired > 0 && isWeb3Connected ? false : true}
-                      className="sub-btn mt-3"
-                    >
-                      Withdraw Funds
-                    </Button>
+                    {pool.poolCreator === address && (
+                      <Button
+                        onClick={handleWithdrawl}
+                        disabled={
+                          isExpired > 0 && isWeb3Connected ? false : true
+                        }
+                        className="sub-btn mt-3"
+                      >
+                        Withdraw Funds
+                      </Button>
+                    )}
                   </>
                 )}
               </Col>
