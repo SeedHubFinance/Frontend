@@ -6,7 +6,7 @@ import React, {
   useRef,
 } from "react";
 import { Row, Col, Button } from "react-bootstrap";
-import { useLocation, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { ProgressBar } from "react-bootstrap";
 import { fixedSwapABI } from "../../contracts/FixedSwap";
 import coinABI from "../../contracts/ERC20ABI";
@@ -22,7 +22,7 @@ import { Link } from "react-router-dom";
 import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
 import Countdown from "react-countdown";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import { usdtAddBid } from "../../utils/callContract";
 import { ReactComponent as MaxIcon } from "../../Assets/Images/max.svg";
 import "./PoolForm.scss";
@@ -183,7 +183,6 @@ const Fixedswap = (props) => {
 
   useEffect(() => {
     if (!web3) {
-      toast.warning("Please Connect Wallet");
       setWeb3Status(false);
       return;
     }
@@ -322,7 +321,6 @@ const Fixedswap = (props) => {
   return (
     <Fragment>
       <Header />
-      <ToastContainer />
       <div className="pool-form">
         <div className="pool-form-container">
           <Link to="/" className="me-2">

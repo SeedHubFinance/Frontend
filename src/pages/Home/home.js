@@ -5,9 +5,6 @@ import Filters from "../../components/Filters/Filters";
 import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
 import Cardlist from "../../components/Cardlist/Cardlist";
-import CardPagination from "../../components/CardPagination/CardPagination";
-import { toast, ToastContainer } from "react-toastify";
-import { Web3Context } from "../../context/web3Context";
 
 import "./Home.scss";
 
@@ -40,22 +37,10 @@ const Home = () => {
     view: true,
   });
   const [showResult, setShowResult] = useState(false);
-  const [web3, setWeb3] = useContext(Web3Context);
-
-  const checkWalletConnection = async () => {
-    if (!web3) {
-      toast.warning("Please Connect Wallet To View Pools");
-    }
-  };
-
-  useEffect(() => {
-    checkWalletConnection();
-  }, [web3]);
 
   return (
     <div className="homepage">
       <Header />
-      <ToastContainer />
       <div className="home-container">
         <div className="mb-4 me-2 text-end search-btn">
           <Link to="/fixed-swap" className="me-2">
