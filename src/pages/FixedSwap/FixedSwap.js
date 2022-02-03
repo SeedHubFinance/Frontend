@@ -97,7 +97,6 @@ const Fixedswap = (props) => {
       setWeb3Status(true);
       // getTransactionFee();
     } else {
-      toast.warning("Please Connect Wallet");
       setWeb3Status(false);
     }
   };
