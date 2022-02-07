@@ -149,6 +149,11 @@ const Fixedswap = (props) => {
     setTransferApproval(false);
   }, [startDate, endDate, claimDate]);
 
+  useEffect(() => {
+    if (limitfield) return;
+    setMaxAmountPerWallet("100000000000000000000000000");
+  }, [limitfield]);
+
   const getTimeStampsForDates = (date) => {
     return Math.ceil(new Date(date).getTime() / 1000);
   };
