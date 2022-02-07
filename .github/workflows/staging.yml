@@ -23,4 +23,5 @@ jobs:
           git reset --hard
           git pull origin staging
           npm install
-          pm2 restart 0
+          rm -rf build 
+          npm run build

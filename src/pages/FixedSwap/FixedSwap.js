@@ -91,39 +91,35 @@ const Fixedswap = (props) => {
   const [tokenContractAddress, setTokenContractAddress] = useState();
 
   const getUserWalletAddress = async () => {
-    if (web3) {
-      let addressArray = await web3?.eth.getAccounts();
-      setAddress(addressArray[0]);
-      setWeb3Status(true);
-      // getTransactionFee();
-    } else {
-      toast.warning("Please Connect Wallet");
-      setWeb3Status(false);
-    }
+    let addressArray = await web3?.eth.getAccounts();
+    setAddress(addressArray[0]);
+    setWeb3Status(true);
+    // getTransactionFee();
   };
 
   // const getContractAddress = asy()
 
   useEffect(() => {
-    if (web3) {
-      determineContractAddress(web3).then((e) => {
-        console.log(e);
-        if (!e) return toast.error("Connect to correct network");
-        setTokenContractAddress(e["address"]);
-        setNetwork(e["net"]);
+    if (!web3) return setWeb3Status(false);
+    determineContractAddress(web3).then((e) => {
+      console.log(e);
+      if (!e) return toast.error("Connect to correct network");
+      setTokenContractAddress(e["address"]);
+      setNetwork(e["net"]);
 
-        switch (e["net"]) {
-          case 4: {
-            setSelectedCurreny({ value: "eth", label: "ETH" });
-          }
-          case 43113: {
-            setSelectedCurreny({ value: "avax", label: "AVAX" });
-          }
-          default:
-            return;
+      switch (e["net"]) {
+        case 4: {
+          setSelectedCurreny({ value: "eth", label: "ETH" });
+          break;
         }
-      });
-    }
+        case 43113: {
+          setSelectedCurreny({ value: "avax", label: "AVAX" });
+          break;
+        }
+        default:
+          return;
+      }
+    });
     getUserWalletAddress();
   }, [web3, address, tokenContractAddress]);
 
@@ -367,7 +363,6 @@ const Fixedswap = (props) => {
   return (
     <Fragment>
       <Header />
-      <ToastContainer />
       <div className="fixed-swap-pool">
         <div className="fixed-swap-form-container">
           <form>
@@ -699,7 +694,6 @@ const Fixedswap = (props) => {
                       >
                         Confirm
                       </Button>
-                      <ToastContainer />
                     </div>
                   </div>
                 </div>

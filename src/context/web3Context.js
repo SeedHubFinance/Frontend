@@ -1,4 +1,4 @@
-import { useState, createContext } from "react/cjs/react.development";
+import { useState, createContext } from "react";
 
 export const Web3Context = createContext();
 

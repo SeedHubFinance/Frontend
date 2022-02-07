@@ -70,3 +70,14 @@ export const determineContractAddress = async (web3) => {
       return false;
   }
 };
+
+export const withDrawUnSoldTokens = async (poolId, web3, address) => {
+  let response = await determineContractAddress(web3);
+  const contract = new web3.eth.Contract(fixedSwapABI, response.address);
+  try {
+    await contract.methods.withdrawUnSoldTokens(poolId).send({ from: address });
+    toast.success("Withdraw successfully");
+  } catch (e) {
+    toast.error("You already Withdrew funds");
+  }
+};

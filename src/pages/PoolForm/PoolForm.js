@@ -6,7 +6,7 @@ import React, {
   useRef,
 } from "react";
 import { Row, Col, Button } from "react-bootstrap";
-import { useLocation, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { ProgressBar } from "react-bootstrap";
 import { fixedSwapABI } from "../../contracts/FixedSwap";
 import coinABI from "../../contracts/ERC20ABI";
@@ -15,19 +15,18 @@ import {
   getPoolById,
   determineContractAddress,
   getUsdtBalance,
+  withDrawUnSoldTokens,
 } from "../../utils/callContract";
 import { Web3Context } from "../../context/web3Context";
 import { Link } from "react-router-dom";
 import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
 import Countdown from "react-countdown";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import { usdtAddBid } from "../../utils/callContract";
 import { ReactComponent as MaxIcon } from "../../Assets/Images/max.svg";
 import "./PoolForm.scss";
 import { poll } from "@usedapp/core/node_modules/ethers/lib/utils";
-
-
 
 // Countdown Timer
 // const Completionist = () => <span>0 d : 0 h : 0 m : 0 s</span>;
@@ -184,7 +183,6 @@ const Fixedswap = (props) => {
 
   useEffect(() => {
     if (!web3) {
-      toast.warning("Please Connect Wallet");
       setWeb3Status(false);
       return;
     }
@@ -314,16 +312,21 @@ const Fixedswap = (props) => {
       .then(() => alert("Claim Successfully!!"))
       .catch((e) => alert("Something went wrong", e));
   };
+
+  const handleWithdrawl = async (e) => {
+    e.preventDefault();
+    await withDrawUnSoldTokens(params.id, web3, address);
+  };
+
   return (
     <Fragment>
       <Header />
-      <ToastContainer />
       <div className="pool-form">
         <div className="pool-form-container">
-        <Link to="/" className="me-2">
+          <Link to="/" className="me-2">
             <Button className="ca">Back</Button>
           </Link>
-           <form>
+          <form>
             <Row className="g-0 mb-5">
               <Col>
                 <div className="form-header">
@@ -570,13 +573,26 @@ const Fixedswap = (props) => {
                     </p>
                   </>
                 ) : (
-                  <Button
-                    onClick={handleClaim}
-                    disabled={isExpired > 0 && isWeb3Connected ? false : true}
-                    className="sub-btn mt-3"
-                  >
-                    Claim Funds
-                  </Button>
+                  <>
+                    <Button
+                      onClick={handleClaim}
+                      disabled={isExpired > 0 && isWeb3Connected ? false : true}
+                      className="sub-btn mt-3"
+                    >
+                      Claim Funds
+                    </Button>
+                    {pool.poolCreator === address && (
+                      <Button
+                        onClick={handleWithdrawl}
+                        disabled={
+                          isExpired > 0 && isWeb3Connected ? false : true
+                        }
+                        className="sub-btn mt-3"
+                      >
+                        Withdraw Funds
+                      </Button>
+                    )}
+                  </>
                 )}
               </Col>
             </Row>

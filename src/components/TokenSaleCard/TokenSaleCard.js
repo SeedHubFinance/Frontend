@@ -2,7 +2,7 @@ import React, { Fragment, useRef } from "react";
 import { Link } from "react-router-dom";
 import { Card, ProgressBar, Button } from "react-bootstrap";
 import "./TokenSaleCard.scss";
-import { useEffect, useState } from "react/cjs/react.development";
+import { useEffect, useState } from "react";
 
 const Tokensalecard = ({
   index,
