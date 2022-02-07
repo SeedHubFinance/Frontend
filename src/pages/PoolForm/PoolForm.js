@@ -51,11 +51,11 @@ const renderer = ({ days, hours, minutes, seconds, completed }) => {
 // };
 
 const Fixedswap = (props) => {
-  const location = useLocation();
-  // const params = useParams();
+  // const location = useLocation();
+  const params = useParams();
   // console.log(params);
 
-  const params = { id: 21 };
+  // const params = { id: 21 };
   // let params = null;
   // // let params = null;
   // if (!params) {
@@ -183,6 +183,7 @@ const Fixedswap = (props) => {
   }, [pool]);
 
   useEffect(() => {
+    console.log("Hekllo");
     if (!web3) {
       setWeb3Status(false);
       return;
