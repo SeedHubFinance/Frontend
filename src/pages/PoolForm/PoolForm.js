@@ -57,12 +57,11 @@ const Fixedswap = (props) => {
 
   // const params = { id: 21 };
   // let params = null;
-  // // let params = null;
-  // if (!params) {
-  //   const path = location.pathname.split("/");
-  //   params = { id: path[path?.length - 1] };
-  //   console.log("params : ", params);
-  // }
+
+  // const path = location.pathname.split("/");
+  // const params = { id: path[path?.length - 1] };
+  // console.log("params : ", params);
+
   const [web3, setWeb3] = useContext(Web3Context);
   const [address, setAddress] = useState("");
   const [error, setError] = useState(null);
@@ -183,7 +182,6 @@ const Fixedswap = (props) => {
   }, [pool]);
 
   useEffect(() => {
-    console.log("Hekllo");
     if (!web3) {
       setWeb3Status(false);
       return;
