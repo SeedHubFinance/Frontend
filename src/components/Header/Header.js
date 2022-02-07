@@ -3,11 +3,14 @@ import { Navbar, Nav } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import Logo from "../../Assets/Images/logo.png";
 import ConnectedButton from "../ConnectButton/ConnectButton";
+import { ToastContainer } from "react-toastify";
 import "./Header.scss";
 
 const Header = () => {
   return (
     <Fragment>
+      <ToastContainer />
+
       <div className="header">
         <div className="header-wrapper mx-auto">
           <Navbar collapseOnSelect expand="lg">

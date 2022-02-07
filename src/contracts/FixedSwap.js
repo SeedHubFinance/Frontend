@@ -31,14 +31,34 @@ export const fixedSwapABI = [
         name: "usdt",
         type: "address",
       },
-      {
-        internalType: "uint256",
-        name: "minUSDTBalance",
-        type: "uint256",
-      },
     ],
     stateMutability: "nonpayable",
     type: "constructor",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "uint256",
+        name: "index",
+        type: "uint256",
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "sender",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "uint256",
+        name: "amount",
+        type: "uint256",
+      },
+    ],
+    name: "FeeCalculated",
+    type: "event",
   },
   {
     anonymous: false,
@@ -116,11 +136,6 @@ export const fixedSwapABI = [
             internalType: "bool",
             name: "isUSDT",
             type: "bool",
-          },
-          {
-            internalType: "address",
-            name: "poolCurrency",
-            type: "address",
           },
         ],
         indexed: false,
@@ -208,11 +223,6 @@ export const fixedSwapABI = [
             internalType: "bool",
             name: "isUSDT",
             type: "bool",
-          },
-          {
-            internalType: "address",
-            name: "poolCurrency",
-            type: "address",
           },
         ],
         indexed: false,
@@ -326,11 +336,6 @@ export const fixedSwapABI = [
             name: "isUSDT",
             type: "bool",
           },
-          {
-            internalType: "address",
-            name: "poolCurrency",
-            type: "address",
-          },
         ],
         indexed: false,
         internalType: "struct LP_ICO.Pool",
@@ -417,11 +422,6 @@ export const fixedSwapABI = [
             internalType: "bool",
             name: "isUSDT",
             type: "bool",
-          },
-          {
-            internalType: "address",
-            name: "poolCurrency",
-            type: "address",
           },
         ],
         indexed: false,
@@ -612,49 +612,71 @@ export const fixedSwapABI = [
   {
     inputs: [
       {
-        internalType: "string",
-        name: "name",
-        type: "string",
-      },
-      {
-        internalType: "address",
-        name: "sellToken",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "swapRatio",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "maxAmountPerWallet",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "amountOfSellToken",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256[]",
-        name: "time",
-        type: "uint256[]",
-      },
-      {
-        internalType: "bool",
-        name: "onlySeedHolders",
-        type: "bool",
-      },
-      {
-        internalType: "bool",
-        name: "enableWhiteList",
-        type: "bool",
-      },
-      {
-        internalType: "bool",
-        name: "isUSDT",
-        type: "bool",
+        components: [
+          {
+            internalType: "string",
+            name: "name",
+            type: "string",
+          },
+          {
+            internalType: "address",
+            name: "poolCreator",
+            type: "address",
+          },
+          {
+            internalType: "uint256",
+            name: "startAuctionAt",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "endAuctionAt",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "claimAuctionFundsAt",
+            type: "uint256",
+          },
+          {
+            internalType: "bool",
+            name: "enableWhiteList",
+            type: "bool",
+          },
+          {
+            internalType: "uint256",
+            name: "maxAmountPerWallet",
+            type: "uint256",
+          },
+          {
+            internalType: "bool",
+            name: "onlySeedHolders",
+            type: "bool",
+          },
+          {
+            internalType: "address",
+            name: "sellToken",
+            type: "address",
+          },
+          {
+            internalType: "uint256",
+            name: "amountOfSellToken",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "swapRatio",
+            type: "uint256",
+          },
+          {
+            internalType: "bool",
+            name: "isUSDT",
+            type: "bool",
+          },
+        ],
+        internalType: "struct LP_ICO.Pool",
+        name: "pool",
+        type: "tuple",
       },
       {
         internalType: "address[]",
@@ -670,49 +692,71 @@ export const fixedSwapABI = [
   {
     inputs: [
       {
-        internalType: "string",
-        name: "name",
-        type: "string",
-      },
-      {
-        internalType: "address",
-        name: "sellToken",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "swapRatio",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "maxAmountPerWallet",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "amountOfSellToken",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256[]",
-        name: "time",
-        type: "uint256[]",
-      },
-      {
-        internalType: "bool",
-        name: "onlySeedHolders",
-        type: "bool",
-      },
-      {
-        internalType: "bool",
-        name: "enableWhiteList",
-        type: "bool",
-      },
-      {
-        internalType: "bool",
-        name: "isUSDT",
-        type: "bool",
+        components: [
+          {
+            internalType: "string",
+            name: "name",
+            type: "string",
+          },
+          {
+            internalType: "address",
+            name: "poolCreator",
+            type: "address",
+          },
+          {
+            internalType: "uint256",
+            name: "startAuctionAt",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "endAuctionAt",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "claimAuctionFundsAt",
+            type: "uint256",
+          },
+          {
+            internalType: "bool",
+            name: "enableWhiteList",
+            type: "bool",
+          },
+          {
+            internalType: "uint256",
+            name: "maxAmountPerWallet",
+            type: "uint256",
+          },
+          {
+            internalType: "bool",
+            name: "onlySeedHolders",
+            type: "bool",
+          },
+          {
+            internalType: "address",
+            name: "sellToken",
+            type: "address",
+          },
+          {
+            internalType: "uint256",
+            name: "amountOfSellToken",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "swapRatio",
+            type: "uint256",
+          },
+          {
+            internalType: "bool",
+            name: "isUSDT",
+            type: "bool",
+          },
+        ],
+        internalType: "struct LP_ICO.Pool",
+        name: "pool",
+        type: "tuple",
       },
       {
         internalType: "address[]",
@@ -829,11 +873,6 @@ export const fixedSwapABI = [
             name: "isUSDT",
             type: "bool",
           },
-          {
-            internalType: "address",
-            name: "poolCurrency",
-            type: "address",
-          },
         ],
         internalType: "struct LP_ICO.Pool[]",
         name: "",
@@ -915,11 +954,6 @@ export const fixedSwapABI = [
             name: "isUSDT",
             type: "bool",
           },
-          {
-            internalType: "address",
-            name: "poolCurrency",
-            type: "address",
-          },
         ],
         internalType: "struct LP_ICO.Pool",
         name: "",
@@ -963,6 +997,25 @@ export const fixedSwapABI = [
         internalType: "address",
         name: "",
         type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    name: "poolBalances",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
       },
     ],
     stateMutability: "view",
@@ -1128,8 +1181,20 @@ export const fixedSwapABI = [
     stateMutability: "view",
     type: "function",
   },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "index",
+        type: "uint256",
+      },
+    ],
+    name: "withdrawUnSoldTokens",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
 ];
-
 export const fixedSwapContractAddress =
   "0xea1886bB1DEC9E6A01CBD11CFcc609d9837fCf4c";
-export const fujiSwapAddress = "0x754a5C84FB45f7a7D8820c272520b47e3d4E27Fd";
+export const fujiSwapAddress = "0xbefe0b933c82d1ba523517ffd774c62651fe13a9";

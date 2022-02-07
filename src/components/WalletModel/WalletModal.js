@@ -18,6 +18,12 @@ const WalletModal = (props) => {
     infuraId: "759fef0c863e4e29b9183e3438f90b1d",
   });
 
+  useEffect(() => {
+    if (!web3) {
+      toast.warning("Please Connect Wallet");
+    }
+  }, [web3]);
+
   const handleWalletConnect = async (e) => {
     props.onHide();
     e.preventDefault();

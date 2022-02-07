@@ -91,39 +91,35 @@ const Fixedswap = (props) => {
   const [tokenContractAddress, setTokenContractAddress] = useState();
 
   const getUserWalletAddress = async () => {
-    if (web3) {
-      let addressArray = await web3?.eth.getAccounts();
-      setAddress(addressArray[0]);
-      setWeb3Status(true);
-      // getTransactionFee();
-    } else {
-      toast.warning("Please Connect Wallet");
-      setWeb3Status(false);
-    }
+    let addressArray = await web3?.eth.getAccounts();
+    setAddress(addressArray[0]);
+    setWeb3Status(true);
+    // getTransactionFee();
   };
 
   // const getContractAddress = asy()
 
   useEffect(() => {
-    if (web3) {
-      determineContractAddress(web3).then((e) => {
-        console.log(e);
-        if (!e) return toast.error("Connect to correct network");
-        setTokenContractAddress(e["address"]);
-        setNetwork(e["net"]);
+    if (!web3) return setWeb3Status(false);
+    determineContractAddress(web3).then((e) => {
+      console.log(e);
+      if (!e) return toast.error("Connect to correct network");
+      setTokenContractAddress(e["address"]);
+      setNetwork(e["net"]);
 
-        switch (e["net"]) {
-          case 4: {
-            setSelectedCurreny({ value: "eth", label: "ETH" });
-          }
-          case 43113: {
-            setSelectedCurreny({ value: "avax", label: "AVAX" });
-          }
-          default:
-            return;
+      switch (e["net"]) {
+        case 4: {
+          setSelectedCurreny({ value: "eth", label: "ETH" });
+          break;
         }
-      });
-    }
+        case 43113: {
+          setSelectedCurreny({ value: "avax", label: "AVAX" });
+          break;
+        }
+        default:
+          return;
+      }
+    });
     getUserWalletAddress();
   }, [web3, address, tokenContractAddress]);
 
@@ -152,6 +148,11 @@ const Fixedswap = (props) => {
     dateErrorRef.current.innerText = "";
     setTransferApproval(false);
   }, [startDate, endDate, claimDate]);
+
+  useEffect(() => {
+    if (limitfield) return;
+    setMaxAmountPerWallet("100000000000000000000000000");
+  }, [limitfield]);
 
   const getTimeStampsForDates = (date) => {
     return Math.ceil(new Date(date).getTime() / 1000);
@@ -308,23 +309,38 @@ const Fixedswap = (props) => {
       return;
     }
 
+    // pool name
+    //  address poolCreator;
+    //  uint256 startAuctionAt;
+    //  uint256 endAuctionAt;
+    //  uint256 claimAuctionFundsAt;
+    //  bool enableWhiteList;
+    //  uint256 maxAmountPerWallet;
+    //  bool onlySeedHolders;
+    //  address sellToken;
+    //  uint256 amountOfSellToken;
+    //  uint256 swapRatio;
+    //  bool isUSDT;
+
+    let pool = [
+      poolName,
+      address,
+      getTimeStampsForDates(startDate),
+      getTimeStampsForDates(endDate),
+      getTimeStampsForDates(claimDate),
+      enableWhiteList,
+      web3.utils.toWei(maxAmountPerWallet),
+      isOnlySeeHolder,
+      tokenAddress,
+      toFixed(tokenAllocation).toString(),
+      swapRatio,
+      currency.value == "usdt" ? true : false,
+    ];
+
+    console.log(pool);
+
     await fixedSwapContract.methods
-      .createLiquidityPool(
-        poolName,
-        tokenAddress,
-        swapRatio,
-        web3.utils.toWei(maxAmountPerWallet),
-        toFixed(tokenAllocation).toString(),
-        [
-          getTimeStampsForDates(startDate),
-          getTimeStampsForDates(endDate),
-          getTimeStampsForDates(claimDate),
-        ],
-        isOnlySeeHolder,
-        enableWhiteList,
-        currency.value == "usdt" ? true : false,
-        listdata
-      )
+      .createLiquidityPool(pool, listdata)
       .send({ from: address })
       .then(() => {
         toast.success("Pool successfully created");
@@ -352,7 +368,6 @@ const Fixedswap = (props) => {
   return (
     <Fragment>
       <Header />
-      <ToastContainer />
       <div className="fixed-swap-pool">
         <div className="fixed-swap-form-container">
           <form>
@@ -362,7 +377,10 @@ const Fixedswap = (props) => {
                   Initial Token Offering
                   <div className="title">
                     Create a Fixed Price Pool
-                    <Button href="https://docs.seedhub.network/products/seed-hub-decentralized/fixed-price-sales/how-to-create-a-pool">
+                    <Button
+                      href="https://docs.seedhub.network/products/seed-hub-decentralized/fixed-price-sales/how-to-create-a-pool"
+                      target="_blank"
+                    >
                       How to Create a pool
                     </Button>
                   </div>
@@ -393,7 +411,7 @@ const Fixedswap = (props) => {
               <Col md={6} lg={5}>
                 <div className="d-flex align-items-center justify-content-between">
                   <div className="w-50 to-select me-3">
-                    <span className="label">To</span>
+                    <span className="label">From</span>
                     <Select
                       options={network == 4 ? poolOptions : poolOptionsAvax}
                       defaultValue={
@@ -408,7 +426,7 @@ const Fixedswap = (props) => {
                     />
                   </div>
                   <div className="w-50 ">
-                    <span className="label">From</span>
+                    <span className="label">To</span>
                     <input
                       className="custom-input"
                       required
@@ -681,7 +699,6 @@ const Fixedswap = (props) => {
                       >
                         Confirm
                       </Button>
-                      <ToastContainer />
                     </div>
                   </div>
                 </div>
