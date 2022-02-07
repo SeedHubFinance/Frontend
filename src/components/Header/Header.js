@@ -1,7 +1,7 @@
 import React, { Fragment } from "react";
 import { Navbar, Nav } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import Logo from "../../Assets/Images/logo.png";
+import { Images } from "../../Assets/Images/Images";
 import ConnectedButton from "../ConnectButton/ConnectButton";
 import { ToastContainer } from "react-toastify";
 import "./Header.scss";
@@ -16,7 +16,7 @@ const Header = () => {
           <Navbar collapseOnSelect expand="lg">
             <Navbar.Brand className="logo fs-3 me-auto">
               <Link to="/">
-                <img src={Logo} className="logoimg" width="150px" />
+                <img src={Images.Logo} className="logoimg" width="150px" />
               </Link>
             </Navbar.Brand>
             <Navbar.Toggle
