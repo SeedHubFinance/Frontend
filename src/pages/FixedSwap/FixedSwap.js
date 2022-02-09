@@ -66,8 +66,8 @@ const Fixedswap = (props) => {
   const [claimDate, setClaimDate] = useState(date);
 
   const [currency, setSelectedCurreny] = useState({
-    value: "eth",
-    label: "ETH",
+    value: "avax",
+    label: "AVAX",
   });
 
   const [passfield, setpassfield] = useState(false);
@@ -427,7 +427,6 @@ const Fixedswap = (props) => {
                         isDisabled={!isWeb3Connected}
                         onChange={(e) => {
                           setSelectedCurreny(e);
-                          console.log(e);
                         }}
                       />
                     ) : (
