@@ -112,7 +112,7 @@ const Fixedswap = (props) => {
           setSelectedCurreny({ value: "eth", label: "ETH" });
           break;
         }
-        case 43113: {
+        case 43113 && 43114: {
           setSelectedCurreny({ value: "avax", label: "AVAX" });
           break;
         }
@@ -337,7 +337,7 @@ const Fixedswap = (props) => {
       currency.value == "usdt" ? true : false,
     ];
 
-    console.log(pool);
+    console.log("pool=>>>>>>>>", pool);
 
     await fixedSwapContract.methods
       .createLiquidityPool(pool, listdata)
