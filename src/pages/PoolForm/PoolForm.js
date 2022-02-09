@@ -1,12 +1,6 @@
-import React, {
-  Fragment,
-  useContext,
-  useState,
-  useEffect,
-  useRef,
-} from "react";
+import React, { Fragment, useContext, useState, useEffect } from "react";
 import { Row, Col, Button } from "react-bootstrap";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { ProgressBar } from "react-bootstrap";
 import { fixedSwapABI } from "../../contracts/FixedSwap";
 import coinABI from "../../contracts/ERC20ABI";
@@ -24,9 +18,7 @@ import Footer from "../../components/Footer/Footer";
 import Countdown from "react-countdown";
 import { toast } from "react-toastify";
 import { usdtAddBid } from "../../utils/callContract";
-import { ReactComponent as MaxIcon } from "../../Assets/Images/max.svg";
 import "./PoolForm.scss";
-import { poll } from "@usedapp/core/node_modules/ethers/lib/utils";
 
 // Countdown Timer
 // const Completionist = () => <span>0 d : 0 h : 0 m : 0 s</span>;
@@ -59,7 +51,17 @@ const renderer = ({ days, hours, minutes, seconds, completed }) => {
 // };
 
 const Fixedswap = (props) => {
+  // const location = useLocation();
   const params = useParams();
+  // console.log(params);
+
+  // const params = { id: 21 };
+  // let params = null;
+
+  // const path = location.pathname.split("/");
+  // const params = { id: path[path?.length - 1] };
+  // console.log("params : ", params);
+
   const [web3, setWeb3] = useContext(Web3Context);
   const [address, setAddress] = useState("");
   const [error, setError] = useState(null);
@@ -75,9 +77,7 @@ const Fixedswap = (props) => {
   const [pool, setPool] = useState();
   const [isApproved, setIsApproved] = useState(false);
   const [network, setNetwork] = useState();
-
   const [fixedSwapContractAddress, setFixedSwapContractAddress] = useState("");
-
   // const statusRef = useRef("");
   // useEffect(() => {
   //   const date = new Date(pool.endAuctionAt * 1000);
@@ -188,7 +188,10 @@ const Fixedswap = (props) => {
     }
     getUserWalletAddress();
     getPoolById(params.id, web3)
-      .then((e) => setPool(e))
+      .then((e) => {
+        console.log("response :", e);
+        setPool(e);
+      })
       .catch(console.log);
   }, [web3]);
 
@@ -354,7 +357,6 @@ const Fixedswap = (props) => {
                     <p>
                       <span>Participants</span>
                       <p>
-                        {console.log(pool)}
                         {pool?.enableWhiteList ? "WhiteList " : "Public "}
                         {pool?.onlySeedHolders ? "and for seed Holders" : ""}
                       </p>
@@ -362,7 +364,7 @@ const Fixedswap = (props) => {
                   </div>
                   <p>Price</p>
                   <h3>
-                    {console.log("nettwoeawjed", network)}1{" "}
+                    1{" "}
                     {network === 4
                       ? pool?.isUSDT
                         ? "USDT"
