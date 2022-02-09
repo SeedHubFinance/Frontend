@@ -106,22 +106,29 @@ const Fixedswap = (props) => {
       if (!e) return toast.error("Connect to correct network");
       setTokenContractAddress(e["address"]);
       setNetwork(e["net"]);
-
-      switch (e["net"]) {
-        case 4: {
-          setSelectedCurreny({ value: "eth", label: "ETH" });
-          break;
-        }
-        case 43113 && 43114: {
-          setSelectedCurreny({ value: "avax", label: "AVAX" });
-          break;
-        }
-        default:
-          return;
-      }
     });
     getUserWalletAddress();
   }, [web3, address, tokenContractAddress]);
+
+  useEffect(() => {
+    console.log("network", network);
+    switch (network) {
+      case 4: {
+        setSelectedCurreny((prev) => ({ ...prev, value: "eth", label: "ETH" }));
+        break;
+      }
+      case 43113 || 43114: {
+        setSelectedCurreny((prev) => ({
+          ...prev,
+          value: "avax",
+          label: "AVAX",
+        }));
+        break;
+      }
+      default:
+        return;
+    }
+  }, [network]);
 
   useEffect(() => {
     if (isFirstRun.current) {
@@ -412,18 +419,28 @@ const Fixedswap = (props) => {
                 <div className="d-flex align-items-center justify-content-between">
                   <div className="w-50 to-select me-3">
                     <span className="label">From</span>
-                    <Select
-                      options={network == 4 ? poolOptions : poolOptionsAvax}
-                      defaultValue={
-                        network == 4 ? poolOptions[0] : poolOptionsAvax[0]
-                      }
-                      isSearchable={false}
-                      isDisabled={!isWeb3Connected}
-                      onChange={(e) => {
-                        setSelectedCurreny(e);
-                        console.log(e);
-                      }}
-                    />
+                    {network == 4 ? (
+                      <Select
+                        options={poolOptions}
+                        defaultValue={poolOptions[0]}
+                        isSearchable={false}
+                        isDisabled={!isWeb3Connected}
+                        onChange={(e) => {
+                          setSelectedCurreny(e);
+                          console.log(e);
+                        }}
+                      />
+                    ) : (
+                      <Select
+                        options={poolOptionsAvax}
+                        defaultValue={poolOptionsAvax[0]}
+                        isSearchable={false}
+                        isDisabled={!isWeb3Connected}
+                        onChange={(e) => {
+                          setSelectedCurreny(e);
+                        }}
+                      />
+                    )}
                   </div>
                   <div className="w-50 ">
                     <span className="label">To</span>
