@@ -297,7 +297,9 @@ const Fixedswap = (props) => {
 
   const calculateAmountFromPrice = (price) => {
     if (!price) {
-      setAmount(null);
+      setPriceAmount(0);
+      calculateAmount(0);
+      return;
     }
     setPriceAmount(price);
     calculateAmount(price);
