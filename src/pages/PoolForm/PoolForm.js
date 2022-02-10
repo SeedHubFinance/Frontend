@@ -372,7 +372,11 @@ const Fixedswap = (props) => {
                       : pool?.isUSDT
                       ? "USDT"
                       : "AVAX"}{" "}
-                    = {pool?.swapRatio} {tokenSymbol}
+                    ={" "}
+                    {pool?.isUSDT
+                      ? pool?.swapRatio / 10 ** 12
+                      : pool?.swapRatio}{" "}
+                    {tokenSymbol}
                   </h3>
                   <div className="divder"></div>
                   <div className="row">
@@ -547,7 +551,7 @@ const Fixedswap = (props) => {
                         required
                         name="amount"
                         placeholder="Token Amount"
-                        value={amount}
+                        value={pool?.isUSDT ? amount / 10 ** 12 : amount}
                       />
                     </div>
                   </>

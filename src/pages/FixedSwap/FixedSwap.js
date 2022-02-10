@@ -340,7 +340,7 @@ const Fixedswap = (props) => {
       isOnlySeeHolder,
       tokenAddress,
       toFixed(tokenAllocation).toString(),
-      swapRatio,
+      currency.value == "usdt" ? swapRatio * 10 ** 12 : swapRatio,
       currency.value == "usdt" ? true : false,
     ];
 
