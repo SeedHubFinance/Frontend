@@ -66,8 +66,8 @@ const Fixedswap = (props) => {
   const [claimDate, setClaimDate] = useState(date);
 
   const [currency, setSelectedCurreny] = useState({
-    value: "eth",
-    label: "ETH",
+    value: "avax",
+    label: "AVAX",
   });
 
   const [passfield, setpassfield] = useState(false);
@@ -106,22 +106,29 @@ const Fixedswap = (props) => {
       if (!e) return toast.error("Connect to correct network");
       setTokenContractAddress(e["address"]);
       setNetwork(e["net"]);
-
-      switch (e["net"]) {
-        case 4: {
-          setSelectedCurreny({ value: "eth", label: "ETH" });
-          break;
-        }
-        case 43113: {
-          setSelectedCurreny({ value: "avax", label: "AVAX" });
-          break;
-        }
-        default:
-          return;
-      }
     });
     getUserWalletAddress();
   }, [web3, address, tokenContractAddress]);
+
+  useEffect(() => {
+    console.log("network", network);
+    switch (network) {
+      case 4: {
+        setSelectedCurreny((prev) => ({ ...prev, value: "eth", label: "ETH" }));
+        break;
+      }
+      case 43113 || 43114: {
+        setSelectedCurreny((prev) => ({
+          ...prev,
+          value: "avax",
+          label: "AVAX",
+        }));
+        break;
+      }
+      default:
+        return;
+    }
+  }, [network]);
 
   useEffect(() => {
     if (isFirstRun.current) {
@@ -148,6 +155,11 @@ const Fixedswap = (props) => {
     dateErrorRef.current.innerText = "";
     setTransferApproval(false);
   }, [startDate, endDate, claimDate]);
+
+  useEffect(() => {
+    if (limitfield) return;
+    setMaxAmountPerWallet("100000000000000000000000000");
+  }, [limitfield]);
 
   const getTimeStampsForDates = (date) => {
     return Math.ceil(new Date(date).getTime() / 1000);
@@ -328,11 +340,11 @@ const Fixedswap = (props) => {
       isOnlySeeHolder,
       tokenAddress,
       toFixed(tokenAllocation).toString(),
-      swapRatio,
+      currency.value == "usdt" ? swapRatio * 10 ** 12 : swapRatio,
       currency.value == "usdt" ? true : false,
     ];
 
-    console.log(pool);
+    console.log("pool=>>>>>>>>", pool);
 
     await fixedSwapContract.methods
       .createLiquidityPool(pool, listdata)
@@ -407,18 +419,27 @@ const Fixedswap = (props) => {
                 <div className="d-flex align-items-center justify-content-between">
                   <div className="w-50 to-select me-3">
                     <span className="label">From</span>
-                    <Select
-                      options={network == 4 ? poolOptions : poolOptionsAvax}
-                      defaultValue={
-                        network == 4 ? poolOptions[0] : poolOptionsAvax[0]
-                      }
-                      isSearchable={false}
-                      isDisabled={!isWeb3Connected}
-                      onChange={(e) => {
-                        setSelectedCurreny(e);
-                        console.log(e);
-                      }}
-                    />
+                    {network == 4 ? (
+                      <Select
+                        options={poolOptions}
+                        defaultValue={poolOptions[0]}
+                        isSearchable={false}
+                        isDisabled={!isWeb3Connected}
+                        onChange={(e) => {
+                          setSelectedCurreny(e);
+                        }}
+                      />
+                    ) : (
+                      <Select
+                        options={poolOptionsAvax}
+                        defaultValue={poolOptionsAvax[0]}
+                        isSearchable={false}
+                        isDisabled={!isWeb3Connected}
+                        onChange={(e) => {
+                          setSelectedCurreny(e);
+                        }}
+                      />
+                    )}
                   </div>
                   <div className="w-50 ">
                     <span className="label">To</span>
