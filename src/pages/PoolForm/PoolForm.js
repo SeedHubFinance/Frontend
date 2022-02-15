@@ -393,6 +393,8 @@ const Fixedswap = (props) => {
                             pool.maxAmountPerWallet.toString()
                           ) === "100000000000000000000000000" ? (
                             "No Limit"
+                          ) : pool?.isUSDT ? (
+                            pool.maxAmountPerWallet / 10 ** 6
                           ) : (
                             web3?.utils.fromWei(
                               pool.maxAmountPerWallet.toString()

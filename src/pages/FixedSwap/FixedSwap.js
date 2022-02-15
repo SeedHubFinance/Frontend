@@ -336,7 +336,9 @@ const Fixedswap = (props) => {
       getTimeStampsForDates(endDate),
       getTimeStampsForDates(claimDate),
       enableWhiteList,
-      web3.utils.toWei(maxAmountPerWallet),
+      currency.value == "usdt"
+        ? (maxAmountPerWallet * 10 ** 6).toString()
+        : web3.utils.toWei(maxAmountPerWallet),
       isOnlySeeHolder,
       tokenAddress,
       toFixed(tokenAllocation).toString(),
