@@ -2,6 +2,7 @@ import {
   fixedSwapABI,
   fixedSwapContractAddress,
   fujiSwapAddress,
+  mainnetContractAddress,
 } from "../contracts/FixedSwap";
 import coinABI from "../contracts/ERC20ABI";
 import { useContext } from "react";
@@ -59,7 +60,6 @@ export const getUsdtBalance = async (address, web3) => {
 
 export const determineContractAddress = async (web3) => {
   const response = await web3.eth.net.getId();
-  const mainnetContractAddress = "";
   switch (response) {
     case 4:
       return { address: fixedSwapContractAddress, net: response };
