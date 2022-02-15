@@ -59,11 +59,12 @@ export const getUsdtBalance = async (address, web3) => {
 
 export const determineContractAddress = async (web3) => {
   const response = await web3.eth.net.getId();
+  const mainnetContractAddress = "";
   switch (response) {
     case 4:
       return { address: fixedSwapContractAddress, net: response };
     case 43114:
-      return false;
+      return { address: mainnetContractAddress, net: response };
     case 43113:
       return { address: fujiSwapAddress, net: response };
     default:
