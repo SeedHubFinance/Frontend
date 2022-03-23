@@ -298,7 +298,7 @@ const Fixedswap = (props) => {
       tokenAddress,
       swapRatio: parseInt(swapRatio),
       maxAmountPerWallet: parseInt(maxAmountPerWallet),
-      tokenAllocation: parseFloat(tokenAllocation),
+      tokenAllocation: toFixed(tokenAllocation).toString(),
       startDate: getTimeStampsForDates(startDate),
       endDate: getTimeStampsForDates(endDate),
       claimDate: getTimeStampsForDates(claimDate),
@@ -329,6 +329,8 @@ const Fixedswap = (props) => {
     //  uint256 swapRatio;
     //  bool isUSDT;
 
+    console.log(toFixed(tokenAllocation).toString());
+
     let pool = [
       poolName,
       address,
@@ -337,7 +339,7 @@ const Fixedswap = (props) => {
       getTimeStampsForDates(claimDate),
       enableWhiteList,
       currency.value == "usdt"
-        ? (maxAmountPerWallet * 10 ** 6).toString()
+        ? toFixed((maxAmountPerWallet * 10 ** 6).toString())
         : web3.utils.toWei(maxAmountPerWallet),
       isOnlySeeHolder,
       tokenAddress,
